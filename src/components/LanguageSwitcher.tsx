@@ -36,7 +36,7 @@ export default function LanguageSwitcher({ onLanguageChange }: { onLanguageChang
         onClick={() => handleLanguageChange('en')}
         className={`px-3 py-1 rounded ${
           currentLang === 'en' 
-            ? 'bg-blue-600 text-white' 
+            ? 'bg-primary-600 text-white' 
             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`}
       >
@@ -46,7 +46,7 @@ export default function LanguageSwitcher({ onLanguageChange }: { onLanguageChang
         onClick={() => handleLanguageChange('ar')}
         className={`px-3 py-1 rounded ${
           currentLang === 'ar' 
-            ? 'bg-blue-600 text-white' 
+            ? 'bg-primary-600 text-white' 
             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`}
       >
@@ -56,7 +56,7 @@ export default function LanguageSwitcher({ onLanguageChange }: { onLanguageChang
         onClick={() => handleLanguageChange('sv')}
         className={`px-3 py-1 rounded ${
           currentLang === 'sv' 
-            ? 'bg-blue-600 text-white' 
+            ? 'bg-primary-600 text-white' 
             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`}
       >

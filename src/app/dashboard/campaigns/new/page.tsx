@@ -79,7 +79,7 @@ export default function NewCampaign() {
     <div className="min-h-screen bg-gray-50" dir={isRTL ? 'rtl' : 'ltr'}>
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4">
-          <Link href="/dashboard" className="text-blue-600 hover:text-blue-700 flex items-center gap-2">
+          <Link href="/dashboard" className="text-primary-600 hover:text-primary-700 flex items-center gap-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -104,7 +104,7 @@ export default function NewCampaign() {
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 placeholder="e.g., Medical Emergency - Uncle Ahmed"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
 
@@ -118,7 +118,7 @@ export default function NewCampaign() {
                 value={formData.beneficiaryName}
                 onChange={(e) => setFormData({ ...formData, beneficiaryName: e.target.value })}
                 placeholder={t('whoWillReceive')}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
 
@@ -132,7 +132,7 @@ export default function NewCampaign() {
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder={t('explainCampaign')}
                 rows={5}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
 
@@ -148,7 +148,7 @@ export default function NewCampaign() {
                   value={formData.targetAmount}
                   onChange={(e) => setFormData({ ...formData, targetAmount: e.target.value })}
                   placeholder="5000"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
 
@@ -159,7 +159,7 @@ export default function NewCampaign() {
                 <select
                   value={formData.currency}
                   onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   <option value="USD">USD - US Dollar</option>
                   <option value="EUR">EUR - Euro</option>
@@ -182,7 +182,7 @@ export default function NewCampaign() {
                 value={formData.dueDate}
                 onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
                 min={new Date().toISOString().split('T')[0]}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
               <p className="text-sm text-gray-500 mt-1">{t('dueDateOptional')}</p>
             </div>
@@ -195,7 +195,7 @@ export default function NewCampaign() {
                 required
                 value={formData.groupId}
                 onChange={(e) => setFormData({ ...formData, groupId: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               >
                 <option value="">{t('selectGroup')}</option>
                 {groups.map(group => (
@@ -208,7 +208,7 @@ export default function NewCampaign() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition disabled:bg-blue-400 disabled:cursor-not-allowed"
+                className="flex-1 bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition disabled:bg-blue-400 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? t('creating') : t('createCampaignBtn')}
               </button>
@@ -225,3 +225,4 @@ export default function NewCampaign() {
     </div>
   );
 }
+

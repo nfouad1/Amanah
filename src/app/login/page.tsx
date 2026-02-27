@@ -54,7 +54,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center px-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-warm-50 to-secondary-50 flex items-center justify-center px-4" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="absolute top-4 right-4">
         <LanguageSwitcher onLanguageChange={handleLanguageChange} />
       </div>
@@ -84,7 +84,7 @@ export default function Login() {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="input-warm"
                 placeholder="your@email.com"
               />
             </div>
@@ -98,7 +98,7 @@ export default function Login() {
                 required
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="input-warm"
                 placeholder="••••••••"
               />
             </div>
@@ -106,7 +106,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition disabled:bg-blue-400 disabled:cursor-not-allowed"
+              className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? t('loggingIn') : t('login')}
             </button>
@@ -115,7 +115,7 @@ export default function Login() {
           <div className="mt-6 text-center">
             <p className="text-gray-600">
               {t('dontHaveAccount')}{' '}
-              <Link href="/register" className="text-blue-600 hover:text-blue-700 font-semibold">
+              <Link href="/register" className="text-primary-600 hover:text-primary-700 font-semibold">
                 {t('signUp')}
               </Link>
             </p>

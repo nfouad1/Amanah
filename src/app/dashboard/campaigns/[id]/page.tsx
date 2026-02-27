@@ -87,7 +87,7 @@ export default function CampaignDetail() {
     <div className="min-h-screen bg-gray-50" dir={isRTL ? 'rtl' : 'ltr'}>
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4">
-          <Link href="/dashboard" className="text-blue-600 hover:text-blue-700 flex items-center gap-2">
+          <Link href="/dashboard" className="text-primary-600 hover:text-primary-700 flex items-center gap-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -143,7 +143,7 @@ export default function CampaignDetail() {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <div 
-                    className="h-3 rounded-full bg-blue-600"
+                    className="h-3 rounded-full bg-primary-600"
                     style={{ width: `${Math.min(percentage, 100)}%` }}
                   />
                 </div>
@@ -166,7 +166,7 @@ export default function CampaignDetail() {
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="font-semibold text-gray-900 mb-3">{t('voteForCampaign')}</h3>
               <div className="flex items-center gap-2 mb-4">
-                <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-6 h-6 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
                 </svg>
                 <span className="text-2xl font-bold text-gray-900">{voteCount}</span>
@@ -186,7 +186,7 @@ export default function CampaignDetail() {
               ) : (
                 <button
                   onClick={handleVote}
-                  className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 font-semibold flex items-center justify-center gap-2"
+                  className="w-full bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 font-semibold flex items-center justify-center gap-2"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />

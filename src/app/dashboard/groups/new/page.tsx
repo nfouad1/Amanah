@@ -76,7 +76,7 @@ export default function NewGroup() {
     <div className="min-h-screen bg-gray-50" dir={isRTL ? 'rtl' : 'ltr'}>
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4">
-          <Link href="/dashboard" className="text-blue-600 hover:text-blue-700 flex items-center gap-2">
+          <Link href="/dashboard" className="text-primary-600 hover:text-primary-700 flex items-center gap-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -101,7 +101,7 @@ export default function NewGroup() {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g., Extended Family Circle"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
 
@@ -114,7 +114,7 @@ export default function NewGroup() {
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder={t('whatIsGroupFor')}
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
 
@@ -127,7 +127,7 @@ export default function NewGroup() {
                 onChange={(e) => setFormData({ ...formData, emails: e.target.value })}
                 placeholder="john@email.com&#10;sarah@email.com&#10;ali@email.com"
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
               <p className="text-sm text-gray-500 mt-1">{t('onePerLine')}</p>
             </div>
@@ -141,7 +141,7 @@ export default function NewGroup() {
                 onChange={(e) => setFormData({ ...formData, phones: e.target.value })}
                 placeholder="+1234567890&#10;+9876543210&#10;+1122334455"
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
               <p className="text-sm text-gray-500 mt-1">{t('onePerLine')}</p>
             </div>
@@ -152,7 +152,7 @@ export default function NewGroup() {
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <h3 className="font-semibold text-blue-900 mb-2">{t('groupPrivacy')}</h3>
-              <p className="text-sm text-blue-800">
+              <p className="text-sm text-primary-800">
                 {t('groupPrivacyDesc')}
               </p>
             </div>
@@ -161,7 +161,7 @@ export default function NewGroup() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition disabled:bg-blue-400 disabled:cursor-not-allowed"
+                className="flex-1 bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition disabled:bg-blue-400 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? t('creating') : t('createGroup')}
               </button>
@@ -178,3 +178,4 @@ export default function NewGroup() {
     </div>
   );
 }
+

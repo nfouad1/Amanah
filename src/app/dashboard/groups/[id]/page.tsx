@@ -181,7 +181,7 @@ export default function GroupDetail() {
     <div className="min-h-screen bg-gray-50" dir={isRTL ? 'rtl' : 'ltr'}>
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4">
-          <Link href="/dashboard" className="text-blue-600 hover:text-blue-700 flex items-center gap-2">
+          <Link href="/dashboard" className="text-primary-600 hover:text-primary-700 flex items-center gap-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -199,7 +199,7 @@ export default function GroupDetail() {
               <p className="text-gray-600">{group.description}</p>
             </div>
             <div className="text-right">
-              <p className="text-3xl font-bold text-blue-600">{group.members}</p>
+              <p className="text-3xl font-bold text-primary-600">{group.members}</p>
               <p className="text-sm text-gray-500">{t('members')}</p>
             </div>
           </div>
@@ -207,7 +207,7 @@ export default function GroupDetail() {
           <div className="flex gap-3 mt-6">
             <Link
               href="/dashboard/campaigns/new"
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-semibold"
+              className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 font-semibold"
             >
               {t('startCampaign')}
             </Link>
@@ -252,7 +252,7 @@ export default function GroupDetail() {
                   <p className="text-gray-500 mb-4">{t('noCampaignsYet')}</p>
                   <Link
                     href="/dashboard/campaigns/new"
-                    className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-semibold"
+                    className="inline-block bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 font-semibold"
                   >
                     {t('createFirstCampaign')}
                   </Link>
@@ -263,7 +263,7 @@ export default function GroupDetail() {
             {/* Group Stats */}
             <div className="grid grid-cols-3 gap-4 mt-6">
               <div className="bg-white p-4 rounded-lg shadow text-center">
-                <p className="text-2xl font-bold text-blue-600">{campaigns.length}</p>
+                <p className="text-2xl font-bold text-primary-600">{campaigns.length}</p>
                 <p className="text-sm text-gray-600">{t('totalCampaigns')}</p>
               </div>
               <div className="bg-white p-4 rounded-lg shadow text-center">
@@ -299,7 +299,7 @@ export default function GroupDetail() {
                           </span>
                         )}
                         {member.role === 'admin' && (
-                          <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
+                          <span className="text-xs bg-primary-100 text-primary-800 px-2 py-0.5 rounded">
                             {t('admin')}
                           </span>
                         )}
@@ -323,7 +323,7 @@ export default function GroupDetail() {
               <div className="p-4 border-t">
                 <button 
                   onClick={() => setShowInviteModal(true)}
-                  className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 font-semibold"
+                  className="w-full bg-primary-600 text-white py-2 rounded-lg hover:bg-primary-700 font-semibold"
                 >
                   {t('inviteMoreMembers')}
                 </button>
@@ -387,7 +387,7 @@ export default function GroupDetail() {
               <button
                 onClick={handleInviteMembers}
                 disabled={isInviting}
-                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 font-semibold disabled:bg-blue-400"
+                className="flex-1 bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 font-semibold disabled:bg-blue-400"
               >
                 {isInviting ? t('inviting') : t('sendInvites')}
               </button>
@@ -448,7 +448,7 @@ export default function GroupDetail() {
               <button
                 onClick={handleSaveSettings}
                 disabled={isSaving}
-                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 font-semibold disabled:bg-blue-400"
+                className="flex-1 bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 font-semibold disabled:bg-blue-400"
               >
                 {isSaving ? t('saving') : t('saveChanges')}
               </button>
@@ -486,7 +486,7 @@ function CampaignItem({ campaign, onDelete, t }: { campaign: any; onDelete: (id:
     <div className="p-6 hover:bg-gray-50 transition">
       <div className="flex justify-between items-start mb-3">
         <Link href={`/dashboard/campaigns/${campaign.id}`} className="flex-1">
-          <h3 className="font-semibold text-gray-900 hover:text-blue-600">{campaign.title}</h3>
+          <h3 className="font-semibold text-gray-900 hover:text-primary-600">{campaign.title}</h3>
         </Link>
         <div className="flex items-center gap-2">
           {campaign.status === 'completed' && (
@@ -513,7 +513,7 @@ function CampaignItem({ campaign, onDelete, t }: { campaign: any; onDelete: (id:
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
-              className={`h-2 rounded-full ${campaign.status === 'completed' ? 'bg-green-500' : 'bg-blue-600'}`}
+              className={`h-2 rounded-full ${campaign.status === 'completed' ? 'bg-green-500' : 'bg-primary-600'}`}
               style={{ width: `${Math.min(percentage, 100)}%` }}
             />
           </div>

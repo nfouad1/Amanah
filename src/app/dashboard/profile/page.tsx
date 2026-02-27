@@ -173,7 +173,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-gray-50" dir={isRTL ? 'rtl' : 'ltr'}>
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/dashboard" className="text-blue-600 hover:text-blue-700 flex items-center gap-2">
+          <Link href="/dashboard" className="text-primary-600 hover:text-primary-700 flex items-center gap-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -198,7 +198,7 @@ export default function ProfilePage() {
                 onClick={() => setActiveTab('profile')}
                 className={`px-6 py-3 font-medium ${
                   activeTab === 'profile'
-                    ? 'text-blue-600 border-b-2 border-blue-600'
+                    ? 'text-primary-600 border-b-2 border-primary-600'
                     : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
@@ -208,7 +208,7 @@ export default function ProfilePage() {
                 onClick={() => setActiveTab('password')}
                 className={`px-6 py-3 font-medium ${
                   activeTab === 'password'
-                    ? 'text-blue-600 border-b-2 border-blue-600'
+                    ? 'text-primary-600 border-b-2 border-primary-600'
                     : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
@@ -248,8 +248,8 @@ export default function ProfilePage() {
                           className="w-24 h-24 rounded-full object-cover border-4 border-gray-200"
                         />
                       ) : (
-                        <div className="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center border-4 border-gray-200">
-                          <span className="text-3xl font-bold text-blue-600">
+                        <div className="w-24 h-24 rounded-full bg-primary-100 flex items-center justify-center border-4 border-gray-200">
+                          <span className="text-3xl font-bold text-primary-600">
                             {profileForm.name.charAt(0).toUpperCase()}
                           </span>
                         </div>
@@ -266,7 +266,7 @@ export default function ProfilePage() {
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+                        className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 text-sm"
                       >
                         {avatar ? t('changePhoto') : t('uploadPhoto')}
                       </button>
@@ -296,7 +296,7 @@ export default function ProfilePage() {
                     required
                     value={profileForm.name}
                     onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
                 </div>
 
@@ -310,7 +310,7 @@ export default function ProfilePage() {
                     required
                     value={profileForm.email}
                     onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
                 </div>
 
@@ -324,7 +324,7 @@ export default function ProfilePage() {
                     value={profileForm.phone}
                     onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
                     placeholder="+1234567890"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
                 </div>
 
@@ -338,7 +338,7 @@ export default function ProfilePage() {
                     onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
                     placeholder={t('aboutYou')}
                     rows={4}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
                 </div>
 
@@ -346,7 +346,7 @@ export default function ProfilePage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition disabled:bg-blue-400"
+                    className="flex-1 bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition disabled:bg-primary-400"
                   >
                     {isSubmitting ? t('updating') : t('updateProfile')}
                   </button>
@@ -372,7 +372,7 @@ export default function ProfilePage() {
                     required
                     value={passwordForm.currentPassword}
                     onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
                 </div>
 
@@ -385,7 +385,7 @@ export default function ProfilePage() {
                     required
                     value={passwordForm.newPassword}
                     onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
                   <p className="text-xs text-gray-500 mt-1">
                     {t('passwordTooShort')}
@@ -401,7 +401,7 @@ export default function ProfilePage() {
                     required
                     value={passwordForm.confirmNewPassword}
                     onChange={(e) => setPasswordForm({ ...passwordForm, confirmNewPassword: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
                 </div>
 
@@ -409,7 +409,7 @@ export default function ProfilePage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition disabled:bg-blue-400"
+                    className="flex-1 bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition disabled:bg-primary-400"
                   >
                     {isSubmitting ? t('updating') : t('changePassword')}
                   </button>
@@ -437,3 +437,5 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+

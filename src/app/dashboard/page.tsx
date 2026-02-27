@@ -72,22 +72,22 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-warm-50 to-secondary-50" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="header-gradient shadow-lg">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <svg width="40" height="40" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="100" cy="100" r="90" fill="#1E40AF" opacity="0.1"/>
-              <circle cx="100" cy="100" r="25" fill="#F59E0B"/>
+              <circle cx="100" cy="100" r="90" fill="#f97316" opacity="0.15"/>
+              <circle cx="100" cy="100" r="25" fill="#eab308"/>
               <circle cx="100" cy="100" r="20" fill="white"/>
-              <path d="M100 90 C95 90 92 93 92 97 C92 103 100 110 100 110 C100 110 108 103 108 97 C108 93 105 90 100 90Z" fill="#1E40AF"/>
+              <path d="M100 90 C95 90 92 93 92 97 C92 103 100 110 100 110 C100 110 108 103 108 97 C108 93 105 90 100 90Z" fill="#f97316"/>
             </svg>
-            <h1 className="text-2xl font-bold text-gray-900">{t('appName')}</h1>
+            <h1 className="text-2xl font-bold text-white">{t('appName')}</h1>
           </div>
           <div className="flex items-center gap-4">
             <LanguageSwitcher onLanguageChange={handleLanguageChange} />
-            <Link href="/dashboard/profile" className="text-gray-600 hover:text-gray-900 flex items-center gap-2">
+            <Link href="/dashboard/profile" className="text-white hover:text-primary-100 flex items-center gap-2">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
@@ -101,24 +101,24 @@ export default function Dashboard() {
       <div className="container mx-auto px-4 py-8">
         {/* Stats Overview */}
         <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <p className="text-gray-500 text-sm mb-1">{t('myGroups')}</p>
-            <p className="text-3xl font-bold text-gray-900">{groups.length}</p>
+          <div className="card-warm p-6">
+            <p className="text-neutral-600 text-sm mb-1">{t('myGroups')}</p>
+            <p className="text-3xl font-bold text-primary-700">{groups.length}</p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <p className="text-gray-500 text-sm mb-1">{t('activeCampaigns')}</p>
-            <p className="text-3xl font-bold text-blue-600">{activeCampaigns.length}</p>
+          <div className="card-warm p-6">
+            <p className="text-neutral-600 text-sm mb-1">{t('activeCampaigns')}</p>
+            <p className="text-3xl font-bold text-primary-600">{activeCampaigns.length}</p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <p className="text-gray-500 text-sm mb-1">{t('totalContributed')}</p>
-            <p className="text-3xl font-bold text-green-600">
+          <div className="card-warm p-6">
+            <p className="text-neutral-600 text-sm mb-1">{t('totalContributed')}</p>
+            <p className="text-3xl font-bold text-secondary-600">
               {formatCurrency(totalContributed, targetCurrency.code, lang)}
             </p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <p className="text-gray-500 text-sm mb-1">{t('familiesHelped')}</p>
-            <p className="text-3xl font-bold text-amber-600">{familiesHelped}</p>
-            <p className="text-xs text-gray-400 mt-1">{t('completedCampaigns')}</p>
+          <div className="card-warm p-6">
+            <p className="text-neutral-600 text-sm mb-1">{t('familiesHelped')}</p>
+            <p className="text-3xl font-bold text-warm-600">{familiesHelped}</p>
+            <p className="text-xs text-neutral-500 mt-1">{t('completedCampaigns')}</p>
           </div>
         </div>
 
@@ -155,10 +155,10 @@ export default function Dashboard() {
             )}
 
             {/* Active Campaigns */}
-            <div className="bg-white rounded-lg shadow">
-              <div className="p-6 border-b flex justify-between items-center">
-                <h2 className="text-xl font-semibold">{t('activeCampaigns')}</h2>
-                <Link href="/dashboard/campaigns/new" className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+            <div className="card">
+              <div className="p-6 border-b border-primary-100 flex justify-between items-center">
+                <h2 className="text-xl font-semibold text-primary-900">{t('activeCampaigns')}</h2>
+                <Link href="/dashboard/campaigns/new" className="text-primary-600 hover:text-primary-700 text-sm font-medium">
                   {t('newCampaign')}
                 </Link>
               </div>
@@ -181,7 +181,7 @@ export default function Dashboard() {
                 ) : (
                   <div className="p-12 text-center">
                     <p className="text-gray-500 mb-4">No active campaigns yet</p>
-                    <Link href="/dashboard/campaigns/new" className="text-blue-600 hover:text-blue-700 font-medium">
+                    <Link href="/dashboard/campaigns/new" className="text-primary-600 hover:text-primary-700 font-medium">
                       Create your first campaign
                     </Link>
                   </div>
@@ -205,10 +205,10 @@ export default function Dashboard() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* My Groups */}
-            <div className="bg-white rounded-lg shadow">
-              <div className="p-6 border-b flex justify-between items-center">
-                <h2 className="text-xl font-semibold">{t('myGroups')}</h2>
-                <Link href="/dashboard/groups/new" className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+            <div className="card">
+              <div className="p-6 border-b border-primary-100 flex justify-between items-center">
+                <h2 className="text-xl font-semibold text-primary-900">{t('myGroups')}</h2>
+                <Link href="/dashboard/groups/new" className="text-primary-600 hover:text-primary-700 text-sm font-medium">
                   {t('create')}
                 </Link>
               </div>
@@ -220,19 +220,19 @@ export default function Dashboard() {
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold mb-4">{t('quickActions')}</h2>
+            <div className="card p-6">
+              <h2 className="text-xl font-semibold mb-4 text-primary-900">{t('quickActions')}</h2>
               <div className="space-y-3">
-                <Link href="/dashboard/campaigns/new" className="block w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 text-center">
+                <Link href="/dashboard/campaigns/new" className="block w-full btn-primary text-center">
                   {t('startCampaign')}
                 </Link>
-                <Link href="/dashboard/contribute" className="block w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 text-center">
+                <Link href="/dashboard/contribute" className="block w-full btn-secondary text-center">
                   {t('contribute')}
                 </Link>
-                <Link href="/dashboard/groups/new" className="block w-full bg-amber-600 text-white py-2 px-4 rounded-lg hover:bg-amber-700 text-center">
+                <Link href="/dashboard/groups/new" className="block w-full bg-gradient-to-r from-warm-500 to-warm-600 hover:from-warm-600 hover:to-warm-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-center">
                   {t('createGroup')}
                 </Link>
-                <Link href="/dashboard/invites" className="block w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 text-center">
+                <Link href="/dashboard/invites" className="block w-full bg-gradient-to-r from-primary-400 to-secondary-400 hover:from-primary-500 hover:to-secondary-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-center">
                   Manage Invites
                 </Link>
               </div>
@@ -300,7 +300,7 @@ function CampaignCard({ id, title, group, current, target, currency, contributor
                 ? 'bg-red-100 text-red-800' 
                 : daysLeft <= 7 
                   ? 'bg-amber-100 text-amber-800' 
-                  : 'bg-blue-100 text-blue-800'
+                  : 'bg-primary-100 text-primary-800'
             }`}>
               {daysLeft < 0 ? t('overdue') : `${daysLeft} ${t('daysLeft')}`}
             </span>
@@ -323,7 +323,7 @@ function CampaignCard({ id, title, group, current, target, currency, contributor
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
           <div 
-            className={`h-2 rounded-full ${completed ? 'bg-green-500' : isPending ? 'bg-amber-500' : 'bg-blue-600'}`}
+            className={`h-2 rounded-full ${completed ? 'bg-green-500' : isPending ? 'bg-amber-500' : 'bg-primary-600'}`}
             style={{ width: `${Math.min(percentage, 100)}%` }}
           />
         </div>
@@ -331,7 +331,7 @@ function CampaignCard({ id, title, group, current, target, currency, contributor
       <div className="flex justify-between items-center text-sm">
         <div className="flex items-center gap-3">
           <span className="text-gray-500">{contributors} {t('contributors')}</span>
-          <div className={`flex items-center gap-1 ${isPending ? 'text-amber-600' : 'text-blue-600'}`}>
+          <div className={`flex items-center gap-1 ${isPending ? 'text-amber-600' : 'text-primary-600'}`}>
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
             </svg>
@@ -405,3 +405,5 @@ function GroupCard({ id, name, members }: { id: string; name: string; members: n
     </Link>
   );
 }
+
+

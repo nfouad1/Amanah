@@ -72,7 +72,7 @@ export default function Contribute() {
     <div className="min-h-screen bg-gray-50" dir={isRTL ? 'rtl' : 'ltr'}>
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/dashboard" className="text-blue-600 hover:text-blue-700 flex items-center gap-2">
+          <Link href="/dashboard" className="text-primary-600 hover:text-primary-700 flex items-center gap-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -98,7 +98,7 @@ export default function Contribute() {
                 required
                 value={formData.campaignId}
                 onChange={(e) => setFormData({ ...formData, campaignId: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               >
                 <option value="">{t('chooseCampaign')}</option>
                 {campaigns.map(campaign => (
@@ -121,7 +121,7 @@ export default function Contribute() {
                       <p className="text-sm text-gray-600 mb-2">{selectedCampaign.description}</p>
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-600">{selectedCampaign.contributors} {t('contributors')}</span>
-                        <span className="text-blue-600 font-medium">{percentage.toFixed(0)}% funded</span>
+                        <span className="text-primary-600 font-medium">{percentage.toFixed(0)}% funded</span>
                       </div>
                     </>
                   );
@@ -144,7 +144,7 @@ export default function Contribute() {
                   value={formData.amount}
                   onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                   placeholder={quickAmounts[2].toString()}
-                  className={`w-full ${isRTL ? 'pr-12 pl-4' : 'pl-12 pr-4'} py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                  className={`w-full ${isRTL ? 'pr-12 pl-4' : 'pl-12 pr-4'} py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent`}
                 />
               </div>
               <div className="flex gap-2 mt-3">
@@ -168,7 +168,7 @@ export default function Contribute() {
                   id="recurring"
                   checked={formData.isRecurring}
                   onChange={(e) => setFormData({ ...formData, isRecurring: e.target.checked })}
-                  className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-5 h-5 text-primary-600 rounded focus:ring-2 focus:ring-primary-500"
                 />
                 <label htmlFor="recurring" className="text-sm font-medium text-gray-700">
                   {t('recurringContribution')}
@@ -183,7 +183,7 @@ export default function Contribute() {
                   <select
                     value={formData.frequency}
                     onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   >
                     <option value="weekly">{t('weekly')}</option>
                     <option value="monthly">{t('monthly')}</option>
@@ -201,7 +201,7 @@ export default function Contribute() {
                   id="private"
                   checked={formData.isPrivate}
                   onChange={(e) => setFormData({ ...formData, isPrivate: e.target.checked })}
-                  className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-5 h-5 text-primary-600 rounded focus:ring-2 focus:ring-primary-500"
                 />
                 <label htmlFor="private" className="text-sm font-medium text-gray-700">
                   {t('makePrivate')}
@@ -243,3 +243,4 @@ export default function Contribute() {
     </div>
   );
 }
+
