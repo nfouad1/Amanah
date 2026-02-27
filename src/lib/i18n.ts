@@ -241,6 +241,33 @@ export const translations = {
     currentPasswordWrong: 'Current password is incorrect',
     passwordsNotMatch: 'New passwords do not match',
     passwordTooShortNew: 'New password must be at least 6 characters',
+    
+    // Invite Management
+    manageInvites: 'Manage Invites',
+    createInvite: 'Create Invite',
+    inviteCodes: 'Invite Codes',
+    shareInviteCodes: 'Share invite codes with family members to allow them to register. Each code can only be used once.',
+    code: 'Code',
+    status: 'Status',
+    usedBy: 'Used By',
+    created: 'Created',
+    actions: 'Actions',
+    copyInviteLink: 'Copy invite link',
+    deactivate: 'Deactivate',
+    deactivated: 'Deactivated',
+    createInviteCode: 'Create Invite Code',
+    maxUses: 'Maximum Uses',
+    maxUsesDesc: 'How many times this code can be used (leave 1 for single use)',
+    expiresIn: 'Expires In',
+    expiresInDesc: 'How many days until this code expires',
+    days: 'days',
+    confirmDeactivate: 'Are you sure you want to deactivate invite code: {code}?',
+    inviteCreatedSuccess: 'Invite code created successfully!',
+    inviteCopied: 'Invite link copied to clipboard!',
+    
+    // Empty States
+    noActiveCampaigns: 'No active campaigns yet',
+    createFirstCampaignBtn: 'Create your first campaign',
   },
   ar: {
     // Landing Page
@@ -482,6 +509,33 @@ export const translations = {
     currentPasswordWrong: 'كلمة المرور الحالية غير صحيحة',
     passwordsNotMatch: 'كلمات المرور الجديدة غير متطابقة',
     passwordTooShortNew: 'يجب أن تكون كلمة المرور الجديدة 6 أحرف على الأقل',
+    
+    // Invite Management
+    manageInvites: 'إدارة الدعوات',
+    createInvite: 'إنشاء دعوة',
+    inviteCodes: 'رموز الدعوة',
+    shareInviteCodes: 'شارك رموز الدعوة مع أفراد العائلة للسماح لهم بالتسجيل. كل رمز يمكن استخدامه مرة واحدة فقط.',
+    code: 'الرمز',
+    status: 'الحالة',
+    usedBy: 'مستخدم من قبل',
+    created: 'تم الإنشاء',
+    actions: 'الإجراءات',
+    copyInviteLink: 'نسخ رابط الدعوة',
+    deactivate: 'إلغاء التفعيل',
+    deactivated: 'غير مفعل',
+    createInviteCode: 'إنشاء رمز دعوة',
+    maxUses: 'الحد الأقصى للاستخدامات',
+    maxUsesDesc: 'كم مرة يمكن استخدام هذا الرمز (اترك 1 للاستخدام الفردي)',
+    expiresIn: 'تنتهي صلاحيته في',
+    expiresInDesc: 'كم يوماً حتى تنتهي صلاحية هذا الرمز',
+    days: 'أيام',
+    confirmDeactivate: 'هل أنت متأكد من إلغاء تفعيل رمز الدعوة: {code}؟',
+    inviteCreatedSuccess: 'تم إنشاء رمز الدعوة بنجاح!',
+    inviteCopied: 'تم نسخ رابط الدعوة إلى الحافظة!',
+    
+    // Empty States
+    noActiveCampaigns: 'لا توجد حملات نشطة بعد',
+    createFirstCampaignBtn: 'أنشئ حملتك الأولى',
   },
   sv: {
     // Landing Page
@@ -723,6 +777,33 @@ export const translations = {
     currentPasswordWrong: 'Nuvarande lösenord är felaktigt',
     passwordsNotMatch: 'Nya lösenord matchar inte',
     passwordTooShortNew: 'Nytt lösenord måste vara minst 6 tecken',
+    
+    // Invite Management
+    manageInvites: 'Hantera inbjudningar',
+    createInvite: 'Skapa inbjudan',
+    inviteCodes: 'Inbjudningskoder',
+    shareInviteCodes: 'Dela inbjudningskoder med familjemedlemmar för att låta dem registrera sig. Varje kod kan endast användas en gång.',
+    code: 'Kod',
+    status: 'Status',
+    usedBy: 'Använd av',
+    created: 'Skapad',
+    actions: 'Åtgärder',
+    copyInviteLink: 'Kopiera inbjudningslänk',
+    deactivate: 'Inaktivera',
+    deactivated: 'Inaktiverad',
+    createInviteCode: 'Skapa inbjudningskod',
+    maxUses: 'Max användningar',
+    maxUsesDesc: 'Hur många gånger denna kod kan användas (lämna 1 för engångsbruk)',
+    expiresIn: 'Går ut om',
+    expiresInDesc: 'Hur många dagar tills denna kod går ut',
+    days: 'dagar',
+    confirmDeactivate: 'Är du säker på att du vill inaktivera inbjudningskod: {code}?',
+    inviteCreatedSuccess: 'Inbjudningskod skapad!',
+    inviteCopied: 'Inbjudningslänk kopierad till urklipp!',
+    
+    // Empty States
+    noActiveCampaigns: 'Inga aktiva kampanjer än',
+    createFirstCampaignBtn: 'Skapa din första kampanj',
   },
 };
 

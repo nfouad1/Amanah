@@ -48,11 +48,12 @@ export default function InvitesPage() {
     const newInvite = createInviteCode(user.name, expiryDays);
     loadInviteCodes();
     setShowCreateModal(false);
-    alert(`Invite code created: ${newInvite.code}`);
+    alert(t('inviteCreatedSuccess'));
   };
 
   const handleDeactivate = (code: string) => {
-    if (confirm(`Are you sure you want to deactivate invite code: ${code}?`)) {
+    const message = t('confirmDeactivate').replace('{code}', code);
+    if (confirm(message)) {
       deactivateInviteCode(code);
       loadInviteCodes();
     }
@@ -61,7 +62,7 @@ export default function InvitesPage() {
   const copyToClipboard = (code: string) => {
     const inviteUrl = `${window.location.origin}/register?invite=${code}`;
     navigator.clipboard.writeText(inviteUrl);
-    alert('Invite link copied to clipboard!');
+    alert(t('inviteCopied'));
   };
 
   if (!mounted || !user) {
@@ -85,20 +86,20 @@ export default function InvitesPage() {
         <div className="bg-white rounded-lg shadow p-8 mb-8">
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Invite Codes</h1>
-              <p className="text-gray-600">Manage family invite codes</p>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('inviteCodes')}</h1>
+              <p className="text-gray-600">{t('manageInvites')}</p>
             </div>
             <button
               onClick={() => setShowCreateModal(true)}
               className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 font-semibold"
             >
-              + Create Invite
+              + {t('createInvite')}
             </button>
           </div>
 
           <div className="bg-primary-50 border border-primary-200 rounded-lg p-4 mb-6">
             <p className="text-sm text-primary-800">
-              Share invite codes with family members to allow them to register. Each code can only be used once.
+              {t('shareInviteCodes')}
             </p>
           </div>
 
@@ -115,20 +116,19 @@ export default function InvitesPage() {
                         <span className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Used</span>
                       )}
                       {!invite.isActive && (
-                        <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">Deactivated</span>
+                        <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">{t('deactivated')}</span>
                       )}
                       {invite.isActive && !invite.usedBy && (
-                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Active</span>
+                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">{t('active')}</span>
                       )}
                     </div>
                     <div className="text-sm text-gray-600 space-y-1">
-                      <p>Created by: {invite.createdBy}</p>
-                      <p>Created: {new Date(invite.createdAt).toLocaleDateString()}</p>
+                      <p>{t('created')}: {new Date(invite.createdAt).toLocaleDateString()}</p>
                       {invite.expiresAt && (
                         <p>Expires: {new Date(invite.expiresAt).toLocaleDateString()}</p>
                       )}
                       {invite.usedBy && invite.usedAt && (
-                        <p>Used: {new Date(invite.usedAt).toLocaleDateString()}</p>
+                        <p>{t('usedBy')}: {invite.usedBy} - {new Date(invite.usedAt).toLocaleDateString()}</p>
                       )}
                     </div>
                   </div>
@@ -138,7 +138,7 @@ export default function InvitesPage() {
                         <button
                           onClick={() => copyToClipboard(invite.code)}
                           className="text-primary-600 hover:text-primary-700 p-2"
-                          title="Copy invite link"
+                          title={t('copyInviteLink')}
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -147,7 +147,7 @@ export default function InvitesPage() {
                         <button
                           onClick={() => handleDeactivate(invite.code)}
                           className="text-red-600 hover:text-red-700 p-2"
-                          title="Deactivate"
+                          title={t('deactivate')}
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -168,7 +168,7 @@ export default function InvitesPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold text-gray-900">Create Invite Code</h3>
+              <h3 className="text-xl font-bold text-gray-900">{t('createInviteCode')}</h3>
               <button
                 onClick={() => setShowCreateModal(false)}
                 className="text-gray-400 hover:text-gray-600"
@@ -203,13 +203,13 @@ export default function InvitesPage() {
                 onClick={handleCreateInvite}
                 className="flex-1 bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 font-semibold"
               >
-                Create Invite
+                {t('createInvite')}
               </button>
               <button
                 onClick={() => setShowCreateModal(false)}
                 className="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 font-semibold"
               >
-                Cancel
+                {t('cancel')}
               </button>
             </div>
           </div>

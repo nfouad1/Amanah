@@ -68,7 +68,7 @@ export default function Dashboard() {
   const familiesHelped = uniqueBeneficiaries.size;
 
   if (!user) {
-    return <div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>;
+    return <div className="min-h-screen bg-gray-50 flex items-center justify-center">{t('loading')}</div>;
   }
 
   return (
@@ -180,9 +180,9 @@ export default function Dashboard() {
                   ))
                 ) : (
                   <div className="p-12 text-center">
-                    <p className="text-gray-500 mb-4">No active campaigns yet</p>
+                    <p className="text-gray-500 mb-4">{t('noActiveCampaigns')}</p>
                     <Link href="/dashboard/campaigns/new" className="text-primary-600 hover:text-primary-700 font-medium">
-                      Create your first campaign
+                      {t('createFirstCampaignBtn')}
                     </Link>
                   </div>
                 )}
@@ -233,7 +233,7 @@ export default function Dashboard() {
                   {t('createGroup')}
                 </Link>
                 <Link href="/dashboard/invites" className="block w-full bg-gradient-to-r from-primary-400 to-secondary-400 hover:from-primary-500 hover:to-secondary-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-center">
-                  Manage Invites
+                  {t('manageInvites')}
                 </Link>
               </div>
             </div>
