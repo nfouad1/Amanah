@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
-import { getInviteCodes, createInviteCode, deactivateInviteCode, getActiveInviteCount, getMaxInvites, type InviteCode } from '@/lib/mockData';
+import { getInviteCodes, createInviteCode, deactivateInviteCode, getActiveInviteCount, getMaxInvites, getGroups, type InviteCode } from '@/lib/mockData';
 import { getLanguage, getTranslation, Language, translations } from '@/lib/i18n';
 
 export default function InvitesPage() {
@@ -12,10 +12,12 @@ export default function InvitesPage() {
   const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [inviteCodes, setInviteCodes] = useState<InviteCode[]>([]);
+  const [groups, setGroups] = useState<any[]>([]);
   const [lang, setLang] = useState<Language>('en');
   const [isRTL, setIsRTL] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [expiryDays, setExpiryDays] = useState<number>(30);
+  const [selectedGroupId, setSelectedGroupId] = useState<string>('');
 
   useEffect(() => {
     setMounted(true);
@@ -31,11 +33,18 @@ export default function InvitesPage() {
     setIsRTL(currentLang === 'ar');
     
     loadInviteCodes();
+    loadGroups();
   }, [router]);
 
   const loadInviteCodes = () => {
     if (typeof window !== 'undefined') {
       setInviteCodes(getInviteCodes());
+    }
+  };
+  
+  const loadGroups = () => {
+    if (typeof window !== 'undefined') {
+      setGroups(getGroups());
     }
   };
 
@@ -46,7 +55,14 @@ export default function InvitesPage() {
 
   const handleCreateInvite = () => {
     try {
-      const newInvite = createInviteCode(user.name, expiryDays, user.role);
+      const selectedGroup = selectedGroupId ? groups.find(g => g.id === selectedGroupId) : null;
+      const newInvite = createInviteCode(
+        user.name, 
+        expiryDays, 
+        user.role,
+        selectedGroupId || undefined,
+        selectedGroup?.name || undefined
+      );
       
       if (!newInvite) {
         alert(t('inviteLimitReached'));
@@ -55,7 +71,13 @@ export default function InvitesPage() {
       
       loadInviteCodes();
       setShowCreateModal(false);
-      alert(t('inviteCreatedSuccess') + '\n' + t('code') + ': ' + newInvite.code);
+      setSelectedGroupId(''); // Reset selection
+      
+      const message = selectedGroup 
+        ? t('inviteCreatedSuccess') + '\n' + t('code') + ': ' + newInvite.code + '\n' + t('forGroup') + ': ' + selectedGroup.name
+        : t('inviteCreatedSuccess') + '\n' + t('code') + ': ' + newInvite.code;
+      
+      alert(message);
     } catch (error) {
       console.error('Error creating invite:', error);
       alert('Failed to create invite code. Please try again.');
@@ -145,6 +167,11 @@ export default function InvitesPage() {
                       <code className="text-lg font-mono font-bold text-gray-900 bg-gray-100 px-3 py-1 rounded">
                         {invite.code}
                       </code>
+                      {invite.groupName && (
+                        <span className="text-xs bg-primary-100 text-primary-800 px-2 py-1 rounded font-semibold">
+                          👥 {invite.groupName}
+                        </span>
+                      )}
                       {invite.usedBy && (
                         <span className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Used</span>
                       )}
@@ -213,6 +240,27 @@ export default function InvitesPage() {
             </div>
             
             <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('selectGroup')} ({t('optional')})
+                </label>
+                <select
+                  value={selectedGroupId}
+                  onChange={(e) => setSelectedGroupId(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                >
+                  <option value="">{t('generalInvite')}</option>
+                  {groups.map((group) => (
+                    <option key={group.id} value={group.id}>
+                      {group.name}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  {t('groupInviteDesc')}
+                </p>
+              </div>
+              
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   {t('expiresIn')} ({t('days')})

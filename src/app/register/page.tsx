@@ -84,10 +84,21 @@ export default function Register() {
     const result = register(formData.email, formData.password, formData.name);
     
     if (result.success) {
+      // Get invite code details to check for group
+      const { getInviteCodeByCode, addUserToGroup, useInviteCode } = await import('@/lib/mockData');
+      const inviteCode = getInviteCodeByCode(formData.inviteCode);
+      
+      // If invite is group-specific, add user to that group
+      if (inviteCode?.groupId && result.user) {
+        console.log('Adding user to group:', inviteCode.groupId);
+        addUserToGroup(inviteCode.groupId, result.user.id, result.user.name, result.user.email);
+      }
+      
       // Mark invite code as used
       console.log('Marking invite code as used:', formData.inviteCode);
       const codeUsed = useInviteCode(formData.inviteCode, result.user?.id || 'unknown');
       console.log('Invite code marked as used:', codeUsed);
+      
       router.push('/dashboard');
     } else {
       setError(result.error === 'Email already registered' ? t('emailAlreadyRegistered') : result.error || 'Registration failed');

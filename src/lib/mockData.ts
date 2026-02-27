@@ -58,6 +58,8 @@ export interface InviteCode {
   usedAt?: string;
   expiresAt?: string;
   isActive: boolean;
+  groupId?: string; // Optional: if set, user will be added to this group automatically
+  groupName?: string; // For display purposes
 }
 
 // Default campaigns
@@ -621,7 +623,13 @@ export function useInviteCode(code: string, userId: string): boolean {
   return true;
 }
 
-export function createInviteCode(createdBy: string, expiresInDays?: number, userRole?: string): InviteCode | null {
+export function createInviteCode(
+  createdBy: string, 
+  expiresInDays?: number, 
+  userRole?: string,
+  groupId?: string,
+  groupName?: string
+): InviteCode | null {
   const inviteCodes = getInviteCodes();
   
   // Check invite limit for non-admin users
@@ -649,6 +657,12 @@ export function createInviteCode(createdBy: string, expiresInDays?: number, user
     createdAt: new Date().toISOString(),
     isActive: true,
   };
+  
+  // Add group info if provided
+  if (groupId) {
+    newInvite.groupId = groupId;
+    newInvite.groupName = groupName;
+  }
   
   if (expiresInDays) {
     const expiryDate = new Date();
@@ -687,4 +701,51 @@ export function deactivateInviteCode(code: string): boolean {
   localStorage.setItem('amanah_invite_codes', JSON.stringify(inviteCodes));
   
   return true;
+}
+
+// Add user to group (used when registering with group-specific invite)
+export function addUserToGroup(groupId: string, userId: string, userName: string, userEmail: string): boolean {
+  const groups = getGroups();
+  const groupIndex = groups.findIndex(g => g.id === groupId);
+  
+  if (groupIndex === -1) return false;
+  
+  const group = groups[groupIndex];
+  
+  // Initialize memberList if it doesn't exist
+  if (!group.memberList) {
+    group.memberList = [];
+  }
+  
+  // Check if user is already in the group
+  if (group.memberList.some(m => m.contact === userEmail)) {
+    return true; // Already a member
+  }
+  
+  // Get next member ID
+  const nextId = group.memberList.length > 0 
+    ? Math.max(...group.memberList.map(m => parseInt(m.id)), 0) + 1 
+    : 1;
+  
+  // Add user to group
+  group.memberList.push({
+    id: nextId.toString(),
+    name: userName,
+    contact: userEmail,
+    role: 'member',
+    status: 'active',
+    joinedDate: new Date().toISOString(),
+  });
+  
+  group.members = group.memberList.length;
+  groups[groupIndex] = group;
+  localStorage.setItem('amanah_groups', JSON.stringify(groups));
+  
+  return true;
+}
+
+// Get invite code with group info
+export function getInviteCodeByCode(code: string): InviteCode | null {
+  const inviteCodes = getInviteCodes();
+  return inviteCodes.find(i => i.code.toUpperCase() === code.toUpperCase()) || null;
 }

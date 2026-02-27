@@ -282,6 +282,12 @@ export const translations = {
     confirmRemoveAdmin: 'Are you sure you want to remove admin rights from {name}?',
     userRoleUpdated: 'User role updated successfully!',
     onlyAdminsCanManage: 'Only admins can manage user roles',
+    
+    // Group-specific invites
+    optional: 'Optional',
+    generalInvite: 'General invite (no group)',
+    groupInviteDesc: 'If you select a group, new users will automatically be added to that group',
+    forGroup: 'For group',
   },
   ar: {
     // Landing Page
@@ -564,6 +570,12 @@ export const translations = {
     confirmRemoveAdmin: 'هل أنت متأكد من إزالة صلاحيات المسؤول من {name}؟',
     userRoleUpdated: 'تم تحديث دور المستخدم بنجاح!',
     onlyAdminsCanManage: 'يمكن للمسؤولين فقط إدارة أدوار المستخدمين',
+    
+    // Group-specific invites
+    optional: 'اختياري',
+    generalInvite: 'دعوة عامة (بدون مجموعة)',
+    groupInviteDesc: 'إذا اخترت مجموعة، سيتم إضافة المستخدمين الجدد تلقائياً إلى تلك المجموعة',
+    forGroup: 'للمجموعة',
   },
   sv: {
     // Landing Page
@@ -846,6 +858,12 @@ export const translations = {
     confirmRemoveAdmin: 'Är du säker på att du vill ta bort admin-rättigheter från {name}?',
     userRoleUpdated: 'Användarroll uppdaterad!',
     onlyAdminsCanManage: 'Endast admins kan hantera användarroller',
+    
+    // Group-specific invites
+    optional: 'Valfritt',
+    generalInvite: 'Allmän inbjudan (ingen grupp)',
+    groupInviteDesc: 'Om du väljer en grupp kommer nya användare automatiskt att läggas till i den gruppen',
+    forGroup: 'För grupp',
   },
 };
 
