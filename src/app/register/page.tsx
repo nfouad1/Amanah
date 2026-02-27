@@ -63,7 +63,8 @@ export default function Register() {
     const inviteValidation = validateInviteCode(formData.inviteCode);
     
     if (!inviteValidation.valid) {
-      setError(t('inviteCodeInvalid'));
+      console.log('Invite validation failed:', inviteValidation.message);
+      setError(inviteValidation.message || t('inviteCodeInvalid'));
       return;
     }
 
@@ -84,7 +85,9 @@ export default function Register() {
     
     if (result.success) {
       // Mark invite code as used
-      useInviteCode(formData.inviteCode, result.user?.id || 'unknown');
+      console.log('Marking invite code as used:', formData.inviteCode);
+      const codeUsed = useInviteCode(formData.inviteCode, result.user?.id || 'unknown');
+      console.log('Invite code marked as used:', codeUsed);
       router.push('/dashboard');
     } else {
       setError(result.error === 'Email already registered' ? t('emailAlreadyRegistered') : result.error || 'Registration failed');

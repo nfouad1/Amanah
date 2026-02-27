@@ -45,10 +45,15 @@ export default function InvitesPage() {
   };
 
   const handleCreateInvite = () => {
-    const newInvite = createInviteCode(user.name, expiryDays);
-    loadInviteCodes();
-    setShowCreateModal(false);
-    alert(t('inviteCreatedSuccess'));
+    try {
+      const newInvite = createInviteCode(user.name, expiryDays);
+      loadInviteCodes();
+      setShowCreateModal(false);
+      alert(t('inviteCreatedSuccess') + '\n' + t('code') + ': ' + newInvite.code);
+    } catch (error) {
+      console.error('Error creating invite:', error);
+      alert('Failed to create invite code. Please try again.');
+    }
   };
 
   const handleDeactivate = (code: string) => {
@@ -60,9 +65,20 @@ export default function InvitesPage() {
   };
 
   const copyToClipboard = (code: string) => {
-    const inviteUrl = `${window.location.origin}/register?invite=${code}`;
-    navigator.clipboard.writeText(inviteUrl);
-    alert(t('inviteCopied'));
+    try {
+      const inviteUrl = `${window.location.origin}/register?invite=${code}`;
+      navigator.clipboard.writeText(inviteUrl).then(() => {
+        alert(t('inviteCopied') + '\n' + inviteUrl);
+      }).catch((err) => {
+        console.error('Failed to copy:', err);
+        // Fallback: show the URL in an alert so user can copy manually
+        alert(t('copyInviteLink') + ':\n' + inviteUrl);
+      });
+    } catch (error) {
+      console.error('Clipboard error:', error);
+      const inviteUrl = `${window.location.origin}/register?invite=${code}`;
+      alert(t('copyInviteLink') + ':\n' + inviteUrl);
+    }
   };
 
   if (!mounted || !user) {
@@ -182,18 +198,18 @@ export default function InvitesPage() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Expires in (days)
+                  {t('expiresIn')} ({t('days')})
                 </label>
                 <input
                   type="number"
                   value={expiryDays}
-                  onChange={(e) => setExpiryDays(parseInt(e.target.value))}
+                  onChange={(e) => setExpiryDays(parseInt(e.target.value) || 30)}
                   min="1"
                   max="365"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  Leave as 30 for default (30 days)
+                  {t('expiresInDesc')}
                 </p>
               </div>
             </div>
