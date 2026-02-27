@@ -122,3 +122,90 @@ export function logout(): void {
 export function isAuthenticated(): boolean {
   return getCurrentUser() !== null;
 }
+
+// Update user profile
+export function updateProfile(userId: string, updates: { name?: string; email?: string; phone?: string; bio?: string; avatar?: string }): { success: boolean; error?: string; user?: User } {
+  const users = getUsers();
+  const userIndex = users.findIndex(u => u.id === userId);
+  
+  if (userIndex === -1) {
+    return { success: false, error: 'User not found' };
+  }
+  
+  // Check if new email is already taken by another user
+  if (updates.email && updates.email !== users[userIndex].email) {
+    if (users.find(u => u.email === updates.email && u.id !== userId)) {
+      return { success: false, error: 'Email already in use' };
+    }
+  }
+  
+  // Update user
+  const updatedAuthUser = {
+    ...users[userIndex],
+    ...updates,
+  };
+  
+  users[userIndex] = updatedAuthUser;
+  saveUsers(users);
+  
+  // Update current user session
+  const updatedUser: User = {
+    id: updatedAuthUser.id,
+    email: updatedAuthUser.email,
+    name: updatedAuthUser.name,
+    createdAt: updatedAuthUser.createdAt,
+  };
+  setCurrentUser(updatedUser);
+  
+  return { success: true, user: updatedUser };
+}
+
+// Change password
+export function changePassword(userId: string, currentPassword: string, newPassword: string): { success: boolean; error?: string } {
+  const users = getUsers();
+  const userIndex = users.findIndex(u => u.id === userId);
+  
+  if (userIndex === -1) {
+    return { success: false, error: 'User not found' };
+  }
+  
+  // Verify current password
+  if (users[userIndex].password !== currentPassword) {
+    return { success: false, error: 'Current password is incorrect' };
+  }
+  
+  // Update password
+  users[userIndex].password = newPassword; // In production, hash this!
+  saveUsers(users);
+  
+  return { success: true };
+}
+
+// Get user profile (including additional fields)
+export function getUserProfile(userId: string): any | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const profiles = localStorage.getItem('amanah_user_profiles');
+    const profilesData = profiles ? JSON.parse(profiles) : {};
+    return profilesData[userId] || null;
+  } catch (error) {
+    console.error('Error loading user profile:', error);
+    return null;
+  }
+}
+
+// Save user profile (additional fields like phone, bio, avatar)
+export function saveUserProfile(userId: string, profile: { phone?: string; bio?: string; avatar?: string }): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const profiles = localStorage.getItem('amanah_user_profiles');
+    const profilesData = profiles ? JSON.parse(profiles) : {};
+    profilesData[userId] = {
+      ...profilesData[userId],
+      ...profile,
+    };
+    localStorage.setItem('amanah_user_profiles', JSON.stringify(profilesData));
+  } catch (error) {
+    console.error('Error saving user profile:', error);
+  }
+}
