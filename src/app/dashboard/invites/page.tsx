@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
-import { getInviteCodes, createInviteCode, deactivateInviteCode, type InviteCode } from '@/lib/mockData';
+import { getInviteCodes, createInviteCode, deactivateInviteCode, getActiveInviteCount, getMaxInvites, type InviteCode } from '@/lib/mockData';
 import { getLanguage, getTranslation, Language, translations } from '@/lib/i18n';
 
 export default function InvitesPage() {
@@ -46,7 +46,13 @@ export default function InvitesPage() {
 
   const handleCreateInvite = () => {
     try {
-      const newInvite = createInviteCode(user.name, expiryDays);
+      const newInvite = createInviteCode(user.name, expiryDays, user.role);
+      
+      if (!newInvite) {
+        alert(t('inviteLimitReached'));
+        return;
+      }
+      
       loadInviteCodes();
       setShowCreateModal(false);
       alert(t('inviteCreatedSuccess') + '\n' + t('code') + ': ' + newInvite.code);
@@ -104,10 +110,21 @@ export default function InvitesPage() {
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('inviteCodes')}</h1>
               <p className="text-gray-600">{t('manageInvites')}</p>
+              {user.role !== 'admin' && (
+                <p className="text-sm text-primary-600 mt-2">
+                  {t('activeInvites')}: {getActiveInviteCount(user.name)} / {getMaxInvites(user.role)}
+                </p>
+              )}
+              {user.role === 'admin' && (
+                <p className="text-sm text-warm-600 mt-2 font-semibold">
+                  👑 {t('adminUnlimitedInvites')}
+                </p>
+              )}
             </div>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 font-semibold"
+              disabled={user.role !== 'admin' && getActiveInviteCount(user.name) >= getMaxInvites(user.role)}
+              className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
               + {t('createInvite')}
             </button>

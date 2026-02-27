@@ -268,6 +268,20 @@ export const translations = {
     // Empty States
     noActiveCampaigns: 'No active campaigns yet',
     createFirstCampaignBtn: 'Create your first campaign',
+    
+    // User Management
+    activeInvites: 'Active invites',
+    adminUnlimitedInvites: 'Admin - Unlimited invites',
+    inviteLimitReached: 'You have reached your invite limit (5 active invites). Deactivate or wait for existing invites to be used.',
+    userManagement: 'User Management',
+    allUsers: 'All Users',
+    makeAdmin: 'Make Admin',
+    removeAdmin: 'Remove Admin',
+    member: 'Member',
+    confirmMakeAdmin: 'Are you sure you want to make {name} an admin? They will have full access to manage users and invites.',
+    confirmRemoveAdmin: 'Are you sure you want to remove admin rights from {name}?',
+    userRoleUpdated: 'User role updated successfully!',
+    onlyAdminsCanManage: 'Only admins can manage user roles',
   },
   ar: {
     // Landing Page
@@ -536,6 +550,20 @@ export const translations = {
     // Empty States
     noActiveCampaigns: 'لا توجد حملات نشطة بعد',
     createFirstCampaignBtn: 'أنشئ حملتك الأولى',
+    
+    // User Management
+    activeInvites: 'الدعوات النشطة',
+    adminUnlimitedInvites: 'مسؤول - دعوات غير محدودة',
+    inviteLimitReached: 'لقد وصلت إلى حد الدعوات (5 دعوات نشطة). قم بإلغاء تفعيل أو انتظر استخدام الدعوات الحالية.',
+    userManagement: 'إدارة المستخدمين',
+    allUsers: 'جميع المستخدمين',
+    makeAdmin: 'جعله مسؤول',
+    removeAdmin: 'إزالة صلاحيات المسؤول',
+    member: 'عضو',
+    confirmMakeAdmin: 'هل أنت متأكد من جعل {name} مسؤولاً؟ سيكون لديه وصول كامل لإدارة المستخدمين والدعوات.',
+    confirmRemoveAdmin: 'هل أنت متأكد من إزالة صلاحيات المسؤول من {name}؟',
+    userRoleUpdated: 'تم تحديث دور المستخدم بنجاح!',
+    onlyAdminsCanManage: 'يمكن للمسؤولين فقط إدارة أدوار المستخدمين',
   },
   sv: {
     // Landing Page
@@ -804,6 +832,20 @@ export const translations = {
     // Empty States
     noActiveCampaigns: 'Inga aktiva kampanjer än',
     createFirstCampaignBtn: 'Skapa din första kampanj',
+    
+    // User Management
+    activeInvites: 'Aktiva inbjudningar',
+    adminUnlimitedInvites: 'Admin - Obegränsade inbjudningar',
+    inviteLimitReached: 'Du har nått din inbjudningsgräns (5 aktiva inbjudningar). Inaktivera eller vänta tills befintliga inbjudningar används.',
+    userManagement: 'Användarhantering',
+    allUsers: 'Alla användare',
+    makeAdmin: 'Gör till admin',
+    removeAdmin: 'Ta bort admin',
+    member: 'Medlem',
+    confirmMakeAdmin: 'Är du säker på att du vill göra {name} till admin? De kommer att ha full åtkomst för att hantera användare och inbjudningar.',
+    confirmRemoveAdmin: 'Är du säker på att du vill ta bort admin-rättigheter från {name}?',
+    userRoleUpdated: 'Användarroll uppdaterad!',
+    onlyAdminsCanManage: 'Endast admins kan hantera användarroller',
   },
 };
 

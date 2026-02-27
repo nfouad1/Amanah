@@ -621,8 +621,23 @@ export function useInviteCode(code: string, userId: string): boolean {
   return true;
 }
 
-export function createInviteCode(createdBy: string, expiresInDays?: number): InviteCode {
+export function createInviteCode(createdBy: string, expiresInDays?: number, userRole?: string): InviteCode | null {
   const inviteCodes = getInviteCodes();
+  
+  // Check invite limit for non-admin users
+  const MAX_ACTIVE_INVITES_PER_MEMBER = 5;
+  
+  if (userRole !== 'admin') {
+    const userActiveInvites = inviteCodes.filter(
+      invite => invite.createdBy === createdBy && 
+                invite.isActive && 
+                !invite.usedBy
+    );
+    
+    if (userActiveInvites.length >= MAX_ACTIVE_INVITES_PER_MEMBER) {
+      return null; // Limit reached
+    }
+  }
   
   // Generate random code
   const code = 'FAM-' + Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -645,6 +660,21 @@ export function createInviteCode(createdBy: string, expiresInDays?: number): Inv
   localStorage.setItem('amanah_invite_codes', JSON.stringify(inviteCodes));
   
   return newInvite;
+}
+
+// Get active invite count for a user
+export function getActiveInviteCount(createdBy: string): number {
+  const inviteCodes = getInviteCodes();
+  return inviteCodes.filter(
+    invite => invite.createdBy === createdBy && 
+              invite.isActive && 
+              !invite.usedBy
+  ).length;
+}
+
+// Get max invites allowed
+export function getMaxInvites(userRole?: string): number {
+  return userRole === 'admin' ? Infinity : 5;
 }
 
 export function deactivateInviteCode(code: string): boolean {

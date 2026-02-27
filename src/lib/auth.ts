@@ -1,10 +1,13 @@
 // Simple authentication system using localStorage
 // In production, this would be replaced with proper backend authentication
 
+export type UserRole = 'admin' | 'member';
+
 export interface User {
   id: string;
   email: string;
   name: string;
+  role: UserRole;
   createdAt: string;
 }
 
@@ -69,12 +72,16 @@ export function register(email: string, password: string, name: string): { succe
     return { success: false, error: 'Email already registered' };
   }
   
+  // First user becomes admin, rest are members
+  const isFirstUser = users.length === 0;
+  
   // Create new user
   const newUser: AuthUser = {
     id: Date.now().toString(),
     email,
     password, // In production, hash this!
     name,
+    role: isFirstUser ? 'admin' : 'member',
     createdAt: new Date().toISOString(),
   };
   
@@ -86,6 +93,7 @@ export function register(email: string, password: string, name: string): { succe
     id: newUser.id,
     email: newUser.email,
     name: newUser.name,
+    role: newUser.role,
     createdAt: newUser.createdAt,
   };
   setCurrentUser(user);
@@ -106,6 +114,7 @@ export function login(email: string, password: string): { success: boolean; erro
     id: authUser.id,
     email: authUser.email,
     name: authUser.name,
+    role: authUser.role || 'member', // Default to member for existing users
     createdAt: authUser.createdAt,
   };
   setCurrentUser(user);
@@ -208,4 +217,56 @@ export function saveUserProfile(userId: string, profile: { phone?: string; bio?:
   } catch (error) {
     console.error('Error saving user profile:', error);
   }
+}
+
+// Get all users (for admin management)
+export function getAllUsers(): User[] {
+  const users = getUsers();
+  return users.map(u => ({
+    id: u.id,
+    email: u.email,
+    name: u.name,
+    role: u.role || 'member',
+    createdAt: u.createdAt,
+  }));
+}
+
+// Update user role (admin only)
+export function updateUserRole(userId: string, newRole: UserRole, currentUserId: string): { success: boolean; error?: string } {
+  const users = getUsers();
+  const currentUser = users.find(u => u.id === currentUserId);
+  
+  // Check if current user is admin
+  if (!currentUser || currentUser.role !== 'admin') {
+    return { success: false, error: 'Only admins can change user roles' };
+  }
+  
+  const userIndex = users.findIndex(u => u.id === userId);
+  if (userIndex === -1) {
+    return { success: false, error: 'User not found' };
+  }
+  
+  users[userIndex].role = newRole;
+  saveUsers(users);
+  
+  // Update current user if they changed their own role
+  if (userId === currentUserId) {
+    const updatedUser: User = {
+      id: users[userIndex].id,
+      email: users[userIndex].email,
+      name: users[userIndex].name,
+      role: users[userIndex].role,
+      createdAt: users[userIndex].createdAt,
+    };
+    setCurrentUser(updatedUser);
+  }
+  
+  return { success: true };
+}
+
+// Check if user is admin
+export function isAdmin(userId: string): boolean {
+  const users = getUsers();
+  const user = users.find(u => u.id === userId);
+  return user?.role === 'admin';
 }

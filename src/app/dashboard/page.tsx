@@ -235,6 +235,11 @@ export default function Dashboard() {
                 <Link href="/dashboard/invites" className="block w-full bg-gradient-to-r from-primary-400 to-secondary-400 hover:from-primary-500 hover:to-secondary-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-center">
                   {t('manageInvites')}
                 </Link>
+                {user.role === 'admin' && (
+                  <Link href="/dashboard/users" className="block w-full bg-gradient-to-r from-warm-600 to-secondary-600 hover:from-warm-700 hover:to-secondary-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-center">
+                    👑 {t('userManagement')}
+                  </Link>
+                )}
               </div>
             </div>
           </div>
