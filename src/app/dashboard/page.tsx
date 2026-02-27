@@ -75,56 +75,56 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-warm-50 to-secondary-50" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <header className="header-gradient shadow-lg">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <svg width="40" height="40" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div className="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <svg width="32" height="32" className="sm:w-10 sm:h-10" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="100" cy="100" r="90" fill="#f97316" opacity="0.15"/>
               <circle cx="100" cy="100" r="25" fill="#eab308"/>
               <circle cx="100" cy="100" r="20" fill="white"/>
               <path d="M100 90 C95 90 92 93 92 97 C92 103 100 110 100 110 C100 110 108 103 108 97 C108 93 105 90 100 90Z" fill="#f97316"/>
             </svg>
-            <h1 className="text-2xl font-bold text-white">{t('appName')}</h1>
+            <h1 className="text-lg sm:text-2xl font-bold text-white">{t('appName')}</h1>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <LanguageSwitcher onLanguageChange={handleLanguageChange} />
-            <Link href="/dashboard/profile" className="text-white hover:text-primary-100 flex items-center gap-2">
+            <Link href="/dashboard/profile" className="text-white hover:text-primary-100 flex items-center gap-1 sm:gap-2">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
               <span className="hidden sm:inline">{user.name}</span>
             </Link>
-            <button onClick={handleLogout} className="text-gray-600 hover:text-gray-900">{t('logout')}</button>
+            <button onClick={handleLogout} className="text-white hover:text-primary-100 text-sm sm:text-base">{t('logout')}</button>
           </div>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6 sm:py-8">
         {/* Stats Overview */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <div className="card-warm p-6">
-            <p className="text-neutral-600 text-sm mb-1">{t('myGroups')}</p>
-            <p className="text-3xl font-bold text-primary-700">{groups.length}</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
+          <div className="card-warm p-4 sm:p-6">
+            <p className="text-neutral-600 text-xs sm:text-sm mb-1">{t('myGroups')}</p>
+            <p className="text-2xl sm:text-3xl font-bold text-primary-700">{groups.length}</p>
           </div>
-          <div className="card-warm p-6">
-            <p className="text-neutral-600 text-sm mb-1">{t('activeCampaigns')}</p>
-            <p className="text-3xl font-bold text-primary-600">{activeCampaigns.length}</p>
+          <div className="card-warm p-4 sm:p-6">
+            <p className="text-neutral-600 text-xs sm:text-sm mb-1">{t('activeCampaigns')}</p>
+            <p className="text-2xl sm:text-3xl font-bold text-primary-600">{activeCampaigns.length}</p>
           </div>
-          <div className="card-warm p-6">
-            <p className="text-neutral-600 text-sm mb-1">{t('totalContributed')}</p>
-            <p className="text-3xl font-bold text-secondary-600">
+          <div className="card-warm p-4 sm:p-6">
+            <p className="text-neutral-600 text-xs sm:text-sm mb-1">{t('totalContributed')}</p>
+            <p className="text-xl sm:text-3xl font-bold text-secondary-600">
               {formatCurrency(totalContributed, targetCurrency.code, lang)}
             </p>
           </div>
-          <div className="card-warm p-6">
-            <p className="text-neutral-600 text-sm mb-1">{t('familiesHelped')}</p>
-            <p className="text-3xl font-bold text-warm-600">{familiesHelped}</p>
+          <div className="card-warm p-4 sm:p-6">
+            <p className="text-neutral-600 text-xs sm:text-sm mb-1">{t('familiesHelped')}</p>
+            <p className="text-2xl sm:text-3xl font-bold text-warm-600">{familiesHelped}</p>
             <p className="text-xs text-neutral-500 mt-1">{t('completedCampaigns')}</p>
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Main Content */}
-          <div className="md:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-6">
             {/* Pending Campaigns */}
             {pendingCampaigns.length > 0 && (
               <div className="bg-amber-50 border border-amber-200 rounded-lg shadow">

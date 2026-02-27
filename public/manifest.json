@@ -1,0 +1,21 @@
+{
+  "name": "Amanah - Family Support Platform",
+  "short_name": "Amanah",
+  "description": "A private crowdfunding platform for families to support each other",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff7ed",
+  "theme_color": "#f97316",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "lifestyle"],
+  "lang": "en",
+  "dir": "auto"
+}

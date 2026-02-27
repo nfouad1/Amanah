@@ -6,20 +6,40 @@
   body {
     @apply bg-gradient-to-br from-primary-50 via-warm-50 to-secondary-50;
   }
+  
+  /* Mobile optimization */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Better touch targets for mobile */
+  button, a, input, select, textarea {
+    @apply min-h-[44px];
+  }
 }
 
 @layer components {
   /* Warm family-friendly button styles */
   .btn-primary {
-    @apply bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200;
+    @apply bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 active:scale-95;
   }
   
   .btn-secondary {
-    @apply bg-gradient-to-r from-secondary-400 to-secondary-500 hover:from-secondary-500 hover:to-secondary-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200;
+    @apply bg-gradient-to-r from-secondary-400 to-secondary-500 hover:from-secondary-500 hover:to-secondary-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 active:scale-95;
   }
   
   .btn-outline {
-    @apply border-2 border-primary-500 text-primary-700 hover:bg-primary-50 font-semibold py-2 px-6 rounded-lg transition-all duration-200;
+    @apply border-2 border-primary-500 text-primary-700 hover:bg-primary-50 font-semibold py-3 px-6 rounded-lg transition-all duration-200 active:scale-95;
   }
   
   /* Warm card styles */
@@ -33,11 +53,34 @@
   
   /* Input styles with warm colors */
   .input-warm {
-    @apply w-full px-4 py-2 border-2 border-primary-200 rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all duration-200;
+    @apply w-full px-4 py-3 border-2 border-primary-200 rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all duration-200 text-base;
   }
   
   /* Header gradient */
   .header-gradient {
     @apply bg-gradient-to-r from-primary-600 via-primary-500 to-secondary-500;
+  }
+  
+  /* Mobile-friendly spacing */
+  .container {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 640px) {
+  /* Larger text for better readability */
+  body {
+    font-size: 16px;
+  }
+  
+  /* Better spacing on mobile */
+  .card, .card-warm {
+    @apply mx-2;
+  }
+  
+  /* Stack grids on mobile */
+  .grid {
+    @apply gap-4;
   }
 }
