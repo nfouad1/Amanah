@@ -227,6 +227,9 @@ export default function Dashboard() {
                 <Link href="/dashboard/groups/new" className="block w-full bg-amber-600 text-white py-2 px-4 rounded-lg hover:bg-amber-700 text-center">
                   {t('createGroup')}
                 </Link>
+                <Link href="/dashboard/invites" className="block w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 text-center">
+                  Manage Invites
+                </Link>
               </div>
             </div>
           </div>

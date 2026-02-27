@@ -49,6 +49,17 @@ export interface Activity {
   createdAt: string;
 }
 
+export interface InviteCode {
+  id: string;
+  code: string;
+  createdBy: string;
+  createdAt: string;
+  usedBy?: string;
+  usedAt?: string;
+  expiresAt?: string;
+  isActive: boolean;
+}
+
 // Default campaigns
 const defaultCampaigns: Campaign[] = [
   {
@@ -542,4 +553,108 @@ export function addContribution(campaignId: string, amount: number, isPrivate: b
       isPrivate: isPrivate,
     });
   }
+}
+
+// Invite Codes Management
+const defaultInviteCodes: InviteCode[] = [
+  {
+    id: '1',
+    code: 'FAMILY2024',
+    createdBy: 'admin',
+    createdAt: new Date().toISOString(),
+    isActive: true,
+  },
+];
+
+export function getInviteCodes(): InviteCode[] {
+  if (typeof window === 'undefined') return [];
+  
+  try {
+    const stored = localStorage.getItem('amanah_invite_codes');
+    if (!stored) {
+      localStorage.setItem('amanah_invite_codes', JSON.stringify(defaultInviteCodes));
+      return defaultInviteCodes;
+    }
+    return JSON.parse(stored);
+  } catch (error) {
+    console.error('Error loading invite codes:', error);
+    return defaultInviteCodes;
+  }
+}
+
+export function validateInviteCode(code: string): { valid: boolean; message: string } {
+  const inviteCodes = getInviteCodes();
+  const invite = inviteCodes.find(i => i.code.toUpperCase() === code.toUpperCase());
+  
+  if (!invite) {
+    return { valid: false, message: 'Invalid invite code' };
+  }
+  
+  if (!invite.isActive) {
+    return { valid: false, message: 'This invite code has been deactivated' };
+  }
+  
+  if (invite.usedBy) {
+    return { valid: false, message: 'This invite code has already been used' };
+  }
+  
+  if (invite.expiresAt && new Date(invite.expiresAt) < new Date()) {
+    return { valid: false, message: 'This invite code has expired' };
+  }
+  
+  return { valid: true, message: 'Valid invite code' };
+}
+
+export function useInviteCode(code: string, userId: string): boolean {
+  const inviteCodes = getInviteCodes();
+  const inviteIndex = inviteCodes.findIndex(i => i.code.toUpperCase() === code.toUpperCase());
+  
+  if (inviteIndex === -1) return false;
+  
+  const invite = inviteCodes[inviteIndex];
+  invite.usedBy = userId;
+  invite.usedAt = new Date().toISOString();
+  
+  inviteCodes[inviteIndex] = invite;
+  localStorage.setItem('amanah_invite_codes', JSON.stringify(inviteCodes));
+  
+  return true;
+}
+
+export function createInviteCode(createdBy: string, expiresInDays?: number): InviteCode {
+  const inviteCodes = getInviteCodes();
+  
+  // Generate random code
+  const code = 'FAM-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+  
+  const newInvite: InviteCode = {
+    id: Date.now().toString(),
+    code: code,
+    createdBy: createdBy,
+    createdAt: new Date().toISOString(),
+    isActive: true,
+  };
+  
+  if (expiresInDays) {
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + expiresInDays);
+    newInvite.expiresAt = expiryDate.toISOString();
+  }
+  
+  inviteCodes.push(newInvite);
+  localStorage.setItem('amanah_invite_codes', JSON.stringify(inviteCodes));
+  
+  return newInvite;
+}
+
+export function deactivateInviteCode(code: string): boolean {
+  const inviteCodes = getInviteCodes();
+  const inviteIndex = inviteCodes.findIndex(i => i.code.toUpperCase() === code.toUpperCase());
+  
+  if (inviteIndex === -1) return false;
+  
+  inviteCodes[inviteIndex].isActive = false;
+  localStorage.setItem('amanah_invite_codes', JSON.stringify(inviteCodes));
+  
+  return true;
 }

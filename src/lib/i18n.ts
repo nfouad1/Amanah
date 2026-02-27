@@ -207,6 +207,16 @@ export const translations = {
     
     // Loading
     loading: 'Loading...',
+    
+    // Invite System
+    inviteCode: 'Invite Code',
+    inviteCodeRequired: 'Invite code is required',
+    enterInviteCode: 'Enter your invite code',
+    inviteCodeInvalid: 'Invalid or expired invite code',
+    inviteOnly: 'Invite Only',
+    inviteOnlyDesc: 'This is a private family platform. You need an invite code to register.',
+    noInviteCode: "Don't have an invite code?",
+    contactAdmin: 'Contact your family admin to get an invite.',
   },
   ar: {
     // Landing Page
@@ -414,6 +424,16 @@ export const translations = {
     
     // Loading
     loading: 'جاري التحميل...',
+    
+    // Invite System
+    inviteCode: 'رمز الدعوة',
+    inviteCodeRequired: 'رمز الدعوة مطلوب',
+    enterInviteCode: 'أدخل رمز الدعوة الخاص بك',
+    inviteCodeInvalid: 'رمز دعوة غير صالح أو منتهي الصلاحية',
+    inviteOnly: 'بالدعوة فقط',
+    inviteOnlyDesc: 'هذه منصة عائلية خاصة. تحتاج إلى رمز دعوة للتسجيل.',
+    noInviteCode: 'ليس لديك رمز دعوة؟',
+    contactAdmin: 'اتصل بمسؤول عائلتك للحصول على دعوة.',
   },
   sv: {
     // Landing Page
@@ -621,6 +641,16 @@ export const translations = {
     
     // Loading
     loading: 'Laddar...',
+    
+    // Invite System
+    inviteCode: 'Inbjudningskod',
+    inviteCodeRequired: 'Inbjudningskod krävs',
+    enterInviteCode: 'Ange din inbjudningskod',
+    inviteCodeInvalid: 'Ogiltig eller utgången inbjudningskod',
+    inviteOnly: 'Endast inbjudna',
+    inviteOnlyDesc: 'Detta är en privat familjeplattform. Du behöver en inbjudningskod för att registrera dig.',
+    noInviteCode: 'Har du ingen inbjudningskod?',
+    contactAdmin: 'Kontakta din familjeadministratör för att få en inbjudan.',
   },
 };
 

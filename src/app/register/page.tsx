@@ -9,14 +9,15 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function Register() {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const [lang, setLang] = useState<Language>('en');
   const [isRTL, setIsRTL] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
+    inviteCode: '',
   });
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,6 +27,15 @@ export default function Register() {
     const currentLang = getLanguage();
     setLang(currentLang);
     setIsRTL(currentLang === 'ar');
+    
+    // Check for invite code in URL
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const inviteFromUrl = params.get('invite');
+      if (inviteFromUrl) {
+        setFormData(prev => ({ ...prev, inviteCode: inviteFromUrl }));
+      }
+    }
   }, []);
 
   const handleLanguageChange = (newLang: Language) => {
@@ -41,6 +51,21 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    // Validate invite code first
+    if (!formData.inviteCode) {
+      setError(t('inviteCodeRequired'));
+      return;
+    }
+
+    // Import validateInviteCode dynamically to avoid SSR issues
+    const { validateInviteCode, useInviteCode } = await import('@/lib/mockData');
+    const inviteValidation = validateInviteCode(formData.inviteCode);
+    
+    if (!inviteValidation.valid) {
+      setError(t('inviteCodeInvalid'));
+      return;
+    }
 
     if (formData.password !== formData.confirmPassword) {
       setError(t('passwordsDontMatch'));
@@ -58,6 +83,8 @@ export default function Register() {
     const result = register(formData.email, formData.password, formData.name);
     
     if (result.success) {
+      // Mark invite code as used
+      useInviteCode(formData.inviteCode, result.user?.id || 'unknown');
       router.push('/dashboard');
     } else {
       setError(result.error === 'Email already registered' ? t('emailAlreadyRegistered') : result.error || 'Registration failed');
@@ -80,6 +107,19 @@ export default function Register() {
         <div className="bg-white rounded-lg shadow-lg p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('createAccount')}</h2>
 
+          {/* Invite Only Notice */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+              <div>
+                <h3 className="font-semibold text-blue-900 text-sm">{t('inviteOnly')}</h3>
+                <p className="text-sm text-blue-800 mt-1">{t('inviteOnlyDesc')}</p>
+              </div>
+            </div>
+          </div>
+
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
               {error}
@@ -89,7 +129,21 @@ export default function Register() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('fullName')}
+                {t('inviteCode')} *
+              </label>
+              <input
+                type="text"
+                required
+                value={formData.inviteCode}
+                onChange={(e) => setFormData({ ...formData, inviteCode: e.target.value })}
+                placeholder={t('enterInviteCode')}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent uppercase"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t('fullName')} *
               </label>
               <input
                 type="text"
@@ -97,13 +151,12 @@ export default function Register() {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="John Doe"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('email')}
+                {t('email')} *
               </label>
               <input
                 type="email"
@@ -111,13 +164,12 @@ export default function Register() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="your@email.com"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('password')}
+                {t('password')} *
               </label>
               <input
                 type="password"
@@ -125,13 +177,12 @@ export default function Register() {
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="••••••••"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('confirmPassword')}
+                {t('confirmPassword')} *
               </label>
               <input
                 type="password"
@@ -139,7 +190,6 @@ export default function Register() {
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="••••••••"
               />
             </div>
 
@@ -158,6 +208,16 @@ export default function Register() {
               <Link href="/login" className="text-blue-600 hover:text-blue-700 font-semibold">
                 {t('login')}
               </Link>
+            </p>
+          </div>
+
+          {/* No invite code help */}
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <p className="text-sm text-gray-600 text-center">
+              {t('noInviteCode')}
+            </p>
+            <p className="text-sm text-gray-500 text-center mt-1">
+              {t('contactAdmin')}
             </p>
           </div>
         </div>
