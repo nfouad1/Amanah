@@ -255,8 +255,12 @@ export function updateUserRole(userId: string, newRole: UserRole, currentUserId:
   const users = getUsers();
   const currentUser = users.find(u => u.id === currentUserId);
   
-  // Check if current user is admin
-  if (!currentUser || currentUser.role !== 'admin') {
+  // Special case: Allow default admin to always restore their own role
+  const isDefaultAdmin = currentUserId === 'admin-default';
+  const isSelfRoleChange = userId === currentUserId;
+  
+  // Check if current user is admin (or default admin changing their own role)
+  if (!currentUser || (currentUser.role !== 'admin' && !(isDefaultAdmin && isSelfRoleChange))) {
     return { success: false, error: 'Only admins can change user roles' };
   }
   
@@ -278,6 +282,10 @@ export function updateUserRole(userId: string, newRole: UserRole, currentUserId:
       createdAt: users[userIndex].createdAt,
     };
     setCurrentUser(updatedUser);
+  }
+  
+  return { success: true };
+}
   }
   
   return { success: true };

@@ -25,8 +25,11 @@ export default function UsersPage() {
       return;
     }
     
-    // Only admins can access this page
-    if (user.role !== 'admin') {
+    // Allow default admin to access even if role was changed
+    const isDefaultAdmin = user.id === 'admin-default';
+    
+    // Only admins (or default admin) can access this page
+    if (user.role !== 'admin' && !isDefaultAdmin) {
       router.push('/dashboard');
       return;
     }
