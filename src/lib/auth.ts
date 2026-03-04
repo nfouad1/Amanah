@@ -291,18 +291,6 @@ export function updateUserRole(userId: string, newRole: UserRole, currentUserId:
   
   return { success: true };
 }
-      role: users[userIndex].role,
-      createdAt: users[userIndex].createdAt,
-    };
-    setCurrentUser(updatedUser);
-  }
-  
-  return { success: true };
-}
-  }
-  
-  return { success: true };
-}
 
 // Check if user is admin
 export function isAdmin(userId: string): boolean {
