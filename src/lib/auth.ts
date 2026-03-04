@@ -162,6 +162,7 @@ export function updateProfile(userId: string, updates: { name?: string; email?: 
     id: updatedAuthUser.id,
     email: updatedAuthUser.email,
     name: updatedAuthUser.name,
+    role: updatedAuthUser.role || 'member',
     createdAt: updatedAuthUser.createdAt,
   };
   setCurrentUser(updatedUser);
