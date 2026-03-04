@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { getCampaignById, voteForCampaign, removeVoteFromCampaign } from '@/lib/mockData';
 import { getCurrentUser } from '@/lib/auth';
 import { getLanguage, getTranslation, Language, translations } from '@/lib/i18n';
+import { canUserVote } from '@/lib/permissions';
 
 export default function CampaignDetail() {
   const params = useParams();
@@ -48,6 +49,12 @@ export default function CampaignDetail() {
       return;
     }
     
+    // Check permission
+    if (!canUserVote(user.role)) {
+      alert(t('noPermissionVote'));
+      return;
+    }
+    
     const result = voteForCampaign(id, user.id);
     
     if (result.success) {
@@ -59,6 +66,12 @@ export default function CampaignDetail() {
 
   const handleRemoveVote = () => {
     if (!user) return;
+    
+    // Check permission
+    if (!canUserVote(user.role)) {
+      alert(t('noPermissionVote'));
+      return;
+    }
     
     const result = removeVoteFromCampaign(id, user.id);
     
@@ -80,8 +93,9 @@ export default function CampaignDetail() {
   const percentage = (campaign.current / campaign.target) * 100;
   const hasVoted = user && campaign.votedBy && campaign.votedBy.includes(user.id);
   const voteCount = campaign.votes || 0;
+  const requiresApproval = campaign.requiresApproval !== false; // Default to true if not set
   const isPending = campaign.status === 'pending';
-  const votesNeeded = isPending ? Math.max(0, 3 - voteCount) : 0;
+  const votesNeeded = isPending && requiresApproval ? Math.max(0, 3 - voteCount) : 0;
 
   return (
     <div className="min-h-screen bg-gray-50" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -118,7 +132,7 @@ export default function CampaignDetail() {
                 )}
               </div>
 
-              {isPending && votesNeeded > 0 && (
+              {isPending && requiresApproval && votesNeeded > 0 && (
                 <div className="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
                   <div className="flex items-start gap-3">
                     <svg className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -162,44 +176,46 @@ export default function CampaignDetail() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Voting Section */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="font-semibold text-gray-900 mb-3">{t('voteForCampaign')}</h3>
-              <div className="flex items-center gap-2 mb-4">
-                <svg className="w-6 h-6 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-                </svg>
-                <span className="text-2xl font-bold text-gray-900">{voteCount}</span>
-                <span className="text-gray-600">{t('votes')}</span>
-              </div>
-              <p className="text-sm text-gray-600 mb-4">{t('votingHelp')}</p>
-              {hasVoted ? (
-                <button
-                  onClick={handleRemoveVote}
-                  className="w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 font-semibold flex items-center justify-center gap-2"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            {/* Voting Section - Only show if campaign requires approval */}
+            {requiresApproval && (
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="font-semibold text-gray-900 mb-3">{t('voteForCampaign')}</h3>
+                <div className="flex items-center gap-2 mb-4">
+                  <svg className="w-6 h-6 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
                   </svg>
-                  {t('voted')}
-                </button>
-              ) : (
-                <button
-                  onClick={handleVote}
-                  className="w-full bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 font-semibold flex items-center justify-center gap-2"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                  </svg>
-                  {t('vote')}
-                </button>
-              )}
-            </div>
+                  <span className="text-2xl font-bold text-gray-900">{voteCount}</span>
+                  <span className="text-gray-600">{t('votes')}</span>
+                </div>
+                <p className="text-sm text-gray-600 mb-4">{t('votingHelp')}</p>
+                {hasVoted ? (
+                  <button
+                    onClick={handleRemoveVote}
+                    className="w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 font-semibold flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+                    </svg>
+                    {t('voted')}
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleVote}
+                    className="w-full bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 font-semibold flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                    </svg>
+                    {t('vote')}
+                  </button>
+                )}
+              </div>
+            )}
 
             {/* Support Section */}
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="font-semibold text-gray-900 mb-4">{t('supportFamilyMember')}</h3>
-              {isPending ? (
+              {isPending && requiresApproval ? (
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-center">
                   <p className="text-sm text-amber-800 mb-2">
                     {t('needsVotesBeforeContrib')

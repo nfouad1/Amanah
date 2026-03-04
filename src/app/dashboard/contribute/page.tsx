@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { addContribution, getCampaigns } from '@/lib/mockData';
 import { getLanguage, getTranslation, Language, translations, getCurrencyForLanguage } from '@/lib/i18n';
+import { getCurrentUser } from '@/lib/auth';
+import { canUserContribute } from '@/lib/permissions';
 
 export default function Contribute() {
   const router = useRouter();
@@ -24,6 +26,15 @@ export default function Contribute() {
 
   useEffect(() => {
     setMounted(true);
+    const user = getCurrentUser();
+    
+    // Check permission
+    if (!user || !canUserContribute(user.role)) {
+      alert(getTranslation(getLanguage(), 'noPermissionContribute'));
+      router.push('/dashboard');
+      return;
+    }
+    
     const currentLang = getLanguage();
     setLang(currentLang);
     setIsRTL(currentLang === 'ar');
@@ -37,7 +48,7 @@ export default function Contribute() {
         setCampaigns([]);
       }
     }
-  }, []);
+  }, [router]);
 
   const t = (key: keyof typeof translations.en) => {
     if (!mounted) return translations.en[key];

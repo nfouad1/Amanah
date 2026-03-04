@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { getCampaigns, getGroups, getActivities } from '@/lib/mockData';
 import { getLanguage, getTranslation, Language, translations, convertCurrency, getCurrencyForLanguage, formatCurrency } from '@/lib/i18n';
 import { getCurrentUser, logout } from '@/lib/auth';
+import { canUserCreateCampaign, canUserCreateGroup, canUserContribute } from '@/lib/permissions';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function Dashboard() {
@@ -223,15 +224,21 @@ export default function Dashboard() {
             <div className="card p-6">
               <h2 className="text-xl font-semibold mb-4 text-primary-900">{t('quickActions')}</h2>
               <div className="space-y-3">
-                <Link href="/dashboard/campaigns/new" className="block w-full btn-primary text-center">
-                  {t('startCampaign')}
-                </Link>
-                <Link href="/dashboard/contribute" className="block w-full btn-secondary text-center">
-                  {t('contribute')}
-                </Link>
-                <Link href="/dashboard/groups/new" className="block w-full bg-gradient-to-r from-warm-500 to-warm-600 hover:from-warm-600 hover:to-warm-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-center">
-                  {t('createGroup')}
-                </Link>
+                {canUserCreateCampaign(user.role) && (
+                  <Link href="/dashboard/campaigns/new" className="block w-full btn-primary text-center">
+                    {t('startCampaign')}
+                  </Link>
+                )}
+                {canUserContribute(user.role) && (
+                  <Link href="/dashboard/contribute" className="block w-full btn-secondary text-center">
+                    {t('contribute')}
+                  </Link>
+                )}
+                {canUserCreateGroup(user.role) && (
+                  <Link href="/dashboard/groups/new" className="block w-full bg-gradient-to-r from-warm-500 to-warm-600 hover:from-warm-600 hover:to-warm-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-center">
+                    {t('createGroup')}
+                  </Link>
+                )}
                 <Link href="/dashboard/invites" className="block w-full bg-gradient-to-r from-primary-400 to-secondary-400 hover:from-primary-500 hover:to-secondary-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-center">
                   {t('manageInvites')}
                 </Link>

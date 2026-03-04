@@ -17,7 +17,7 @@ export interface Campaign {
   dueDate?: string;
   votes: number;
   votedBy: string[]; // Array of user IDs who voted
-  needsApproval?: boolean;
+  requiresApproval: boolean; // If true, campaign needs votes to become active
 }
 
 export interface Group {
@@ -79,6 +79,7 @@ const defaultCampaigns: Campaign[] = [
     createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
     votes: 8,
     votedBy: [],
+    requiresApproval: true,
   },
   {
     id: '2',
@@ -95,6 +96,7 @@ const defaultCampaigns: Campaign[] = [
     createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
     votes: 5,
     votedBy: [],
+    requiresApproval: true,
   },
   {
     id: '3',
@@ -111,6 +113,7 @@ const defaultCampaigns: Campaign[] = [
     createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
     votes: 10,
     votedBy: [],
+    requiresApproval: false,
   },
 ];
 
@@ -196,6 +199,7 @@ export function getCampaigns(): Campaign[] {
       ...c,
       votes: c.votes || 0,
       votedBy: c.votedBy || [],
+      requiresApproval: c.requiresApproval !== undefined ? c.requiresApproval : true, // Default to true for old campaigns
     }));
     
     // Save migrated data
@@ -217,7 +221,8 @@ export function addCampaign(campaign: Omit<Campaign, 'id' | 'current' | 'contrib
     createdAt: new Date().toISOString(),
     votes: 0,
     votedBy: [],
-    status: 'pending', // New campaigns start as pending until they get enough votes
+    // If requiresApproval is true, start as pending. Otherwise, start as active
+    status: campaign.requiresApproval ? 'pending' : 'active',
   };
   
   // Add to beginning of array (newest first)
@@ -433,6 +438,11 @@ export function voteForCampaign(campaignId: string, userId: string): { success: 
   
   const campaign = campaigns[campaignIndex];
   
+  // Check if campaign requires approval
+  if (!campaign.requiresApproval) {
+    return { success: false, message: 'This campaign does not require voting' };
+  }
+  
   // Check if user already voted
   if (campaign.votedBy.includes(userId)) {
     return { success: false, message: 'You have already voted for this campaign' };
@@ -469,6 +479,11 @@ export function removeVoteFromCampaign(campaignId: string, userId: string): { su
   
   const campaign = campaigns[campaignIndex];
   
+  // Check if campaign requires approval
+  if (!campaign.requiresApproval) {
+    return { success: false, message: 'This campaign does not require voting' };
+  }
+  
   // Check if user has voted
   if (!campaign.votedBy.includes(userId)) {
     return { success: false, message: 'You have not voted for this campaign' };
@@ -480,7 +495,7 @@ export function removeVoteFromCampaign(campaignId: string, userId: string): { su
   
   // Deactivate campaign if votes drop below minimum (3 votes)
   const MINIMUM_VOTES = 3;
-  if (campaign.status === 'active' && campaign.votes < MINIMUM_VOTES) {
+  if (campaign.status === 'active' && campaign.votes < MINIMUM_VOTES && campaign.requiresApproval) {
     campaign.status = 'pending';
   }
   
@@ -632,17 +647,21 @@ export function createInviteCode(
 ): InviteCode | null {
   const inviteCodes = getInviteCodes();
   
-  // Check invite limit for non-admin users
-  const MAX_ACTIVE_INVITES_PER_MEMBER = 5;
+  // Check invite limit based on role
+  const maxInvites = getMaxInvites(userRole);
   
-  if (userRole !== 'admin') {
+  if (maxInvites === 0) {
+    return null; // Viewers cannot create invites
+  }
+  
+  if (maxInvites !== Infinity) {
     const userActiveInvites = inviteCodes.filter(
       invite => invite.createdBy === createdBy && 
                 invite.isActive && 
                 !invite.usedBy
     );
     
-    if (userActiveInvites.length >= MAX_ACTIVE_INVITES_PER_MEMBER) {
+    if (userActiveInvites.length >= maxInvites) {
       return null; // Limit reached
     }
   }
@@ -686,9 +705,20 @@ export function getActiveInviteCount(createdBy: string): number {
   ).length;
 }
 
-// Get max invites allowed
+// Get max invites allowed based on role
 export function getMaxInvites(userRole?: string): number {
-  return userRole === 'admin' ? Infinity : 5;
+  switch (userRole) {
+    case 'admin':
+      return Infinity;
+    case 'contributor':
+      return 5;
+    case 'member':
+      return 3;
+    case 'viewer':
+      return 0;
+    default:
+      return 3; // Default to member
+  }
 }
 
 export function deactivateInviteCode(code: string): boolean {

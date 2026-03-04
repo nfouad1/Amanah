@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { getLanguage, getTranslation, Language, translations } from '@/lib/i18n';
 import { addGroup } from '@/lib/mockData';
 import { getCurrentUser } from '@/lib/auth';
+import { canUserCreateGroup } from '@/lib/permissions';
 
 export default function NewGroup() {
   const router = useRouter();
@@ -23,10 +24,19 @@ export default function NewGroup() {
 
   useEffect(() => {
     setMounted(true);
+    const user = getCurrentUser();
+    
+    // Check permission
+    if (!user || !canUserCreateGroup(user.role)) {
+      alert(getTranslation(getLanguage(), 'noPermissionCreateGroup'));
+      router.push('/dashboard');
+      return;
+    }
+    
     const currentLang = getLanguage();
     setLang(currentLang);
     setIsRTL(currentLang === 'ar');
-  }, []);
+  }, [router]);
 
   const t = (key: keyof typeof translations.en) => {
     if (!mounted) return translations.en[key];

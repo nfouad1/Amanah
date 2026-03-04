@@ -1,7 +1,7 @@
 // Simple authentication system using localStorage
 // In production, this would be replaced with proper backend authentication
 
-export type UserRole = 'admin' | 'member';
+export type UserRole = 'admin' | 'contributor' | 'member' | 'viewer';
 
 export interface User {
   id: string;
@@ -72,7 +72,7 @@ export function register(email: string, password: string, name: string): { succe
     return { success: false, error: 'Email already registered' };
   }
   
-  // First user becomes admin, rest are members
+  // First user becomes admin, rest are contributors by default
   const isFirstUser = users.length === 0;
   
   // Create new user
@@ -81,7 +81,7 @@ export function register(email: string, password: string, name: string): { succe
     email,
     password, // In production, hash this!
     name,
-    role: isFirstUser ? 'admin' : 'member',
+    role: isFirstUser ? 'admin' : 'contributor',
     createdAt: new Date().toISOString(),
   };
   

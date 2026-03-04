@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { addCampaign, getGroups } from '@/lib/mockData';
 import { getLanguage, getTranslation, Language, translations } from '@/lib/i18n';
+import { getCurrentUser } from '@/lib/auth';
+import { canUserCreateCampaign } from '@/lib/permissions';
 
 export default function NewCampaign() {
   const router = useRouter();
@@ -12,6 +14,7 @@ export default function NewCampaign() {
   const [lang, setLang] = useState<Language>('en');
   const [isRTL, setIsRTL] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   
   const [formData, setFormData] = useState({
     title: '',
@@ -21,11 +24,22 @@ export default function NewCampaign() {
     groupId: '',
     beneficiaryName: '',
     dueDate: '',
+    requiresApproval: true, // Default to requiring approval
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    const user = getCurrentUser();
+    
+    // Check permission
+    if (!user || !canUserCreateCampaign(user.role)) {
+      alert(getTranslation(getLanguage(), 'noPermissionCreateCampaign'));
+      router.push('/dashboard');
+      return;
+    }
+    
+    setCurrentUser(user);
     const currentLang = getLanguage();
     setLang(currentLang);
     setIsRTL(currentLang === 'ar');
@@ -38,7 +52,7 @@ export default function NewCampaign() {
         setGroups([]);
       }
     }
-  }, []);
+  }, [router]);
 
   const t = (key: keyof typeof translations.en) => {
     if (!mounted) return translations.en[key];
@@ -65,6 +79,7 @@ export default function NewCampaign() {
       currency: formData.currency,
       status: 'active',
       dueDate: formData.dueDate || undefined,
+      requiresApproval: formData.requiresApproval,
     });
     
     alert(t('campaignCreatedSuccess'));
@@ -202,6 +217,41 @@ export default function NewCampaign() {
                   <option key={group.id} value={group.id}>{group.name}</option>
                 ))}
               </select>
+            </div>
+
+            {/* Campaign Approval Setting */}
+            <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                {t('campaignApprovalSetting')}
+              </label>
+              <div className="space-y-3">
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="requiresApproval"
+                    checked={formData.requiresApproval === true}
+                    onChange={() => setFormData({ ...formData, requiresApproval: true })}
+                    className="mt-1"
+                  />
+                  <div>
+                    <div className="font-medium text-gray-900">✓ {t('requiresApproval')}</div>
+                    <div className="text-sm text-gray-600">{t('requiresApprovalDesc')}</div>
+                  </div>
+                </label>
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="requiresApproval"
+                    checked={formData.requiresApproval === false}
+                    onChange={() => setFormData({ ...formData, requiresApproval: false })}
+                    className="mt-1"
+                  />
+                  <div>
+                    <div className="font-medium text-gray-900">⚡ {t('startImmediately')}</div>
+                    <div className="text-sm text-gray-600">{t('startImmediatelyDesc')}</div>
+                  </div>
+                </label>
+              </div>
             </div>
 
             <div className="flex gap-4 pt-4">
