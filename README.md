@@ -40,6 +40,13 @@
 - Node.js 18+ 
 - npm or yarn
 
+### Default Admin Login
+For testing and initial setup, use these credentials:
+- **Email**: `admin@amanah.app`
+- **Password**: `admin123`
+
+⚠️ **Important**: Change these credentials in production!
+
 ### Installation
 
 ```bash

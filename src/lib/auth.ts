@@ -15,15 +15,33 @@ export interface AuthUser extends User {
   password: string; // Hashed in production
 }
 
+// Default admin user
+const DEFAULT_ADMIN: AuthUser = {
+  id: 'admin-default',
+  email: 'admin@amanah.app',
+  password: 'admin123', // Change this in production!
+  name: 'Admin',
+  role: 'admin',
+  createdAt: new Date().toISOString(),
+};
+
 // Get all users
 function getUsers(): AuthUser[] {
   if (typeof window === 'undefined') return [];
   try {
     const stored = localStorage.getItem('amanah_users');
-    return stored ? JSON.parse(stored) : [];
+    const users = stored ? JSON.parse(stored) : [];
+    
+    // Add default admin if no users exist
+    if (users.length === 0) {
+      users.push(DEFAULT_ADMIN);
+      localStorage.setItem('amanah_users', JSON.stringify(users));
+    }
+    
+    return users;
   } catch (error) {
     console.error('Error loading users:', error);
-    return [];
+    return [DEFAULT_ADMIN];
   }
 }
 
