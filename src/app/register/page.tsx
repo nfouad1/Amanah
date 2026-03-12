@@ -52,22 +52,6 @@ export default function Register() {
     e.preventDefault();
     setError('');
 
-    // Validate invite code first
-    if (!formData.inviteCode) {
-      setError(t('inviteCodeRequired'));
-      return;
-    }
-
-    // Import validateInviteCode dynamically to avoid SSR issues
-    const { validateInviteCode, useInviteCode } = await import('@/lib/mockData');
-    const inviteValidation = validateInviteCode(formData.inviteCode);
-    
-    if (!inviteValidation.valid) {
-      console.log('Invite validation failed:', inviteValidation.message);
-      setError(inviteValidation.message || t('inviteCodeInvalid'));
-      return;
-    }
-
     if (formData.password !== formData.confirmPassword) {
       setError(t('passwordsDontMatch'));
       return;
@@ -81,23 +65,21 @@ export default function Register() {
     setIsSubmitting(true);
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    const result = register(formData.email, formData.password, formData.name);
+    const result = register(formData.email, formData.password, formData.name, formData.inviteCode || undefined);
     
     if (result.success) {
       // Get invite code details to check for group
-      const { getInviteCodeByCode, addUserToGroup, useInviteCode } = await import('@/lib/mockData');
-      const inviteCode = getInviteCodeByCode(formData.inviteCode);
+      const { getInviteCodeByCode, addUserToGroup } = await import('@/lib/mockData');
       
-      // If invite is group-specific, add user to that group
-      if (inviteCode?.groupId && result.user) {
-        console.log('Adding user to group:', inviteCode.groupId);
-        addUserToGroup(inviteCode.groupId, result.user.id, result.user.name, result.user.email);
+      if (formData.inviteCode) {
+        const inviteCode = getInviteCodeByCode(formData.inviteCode);
+        
+        // If invite is group-specific, add user to that group
+        if (inviteCode?.groupId && result.user) {
+          console.log('Adding user to group:', inviteCode.groupId);
+          addUserToGroup(inviteCode.groupId, result.user.id, result.user.name, result.user.email);
+        }
       }
-      
-      // Mark invite code as used
-      console.log('Marking invite code as used:', formData.inviteCode);
-      const codeUsed = useInviteCode(formData.inviteCode, result.user?.id || 'unknown');
-      console.log('Invite code marked as used:', codeUsed);
       
       router.push('/dashboard');
     } else {
@@ -155,11 +137,10 @@ export default function Register() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('inviteCode')} *
+                {t('inviteCode')}
               </label>
               <input
                 type="text"
-                required
                 value={formData.inviteCode}
                 onChange={(e) => setFormData({ ...formData, inviteCode: e.target.value })}
                 placeholder={t('enterInviteCode')}

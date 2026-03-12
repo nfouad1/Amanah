@@ -9,6 +9,9 @@ export interface User {
   name: string;
   role: UserRole;
   createdAt: string;
+  invitedBy?: string; // ID of user who created the invite (optional)
+  roleAssignedAt: string; // Timestamp of role assignment
+  roleAssignedReason: 'first_user' | 'invite_specified' | 'invite_default' | 'no_invite_default' | 'admin_changed';
 }
 
 export interface AuthUser extends User {
@@ -23,6 +26,8 @@ const DEFAULT_ADMIN: AuthUser = {
   name: 'Admin',
   role: 'admin',
   createdAt: new Date().toISOString(),
+  roleAssignedAt: new Date().toISOString(),
+  roleAssignedReason: 'first_user',
 };
 
 // Get all users
@@ -80,9 +85,102 @@ function setCurrentUser(user: User | null): void {
     console.error('Error saving current user:', error);
   }
 }
+// Role assignment logic
+interface RoleAssignmentContext {
+  inviteToken?: string;
+  existingUserCount: number;
+}
+
+interface RoleAssignmentResult {
+  role: UserRole;
+  reason: 'first_user' | 'invite_specified' | 'invite_default' | 'no_invite_default';
+  invitedBy?: string;
+}
+
+function determineUserRole(context: RoleAssignmentContext): RoleAssignmentResult {
+  // First user exception: always assign Admin role
+  if (context.existingUserCount === 0) {
+    return {
+      role: 'admin',
+      reason: 'first_user',
+    };
+  }
+
+  // If invite token provided, validate and extract role
+  if (context.inviteToken) {
+    // Get invite codes from localStorage
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('amanah_invite_codes');
+        if (stored) {
+          const inviteCodes = JSON.parse(stored);
+          const invite = inviteCodes.find(
+            (i: any) => i.code.toUpperCase() === context.inviteToken!.toUpperCase()
+          );
+
+          // Validate invite token
+          if (invite &&
+              invite.isActive &&
+              !invite.usedBy &&
+              (!invite.expiresAt || new Date(invite.expiresAt) >= new Date())) {
+
+            // Extract role from invite
+            const assignedRole = invite.assignedRole;
+
+            // Validate role is one of the allowed values
+            if (assignedRole && ['contributor', 'member', 'viewer'].includes(assignedRole)) {
+              return {
+                role: assignedRole as UserRole,
+                reason: 'invite_specified',
+                invitedBy: invite.createdBy,
+              };
+            }
+
+            // If no role specified or invalid role, default to Member
+            return {
+              role: 'member',
+              reason: 'invite_default',
+              invitedBy: invite.createdBy,
+            };
+          }
+        }
+      } catch (error) {
+        console.error('Error validating invite token:', error);
+      }
+    }
+  }
+
+  // Default: non-invited users get Viewer role
+  return {
+    role: 'viewer',
+    reason: 'no_invite_default',
+  };
+}
+
+// Mark invite as consumed
+function consumeInviteToken(inviteToken: string, userId: string): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const stored = localStorage.getItem('amanah_invite_codes');
+    if (stored) {
+      const inviteCodes = JSON.parse(stored);
+      const inviteIndex = inviteCodes.findIndex(
+        (i: any) => i.code.toUpperCase() === inviteToken.toUpperCase()
+      );
+
+      if (inviteIndex !== -1) {
+        inviteCodes[inviteIndex].usedBy = userId;
+        inviteCodes[inviteIndex].usedAt = new Date().toISOString();
+        localStorage.setItem('amanah_invite_codes', JSON.stringify(inviteCodes));
+      }
+    }
+  } catch (error) {
+    console.error('Error consuming invite token:', error);
+  }
+}
 
 // Register new user
-export function register(email: string, password: string, name: string): { success: boolean; error?: string; user?: User } {
+export function register(email: string, password: string, name: string, inviteCode?: string): { success: boolean; error?: string; user?: User } {
   const users = getUsers();
   
   // Check if email already exists
@@ -90,8 +188,13 @@ export function register(email: string, password: string, name: string): { succe
     return { success: false, error: 'Email already registered' };
   }
   
-  // First user becomes admin, rest are contributors by default
-  const isFirstUser = users.length === 0;
+  // Determine role based on context
+  const roleAssignment = determineUserRole({
+    inviteToken: inviteCode,
+    existingUserCount: users.length,
+  });
+  
+  const roleAssignedAt = new Date().toISOString();
   
   // Create new user
   const newUser: AuthUser = {
@@ -99,12 +202,20 @@ export function register(email: string, password: string, name: string): { succe
     email,
     password, // In production, hash this!
     name,
-    role: isFirstUser ? 'admin' : 'contributor',
+    role: roleAssignment.role,
     createdAt: new Date().toISOString(),
+    roleAssignedAt,
+    roleAssignedReason: roleAssignment.reason,
+    invitedBy: roleAssignment.invitedBy,
   };
   
   users.push(newUser);
   saveUsers(users);
+  
+  // Mark invite as consumed if valid invite was used
+  if (inviteCode && roleAssignment.invitedBy) {
+    consumeInviteToken(inviteCode, newUser.id);
+  }
   
   // Auto login
   const user: User = {
@@ -113,6 +224,8 @@ export function register(email: string, password: string, name: string): { succe
     name: newUser.name,
     role: newUser.role,
     createdAt: newUser.createdAt,
+    roleAssignedAt: newUser.roleAssignedAt,
+    roleAssignedReason: newUser.roleAssignedReason,
   };
   setCurrentUser(user);
   
@@ -134,6 +247,9 @@ export function login(email: string, password: string): { success: boolean; erro
     name: authUser.name,
     role: authUser.role || 'member', // Default to member for existing users
     createdAt: authUser.createdAt,
+    invitedBy: authUser.invitedBy,
+    roleAssignedAt: authUser.roleAssignedAt || authUser.createdAt, // Fallback for existing users
+    roleAssignedReason: authUser.roleAssignedReason || 'no_invite_default', // Fallback for existing users
   };
   setCurrentUser(user);
   
@@ -182,6 +298,9 @@ export function updateProfile(userId: string, updates: { name?: string; email?: 
     name: updatedAuthUser.name,
     role: updatedAuthUser.role || 'member',
     createdAt: updatedAuthUser.createdAt,
+    invitedBy: updatedAuthUser.invitedBy,
+    roleAssignedAt: updatedAuthUser.roleAssignedAt || updatedAuthUser.createdAt,
+    roleAssignedReason: updatedAuthUser.roleAssignedReason || 'no_invite_default',
   };
   setCurrentUser(updatedUser);
   
@@ -247,6 +366,9 @@ export function getAllUsers(): User[] {
     name: u.name,
     role: u.role || 'member',
     createdAt: u.createdAt,
+    invitedBy: u.invitedBy,
+    roleAssignedAt: u.roleAssignedAt || u.createdAt,
+    roleAssignedReason: u.roleAssignedReason || 'no_invite_default',
   }));
 }
 
@@ -275,6 +397,8 @@ export function updateUserRole(userId: string, newRole: UserRole, currentUserId:
   }
   
   users[userIndex].role = newRole;
+  users[userIndex].roleAssignedAt = new Date().toISOString();
+  users[userIndex].roleAssignedReason = 'admin_changed';
   saveUsers(users);
   
   // Update current user if they changed their own role
@@ -285,6 +409,9 @@ export function updateUserRole(userId: string, newRole: UserRole, currentUserId:
       name: users[userIndex].name,
       role: users[userIndex].role,
       createdAt: users[userIndex].createdAt,
+      invitedBy: users[userIndex].invitedBy,
+      roleAssignedAt: users[userIndex].roleAssignedAt,
+      roleAssignedReason: users[userIndex].roleAssignedReason,
     };
     setCurrentUser(updatedUser);
   }

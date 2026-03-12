@@ -60,6 +60,7 @@ export interface InviteCode {
   isActive: boolean;
   groupId?: string; // Optional: if set, user will be added to this group automatically
   groupName?: string; // For display purposes
+  assignedRole?: 'admin' | 'contributor' | 'member' | 'viewer'; // Role to assign to user who uses this invite
 }
 
 // Default campaigns
@@ -643,7 +644,8 @@ export function createInviteCode(
   expiresInDays?: number, 
   userRole?: string,
   groupId?: string,
-  groupName?: string
+  groupName?: string,
+  assignedRole?: 'contributor' | 'member' | 'viewer'
 ): InviteCode | null {
   const inviteCodes = getInviteCodes();
   
@@ -666,6 +668,15 @@ export function createInviteCode(
     }
   }
   
+  // Validate assignedRole - only contributor, member, or viewer allowed (not admin)
+  let validatedRole: 'contributor' | 'member' | 'viewer' = 'member'; // Default to member
+  if (assignedRole) {
+    const allowedRoles: Array<'contributor' | 'member' | 'viewer'> = ['contributor', 'member', 'viewer'];
+    if (allowedRoles.includes(assignedRole)) {
+      validatedRole = assignedRole;
+    }
+  }
+  
   // Generate random code
   const code = 'FAM-' + Math.random().toString(36).substring(2, 8).toUpperCase();
   
@@ -675,6 +686,7 @@ export function createInviteCode(
     createdBy: createdBy,
     createdAt: new Date().toISOString(),
     isActive: true,
+    assignedRole: validatedRole, // Store the validated role
   };
   
   // Add group info if provided

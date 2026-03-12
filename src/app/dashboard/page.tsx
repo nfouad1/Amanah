@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { getCampaigns, getGroups, getActivities } from '@/lib/mockData';
 import { getLanguage, getTranslation, Language, translations, convertCurrency, getCurrencyForLanguage, formatCurrency } from '@/lib/i18n';
 import { getCurrentUser, logout } from '@/lib/auth';
-import { canUserCreateCampaign, canUserCreateGroup, canUserContribute } from '@/lib/permissions';
+import { canUserCreateCampaign, canUserCreateGroup, canUserContribute, checkInviteCreationPermission } from '@/lib/permissions';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function Dashboard() {
@@ -67,6 +67,11 @@ export default function Dashboard() {
     completedCampaigns.map(c => c.beneficiaryName)
   );
   const familiesHelped = uniqueBeneficiaries.size;
+    // Check permissions for UI restrictions
+  const canCreateCampaign = user ? canUserCreateCampaign(user.role) : false;
+  const canContribute = user ? canUserContribute(user.role) : false;
+  const canCreateGroup = user ? canUserCreateGroup(user.role) : false;
+  const canCreateInvite = user ? checkInviteCreationPermission(user.role).allowed : false;
 
   if (!user) {
     return <div className="min-h-screen bg-gray-50 flex items-center justify-center">{t('loading')}</div>;
@@ -156,12 +161,15 @@ export default function Dashboard() {
             )}
 
             {/* Active Campaigns */}
-            <div className="card">
               <div className="p-6 border-b border-primary-100 flex justify-between items-center">
                 <h2 className="text-xl font-semibold text-primary-900">{t('activeCampaigns')}</h2>
-                <Link href="/dashboard/campaigns/new" className="text-primary-600 hover:text-primary-700 text-sm font-medium">
-                  {t('newCampaign')}
-                </Link>
+                {canCreateCampaign && (
+                  <Link href="/dashboard/campaigns/new" className="text-primary-600 hover:text-primary-700 text-sm font-medium">
+                    {t('newCampaign')}
+                  </Link>
+                )}
+              </div>
+
               </div>
               <div className="divide-y">
                 {activeCampaigns.length > 0 ? (
@@ -180,12 +188,15 @@ export default function Dashboard() {
                     />
                   ))
                 ) : (
-                  <div className="p-12 text-center">
+                    <div className="p-12 text-center">
                     <p className="text-gray-500 mb-4">{t('noActiveCampaigns')}</p>
-                    <Link href="/dashboard/campaigns/new" className="text-primary-600 hover:text-primary-700 font-medium">
-                      {t('createFirstCampaignBtn')}
-                    </Link>
+                    {canCreateCampaign && (
+                      <Link href="/dashboard/campaigns/new" className="text-primary-600 hover:text-primary-700 font-medium">
+                        {t('createFirstCampaignBtn')}
+                      </Link>
+                    )}
                   </div>
+
                 )}
               </div>
             </div>
@@ -207,12 +218,15 @@ export default function Dashboard() {
           <div className="space-y-6">
             {/* My Groups */}
             <div className="card">
-              <div className="p-6 border-b border-primary-100 flex justify-between items-center">
+                <div className="p-6 border-b border-primary-100 flex justify-between items-center">
                 <h2 className="text-xl font-semibold text-primary-900">{t('myGroups')}</h2>
-                <Link href="/dashboard/groups/new" className="text-primary-600 hover:text-primary-700 text-sm font-medium">
-                  {t('create')}
-                </Link>
+                {canCreateGroup && (
+                  <Link href="/dashboard/groups/new" className="text-primary-600 hover:text-primary-700 text-sm font-medium">
+                    {t('create')}
+                  </Link>
+                )}
               </div>
+
               <div className="p-6 space-y-4">
                 {groups.map(group => (
                   <GroupCard key={group.id} id={group.id} name={group.name} members={group.members} />
@@ -223,25 +237,27 @@ export default function Dashboard() {
             {/* Quick Actions */}
             <div className="card p-6">
               <h2 className="text-xl font-semibold mb-4 text-primary-900">{t('quickActions')}</h2>
-              <div className="space-y-3">
-                {canUserCreateCampaign(user.role) && (
+                            <div className="space-y-3">
+                {canCreateCampaign && (
                   <Link href="/dashboard/campaigns/new" className="block w-full btn-primary text-center">
                     {t('startCampaign')}
                   </Link>
                 )}
-                {canUserContribute(user.role) && (
+                {canContribute && (
                   <Link href="/dashboard/contribute" className="block w-full btn-secondary text-center">
                     {t('contribute')}
                   </Link>
                 )}
-                {canUserCreateGroup(user.role) && (
+                {canCreateGroup && (
                   <Link href="/dashboard/groups/new" className="block w-full bg-gradient-to-r from-warm-500 to-warm-600 hover:from-warm-600 hover:to-warm-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-center">
                     {t('createGroup')}
                   </Link>
                 )}
-                <Link href="/dashboard/invites" className="block w-full bg-gradient-to-r from-primary-400 to-secondary-400 hover:from-primary-500 hover:to-secondary-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-center">
-                  {t('manageInvites')}
-                </Link>
+                {canCreateInvite && (
+                  <Link href="/dashboard/invites" className="block w-full bg-gradient-to-r from-primary-400 to-secondary-400 hover:from-primary-500 hover:to-secondary-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-center">
+                    {t('manageInvites')}
+                  </Link>
+                )}
                 {(user.role === 'admin' || user.id === 'admin-default') && (
                   <Link href="/dashboard/users" className="block w-full bg-gradient-to-r from-warm-600 to-secondary-600 hover:from-warm-700 hover:to-secondary-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-center">
                     👑 {t('userManagement')}

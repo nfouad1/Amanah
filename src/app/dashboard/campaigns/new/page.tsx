@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { addCampaign, getGroups } from '@/lib/mockData';
 import { getLanguage, getTranslation, Language, translations } from '@/lib/i18n';
 import { getCurrentUser } from '@/lib/auth';
-import { canUserCreateCampaign } from '@/lib/permissions';
+import { checkCampaignCreationPermission } from '@/lib/permissions';
 
 export default function NewCampaign() {
   const router = useRouter();
@@ -32,9 +32,15 @@ export default function NewCampaign() {
     setMounted(true);
     const user = getCurrentUser();
     
-    // Check permission
-    if (!user || !canUserCreateCampaign(user.role)) {
-      alert(getTranslation(getLanguage(), 'noPermissionCreateCampaign'));
+       // Check permission
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+    
+    const permissionCheck = checkCampaignCreationPermission(user.role);
+    if (!permissionCheck.allowed) {
+      alert(getTranslation(getLanguage(), permissionCheck.reason || 'noPermissionCreateCampaign'));
       router.push('/dashboard');
       return;
     }

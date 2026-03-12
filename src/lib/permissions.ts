@@ -2,6 +2,60 @@
 
 import { UserRole } from './auth';
 
+export interface RolePermissions {
+  // Campaign permissions
+  canCreateCampaign: boolean;
+  canVoteOnCampaign: boolean;
+  canContribute: boolean;
+  
+  // Invite permissions
+  canCreateInvites: boolean;
+  maxInvites: number;
+  
+  // View permissions
+  canViewCampaigns: boolean;
+  canViewGroups: boolean;
+}
+
+export const ROLE_PERMISSIONS: Record<UserRole, RolePermissions> = {
+  admin: {
+    canCreateCampaign: true,
+    canVoteOnCampaign: true,
+    canContribute: true,
+    canCreateInvites: true,
+    maxInvites: Infinity,
+    canViewCampaigns: true,
+    canViewGroups: true,
+  },
+  contributor: {
+    canCreateCampaign: true,
+    canVoteOnCampaign: true,
+    canContribute: true,
+    canCreateInvites: true,
+    maxInvites: 5,
+    canViewCampaigns: true,
+    canViewGroups: true,
+  },
+  member: {
+    canCreateCampaign: false,
+    canVoteOnCampaign: true,
+    canContribute: true,
+    canCreateInvites: true,
+    maxInvites: 3,
+    canViewCampaigns: true,
+    canViewGroups: true,
+  },
+  viewer: {
+    canCreateCampaign: false,
+    canVoteOnCampaign: false,
+    canContribute: false,
+    canCreateInvites: false,
+    maxInvites: 0,
+    canViewCampaigns: true,
+    canViewGroups: true,
+  },
+};
+
 export interface Permissions {
   // Campaign permissions
   canCreateCampaign: boolean;
@@ -283,4 +337,71 @@ export function getRoleIcon(role: UserRole): string {
 // Get max invites allowed based on role
 export function getMaxInvites(role: UserRole): number {
   return getPermissions(role).maxInvites;
+}
+
+// Permission check result interface
+export interface PermissionCheckResult {
+  allowed: boolean;
+  reason?: string;
+  suggestedAction?: string;
+}
+
+// Check if user can create campaigns
+export function checkCampaignCreationPermission(role: UserRole): PermissionCheckResult {
+  const permissions = ROLE_PERMISSIONS[role];
+  
+  if (permissions.canCreateCampaign) {
+    return { allowed: true };
+  }
+  
+  return {
+    allowed: false,
+    reason: 'noPermissionCreateCampaign',
+    suggestedAction: 'contactAdmin',
+  };
+}
+
+// Check if user can vote on campaigns
+export function checkVotingPermission(role: UserRole): PermissionCheckResult {
+  const permissions = ROLE_PERMISSIONS[role];
+  
+  if (permissions.canVoteOnCampaign) {
+    return { allowed: true };
+  }
+  
+  return {
+    allowed: false,
+    reason: 'noPermissionVote',
+    suggestedAction: 'contactAdmin',
+  };
+}
+
+// Check if user can contribute to campaigns
+export function checkContributionPermission(role: UserRole): PermissionCheckResult {
+  const permissions = ROLE_PERMISSIONS[role];
+  
+  if (permissions.canContribute) {
+    return { allowed: true };
+  }
+  
+  return {
+    allowed: false,
+    reason: 'noPermissionContribute',
+    suggestedAction: 'contactAdmin',
+  };
+}
+
+// Check if user can create invites
+export function checkInviteCreationPermission(role: UserRole): PermissionCheckResult {
+  const permissions = ROLE_PERMISSIONS[role];
+  
+  if (permissions.canCreateInvites) {
+    return { allowed: true };
+  }
+  
+  return {
+    allowed: false,
+    reason: 'noPermissionCreateInvite',
+    suggestedAction: 'contactAdmin',
+  };
 }

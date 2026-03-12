@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { addContribution, getCampaigns } from '@/lib/mockData';
 import { getLanguage, getTranslation, Language, translations, getCurrencyForLanguage } from '@/lib/i18n';
 import { getCurrentUser } from '@/lib/auth';
-import { canUserContribute } from '@/lib/permissions';
+import { checkContributionPermission } from '@/lib/permissions';
 
 export default function Contribute() {
   const router = useRouter();
@@ -28,9 +28,15 @@ export default function Contribute() {
     setMounted(true);
     const user = getCurrentUser();
     
-    // Check permission
-    if (!user || !canUserContribute(user.role)) {
-      alert(getTranslation(getLanguage(), 'noPermissionContribute'));
+        // Check permission
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+    
+    const permissionCheck = checkContributionPermission(user.role);
+    if (!permissionCheck.allowed) {
+      alert(getTranslation(getLanguage(), permissionCheck.reason || 'noPermissionContribute'));
       router.push('/dashboard');
       return;
     }
