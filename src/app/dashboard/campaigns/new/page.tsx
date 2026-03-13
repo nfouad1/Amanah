@@ -40,7 +40,7 @@ export default function NewCampaign() {
     
     const permissionCheck = checkCampaignCreationPermission(user.role);
     if (!permissionCheck.allowed) {
-      alert(getTranslation(getLanguage(), permissionCheck.reason || 'noPermissionCreateCampaign'));
+      alert(getTranslation(getLanguage(), (permissionCheck.reason || 'noPermissionCreateCampaign') as keyof typeof translations.en));
       router.push('/dashboard');
       return;
     }

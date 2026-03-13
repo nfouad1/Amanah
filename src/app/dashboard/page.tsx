@@ -218,7 +218,7 @@ export default function Dashboard() {
           <div className="space-y-6">
             {/* My Groups */}
             <div className="card">
-                <div className="p-6 border-b border-primary-100 flex justify-between items-center">
+              <div className="p-6 border-b border-primary-100 flex justify-between items-center">
                 <h2 className="text-xl font-semibold text-primary-900">{t('myGroups')}</h2>
                 {canCreateGroup && (
                   <Link href="/dashboard/groups/new" className="text-primary-600 hover:text-primary-700 text-sm font-medium">
@@ -237,7 +237,7 @@ export default function Dashboard() {
             {/* Quick Actions */}
             <div className="card p-6">
               <h2 className="text-xl font-semibold mb-4 text-primary-900">{t('quickActions')}</h2>
-                            <div className="space-y-3">
+              <div className="space-y-3">
                 {canCreateCampaign && (
                   <Link href="/dashboard/campaigns/new" className="block w-full btn-primary text-center">
                     {t('startCampaign')}

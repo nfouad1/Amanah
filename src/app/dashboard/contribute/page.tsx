@@ -36,7 +36,7 @@ export default function Contribute() {
     
     const permissionCheck = checkContributionPermission(user.role);
     if (!permissionCheck.allowed) {
-      alert(getTranslation(getLanguage(), permissionCheck.reason || 'noPermissionContribute'));
+      alert(getTranslation(getLanguage(), (permissionCheck.reason || 'noPermissionContribute') as keyof typeof translations.en));
       router.push('/dashboard');
       return;
     }

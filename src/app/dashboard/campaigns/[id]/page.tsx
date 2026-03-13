@@ -52,7 +52,7 @@ export default function CampaignDetail() {
     // Check permission
     const permissionCheck = checkVotingPermission(user.role);
     if (!permissionCheck.allowed) {
-      alert(t(permissionCheck.reason || 'noPermissionVote'));
+      alert(t((permissionCheck.reason || 'noPermissionVote') as keyof typeof translations.en));
       return;
     }
     
@@ -72,7 +72,7 @@ export default function CampaignDetail() {
     // Check permission
     const permissionCheck = checkVotingPermission(user.role);
     if (!permissionCheck.allowed) {
-      alert(t(permissionCheck.reason || 'noPermissionVote'));
+      alert(t((permissionCheck.reason || 'noPermissionVote') as keyof typeof translations.en));
       return;
     }
     
