@@ -62,7 +62,7 @@ export default function Login() {
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <svg width="80" height="80" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="128" height="128" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="100" cy="100" r="90" fill="#f97316" opacity="0.1"/>
               <path d="M100 30 C110 30 118 35 122 42 L130 60 C132 65 130 70 125 72 L105 82 C100 84 95 82 93 77 L85 59 C83 52 88 42 95 38 C97 36 98.5 30 100 30Z" fill="#f97316"/>
               <path d="M170 100 C170 110 165 118 158 122 L140 130 C135 132 130 130 128 125 L118 105 C116 100 118 95 123 93 L141 85 C148 83 158 88 162 95 C164 97 170 98.5 170 100Z" fill="#eab308"/>
