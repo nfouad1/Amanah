@@ -161,6 +161,7 @@ export default function Dashboard() {
             )}
 
             {/* Active Campaigns */}
+            <div className="bg-white rounded-lg shadow">
               <div className="p-6 border-b border-primary-100 flex justify-between items-center">
                 <h2 className="text-xl font-semibold text-primary-900">{t('activeCampaigns')}</h2>
                 {canCreateCampaign && (
@@ -168,8 +169,6 @@ export default function Dashboard() {
                     {t('newCampaign')}
                   </Link>
                 )}
-              </div>
-
               </div>
               <div className="divide-y">
                 {activeCampaigns.length > 0 ? (
