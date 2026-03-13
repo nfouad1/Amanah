@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { getGroupById, getCampaigns, addMembersToGroup, removeMemberFromGroup, updateGroup, deleteCampaign, deleteGroup } from '@/lib/mockData';
 import { getCurrentUser } from '@/lib/auth';
 import { getLanguage, getTranslation, Language, translations } from '@/lib/i18n';
+import { canUserCreateCampaign, checkGroupDeletionPermission, checkGroupEditPermission, checkGroupInvitePermission } from '@/lib/permissions';
 
 export default function GroupDetail() {
   const params = useParams();
@@ -68,6 +69,12 @@ export default function GroupDetail() {
     if (!mounted) return translations.en[key];
     return getTranslation(lang, key);
   };
+
+  // Check permissions
+  const canCreateCampaign = user ? canUserCreateCampaign(user.role) : false;
+  const canInviteToGroup = user ? checkGroupInvitePermission(user.role).allowed : false;
+  const canEditGroup = user ? checkGroupEditPermission(user.role).allowed : false;
+  const canDeleteGroup = user ? checkGroupDeletionPermission(user.role).allowed : false;
 
   const handleInviteMembers = async () => {
     setIsInviting(true);
@@ -205,24 +212,30 @@ export default function GroupDetail() {
           </div>
 
           <div className="flex gap-3 mt-6">
-            <Link
-              href="/dashboard/campaigns/new"
-              className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 font-semibold"
-            >
-              {t('startCampaign')}
-            </Link>
-            <button 
-              onClick={() => setShowInviteModal(true)}
-              className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 font-semibold"
-            >
-              {t('inviteMembers')}
-            </button>
-            <button 
-              onClick={() => setShowSettingsModal(true)}
-              className="bg-gray-100 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-200 font-semibold"
-            >
-              {t('groupSettings')}
-            </button>
+            {canCreateCampaign && (
+              <Link
+                href="/dashboard/campaigns/new"
+                className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 font-semibold"
+              >
+                {t('startCampaign')}
+              </Link>
+            )}
+            {canInviteToGroup && (
+              <button 
+                onClick={() => setShowInviteModal(true)}
+                className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 font-semibold"
+              >
+                {t('inviteMembers')}
+              </button>
+            )}
+            {canEditGroup && (
+              <button 
+                onClick={() => setShowSettingsModal(true)}
+                className="bg-gray-100 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-200 font-semibold"
+              >
+                {t('groupSettings')}
+              </button>
+            )}
           </div>
         </div>
 
@@ -250,12 +263,14 @@ export default function GroupDetail() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
                   <p className="text-gray-500 mb-4">{t('noCampaignsYet')}</p>
-                  <Link
-                    href="/dashboard/campaigns/new"
-                    className="inline-block bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 font-semibold"
-                  >
-                    {t('createFirstCampaign')}
-                  </Link>
+                  {canCreateCampaign && (
+                    <Link
+                      href="/dashboard/campaigns/new"
+                      className="inline-block bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 font-semibold"
+                    >
+                      {t('createFirstCampaign')}
+                    </Link>
+                  )}
                 </div>
               )}
             </div>
@@ -320,14 +335,16 @@ export default function GroupDetail() {
                   </div>
                 ))}
               </div>
-              <div className="p-4 border-t">
-                <button 
-                  onClick={() => setShowInviteModal(true)}
-                  className="w-full bg-primary-600 text-white py-2 rounded-lg hover:bg-primary-700 font-semibold"
-                >
-                  {t('inviteMoreMembers')}
-                </button>
-              </div>
+              {canInviteToGroup && (
+                <div className="p-4 border-t">
+                  <button 
+                    onClick={() => setShowInviteModal(true)}
+                    className="w-full bg-primary-600 text-white py-2 rounded-lg hover:bg-primary-700 font-semibold"
+                  >
+                    {t('inviteMoreMembers')}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -460,18 +477,20 @@ export default function GroupDetail() {
               </button>
             </div>
             
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <p className="text-sm text-gray-600 mb-3">{t('dangerZone')}</p>
-              <button
-                onClick={handleDeleteGroup}
-                className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 font-semibold"
-              >
-                {t('deleteGroup')}
-              </button>
-              <p className="text-xs text-gray-500 mt-2">
-                {t('deleteGroupWarning')}
-              </p>
-            </div>
+            {canDeleteGroup && (
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <p className="text-sm text-gray-600 mb-3">{t('dangerZone')}</p>
+                <button
+                  onClick={handleDeleteGroup}
+                  className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 font-semibold"
+                >
+                  {t('deleteGroup')}
+                </button>
+                <p className="text-xs text-gray-500 mt-2">
+                  {t('deleteGroupWarning')}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       )}

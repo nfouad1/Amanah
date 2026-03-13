@@ -405,3 +405,48 @@ export function checkInviteCreationPermission(role: UserRole): PermissionCheckRe
     suggestedAction: 'contactAdmin',
   };
 }
+
+// Check if user can delete groups
+export function checkGroupDeletionPermission(role: UserRole): PermissionCheckResult {
+  const permissions = getPermissions(role);
+  
+  if (permissions.canDeleteOwnGroup || permissions.canDeleteAnyGroup) {
+    return { allowed: true };
+  }
+  
+  return {
+    allowed: false,
+    reason: 'noPermissionDeleteGroup',
+    suggestedAction: 'contactAdmin',
+  };
+}
+
+// Check if user can edit groups
+export function checkGroupEditPermission(role: UserRole): PermissionCheckResult {
+  const permissions = getPermissions(role);
+  
+  if (permissions.canEditOwnGroup || permissions.canEditAnyGroup) {
+    return { allowed: true };
+  }
+  
+  return {
+    allowed: false,
+    reason: 'noPermissionEditGroup',
+    suggestedAction: 'contactAdmin',
+  };
+}
+
+// Check if user can invite to groups
+export function checkGroupInvitePermission(role: UserRole): PermissionCheckResult {
+  const permissions = getPermissions(role);
+  
+  if (permissions.canInviteToGroup) {
+    return { allowed: true };
+  }
+  
+  return {
+    allowed: false,
+    reason: 'noPermissionInviteToGroup',
+    suggestedAction: 'contactAdmin',
+  };
+}
