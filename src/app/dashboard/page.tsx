@@ -84,7 +84,7 @@ export default function Dashboard() {
       <header className="header-gradient shadow-lg">
         <div className="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
-            <svg width="32" height="32" className="sm:w-10 sm:h-10" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="48" height="48" className="sm:w-16 sm:h-16" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="100" cy="100" r="90" fill="#f97316" opacity="0.15"/>
               <circle cx="100" cy="100" r="25" fill="#eab308"/>
               <circle cx="100" cy="100" r="20" fill="white"/>
