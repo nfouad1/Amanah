@@ -1,6 +1,9 @@
 // Simple authentication system using localStorage
 // In production, this would be replaced with proper backend authentication
 
+import { createNotification } from './notifications';
+import { getRoleDisplayName } from './permissions';
+
 export type UserRole = 'admin' | 'contributor' | 'member' | 'viewer';
 
 export interface User {
@@ -396,10 +399,28 @@ export function updateUserRole(userId: string, newRole: UserRole, currentUserId:
     return { success: false, error: 'User not found' };
   }
   
+  const oldRole = users[userIndex].role;
   users[userIndex].role = newRole;
   users[userIndex].roleAssignedAt = new Date().toISOString();
   users[userIndex].roleAssignedReason = 'admin_changed';
   saveUsers(users);
+  
+  // Create notification for role change
+  try {
+    createNotification(
+      userId,
+      'role_changed',
+      'notifRoleChanged',
+      {
+        oldRole: getRoleDisplayName(oldRole),
+        newRole: getRoleDisplayName(newRole),
+      },
+      userId,
+      'user'
+    );
+  } catch (error) {
+    console.error('Error creating role change notification:', error);
+  }
   
   // Update current user if they changed their own role
   if (userId === currentUserId) {

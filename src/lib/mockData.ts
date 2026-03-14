@@ -1,6 +1,9 @@
 // Mock data storage using localStorage for demo purposes
 // In production, this would be replaced with actual API calls
 
+import { createNotification } from './notifications';
+import { getAllUsers } from './auth';
+
 export interface Campaign {
   id: string;
   title: string;
@@ -14,6 +17,7 @@ export interface Campaign {
   status: 'active' | 'completed' | 'cancelled' | 'pending';
   contributors: number;
   createdAt: string;
+  createdBy?: string; // User ID of campaign creator
   dueDate?: string;
   votes: number;
   votedBy: string[]; // Array of user IDs who voted
@@ -238,6 +242,34 @@ export function addCampaign(campaign: Omit<Campaign, 'id' | 'current' | 'contrib
     campaign: newCampaign.title,
   });
   
+  // Create notifications for all group members
+  try {
+    const group = getGroupById(newCampaign.groupId);
+    if (group && group.memberList) {
+      group.memberList.forEach(member => {
+        // Don't notify the creator (if createdBy is set)
+        if (newCampaign.createdBy && member.id === newCampaign.createdBy) return;
+        
+        // Only notify active members (not invited)
+        if (member.status === 'invited') return;
+        
+        createNotification(
+          member.id,
+          'campaign_created',
+          'notifCampaignCreated',
+          {
+            campaignTitle: newCampaign.title,
+            groupName: newCampaign.groupName,
+          },
+          newCampaign.id,
+          'campaign'
+        );
+      });
+    }
+  } catch (error) {
+    console.error('Error creating campaign notifications:', error);
+  }
+  
   return newCampaign;
 }
 
@@ -404,11 +436,38 @@ export function updateGroup(groupId: string, updates: { name?: string; descripti
 // Delete campaign
 export function deleteCampaign(campaignId: string): boolean {
   const campaigns = getCampaigns();
+  const campaign = campaigns.find(c => c.id === campaignId);
   const filteredCampaigns = campaigns.filter(c => c.id !== campaignId);
   
   if (filteredCampaigns.length === campaigns.length) return false;
   
   localStorage.setItem('amanah_campaigns', JSON.stringify(filteredCampaigns));
+  
+  // Create notifications for contributors
+  if (campaign) {
+    try {
+      const group = getGroupById(campaign.groupId);
+      if (group && group.memberList && campaign.contributors > 0) {
+        group.memberList.forEach(member => {
+          if (member.status === 'invited') return;
+          
+          createNotification(
+            member.id,
+            'campaign_deleted',
+            'notifCampaignDeleted',
+            {
+              campaignTitle: campaign.title,
+            },
+            campaign.id,
+            'campaign'
+          );
+        });
+      }
+    } catch (error) {
+      console.error('Error creating campaign deletion notifications:', error);
+    }
+  }
+  
   return true;
 }
 
@@ -455,14 +514,60 @@ export function voteForCampaign(campaignId: string, userId: string): { success: 
   
   // Activate campaign if it reaches minimum votes (3 votes)
   const MINIMUM_VOTES = 3;
-  if (campaign.status === 'pending' && campaign.votes >= MINIMUM_VOTES) {
+  const wasActivated = campaign.status === 'pending' && campaign.votes >= MINIMUM_VOTES;
+  if (wasActivated) {
     campaign.status = 'active';
   }
   
   campaigns[campaignIndex] = campaign;
   localStorage.setItem('amanah_campaigns', JSON.stringify(campaigns));
   
-  const statusMessage = campaign.status === 'active' && campaign.votes === MINIMUM_VOTES
+    // Create notifications
+  try {
+    const users = getAllUsers();
+    const voter = users.find(u => u.id === userId);
+    const creator = campaign.createdBy ? users.find(u => u.id === campaign.createdBy) : null;
+    
+    // Notify campaign creator about the vote
+    if (creator && creator.id !== userId) {
+      createNotification(
+        creator.id,
+        'campaign_vote',
+        'notifCampaignVote',
+        {
+          userName: voter?.name || 'Someone',
+          campaignTitle: campaign.title,
+        },
+        campaign.id,
+        'campaign'
+      );
+    }
+    
+    // If campaign was activated, notify all group members
+    if (wasActivated) {
+      const group = getGroupById(campaign.groupId);
+      if (group && group.memberList) {
+        group.memberList.forEach(member => {
+          if (member.status === 'invited') return;
+          
+          createNotification(
+            member.id,
+            'campaign_activated',
+            'notifCampaignActivated',
+            {
+              campaignTitle: campaign.title,
+            },
+            campaign.id,
+            'campaign'
+          );
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Error creating vote notifications:', error);
+  }
+  
+  const statusMessage = wasActivated
     ? 'Vote recorded! Campaign is now active and can receive contributions.'
     : 'Vote recorded successfully';
   
@@ -549,12 +654,15 @@ export function addContribution(campaignId: string, amount: number, isPrivate: b
   const campaign = campaigns.find(c => c.id === campaignId);
   
   if (campaign) {
+    const previousAmount = campaign.current;
+    
     // Update campaign
     campaign.current += amount;
     campaign.contributors += 1;
     
     // Check if campaign reached or exceeded target
-    if (campaign.current >= campaign.target && campaign.status === 'active') {
+    const goalReached = previousAmount < campaign.target && campaign.current >= campaign.target;
+    if (goalReached && campaign.status === 'active') {
       campaign.status = 'completed';
     }
     
@@ -570,6 +678,51 @@ export function addContribution(campaignId: string, amount: number, isPrivate: b
       currency: campaign.currency,
       isPrivate: isPrivate,
     });
+    
+    // Create notifications
+    try {
+      const users = getAllUsers();
+      const creator = campaign.createdBy ? users.find(u => u.id === campaign.createdBy) : null;
+      
+      // Notify campaign creator about contribution
+      if (creator) {
+        const contributorName = isPrivate ? 'Anonymous' : 'Someone';
+        createNotification(
+          creator.id,
+          'contribution_received',
+          isPrivate ? 'notifContributionAnonymous' : 'notifContributionReceived',
+          {
+            userName: contributorName,
+            amount: `${campaign.currency} ${amount}`,
+          },
+          campaign.id,
+          'campaign'
+        );
+      }
+      
+      // If goal was reached, notify all group members
+      if (goalReached) {
+        const group = getGroupById(campaign.groupId);
+        if (group && group.memberList) {
+          group.memberList.forEach(member => {
+            if (member.status === 'invited') return;
+            
+            createNotification(
+              member.id,
+              'campaign_goal_reached',
+              'notifCampaignGoalReached',
+              {
+                campaignTitle: campaign.title,
+              },
+              campaign.id,
+              'campaign'
+            );
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error creating contribution notifications:', error);
+    }
   }
 }
 
