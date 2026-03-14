@@ -14,6 +14,7 @@ export default function Contribute() {
   const [lang, setLang] = useState<Language>('en');
   const [isRTL, setIsRTL] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   
   const [formData, setFormData] = useState({
     campaignId: '',
@@ -33,6 +34,8 @@ export default function Contribute() {
       router.push('/login');
       return;
     }
+    
+    setCurrentUser(user);
     
     const permissionCheck = checkContributionPermission(user.role);
     if (!permissionCheck.allowed) {
@@ -78,8 +81,10 @@ export default function Contribute() {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 500));
     
-    // Add contribution
-    addContribution(formData.campaignId, parseFloat(formData.amount), formData.isPrivate);
+    // Add contribution with user ID
+    if (currentUser) {
+      addContribution(formData.campaignId, parseFloat(formData.amount), currentUser.id, formData.isPrivate);
+    }
     
     alert(t('contributionSuccess'));
     router.push('/dashboard');

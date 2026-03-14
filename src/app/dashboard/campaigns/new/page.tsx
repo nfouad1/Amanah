@@ -86,6 +86,7 @@ export default function NewCampaign() {
       status: 'active',
       dueDate: formData.dueDate || undefined,
       requiresApproval: formData.requiresApproval,
+      createdBy: currentUser?.id, // Add creator ID for notifications
     });
     
     alert(t('campaignCreatedSuccess'));

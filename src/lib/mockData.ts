@@ -649,7 +649,7 @@ export function addActivity(activity: Omit<Activity, 'id' | 'createdAt'>): Activ
   return newActivity;
 }
 
-export function addContribution(campaignId: string, amount: number, isPrivate: boolean = false): void {
+export function addContribution(campaignId: string, amount: number, userId: string, isPrivate: boolean = false): void {
   const campaigns = getCampaigns();
   const campaign = campaigns.find(c => c.id === campaignId);
   
@@ -683,10 +683,11 @@ export function addContribution(campaignId: string, amount: number, isPrivate: b
     try {
       const users = getAllUsers();
       const creator = campaign.createdBy ? users.find(u => u.id === campaign.createdBy) : null;
+      const contributor = users.find(u => u.id === userId);
       
-      // Notify campaign creator about contribution
-      if (creator) {
-        const contributorName = isPrivate ? 'Anonymous' : 'Someone';
+      // Notify campaign creator about contribution (but not if creator contributed to their own campaign)
+      if (creator && creator.id !== userId) {
+        const contributorName = isPrivate ? 'Anonymous' : (contributor?.name || 'Someone');
         createNotification(
           creator.id,
           'contribution_received',
