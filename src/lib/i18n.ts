@@ -314,6 +314,13 @@ export const translations = {
     noPermissionDeleteGroup: 'You do not have permission to delete groups. Only Admins can delete groups.',
     noPermissionEditGroup: 'You do not have permission to edit groups. Only Admins can edit groups.',
     noPermissionInviteToGroup: 'You do not have permission to invite members to groups. Only Admins can invite to groups.',
+    
+    // Viewer Role Help Messages
+    viewerNeedInvite: 'As a Viewer, you need to be invited to a group to contribute to campaigns.',
+    viewerRequestAccess: 'Request Access to Group',
+    viewerRequestSent: 'Access request sent to group admins',
+    viewerContactAdmin: 'Contact a group admin to request an invite or role upgrade.',
+    viewerUpgradeRole: 'To contribute, ask an admin to upgrade your role to Member or Contributor.',
     requiresApproval: 'Requires Approval',
     requiresApprovalDesc: 'Campaign needs 3 votes before it can accept contributions',
     startImmediately: 'Start Immediately',
@@ -664,6 +671,13 @@ export const translations = {
     noPermissionDeleteGroup: 'ليس لديك إذن لحذف المجموعات. يمكن للمسؤولين فقط حذف المجموعات.',
     noPermissionEditGroup: 'ليس لديك إذن لتعديل المجموعات. يمكن للمسؤولين فقط تعديل المجموعات.',
     noPermissionInviteToGroup: 'ليس لديك إذن لدعوة أعضاء إلى المجموعات. يمكن للمسؤولين فقط الدعوة إلى المجموعات.',
+    
+    // Viewer Role Help Messages
+    viewerNeedInvite: 'كمشاهد، تحتاج إلى دعوة للانضمام إلى مجموعة للمساهمة في الحملات.',
+    viewerRequestAccess: 'طلب الوصول إلى المجموعة',
+    viewerRequestSent: 'تم إرسال طلب الوصول إلى مسؤولي المجموعة',
+    viewerContactAdmin: 'اتصل بمسؤول المجموعة لطلب دعوة أو ترقية الدور.',
+    viewerUpgradeRole: 'للمساهمة، اطلب من المسؤول ترقية دورك إلى عضو أو مساهم.',
     requiresApproval: 'يتطلب الموافقة',
     requiresApprovalDesc: 'تحتاج الحملة إلى 3 أصوات قبل أن تتمكن من قبول المساهمات',
     startImmediately: 'ابدأ فوراً',
@@ -1014,6 +1028,13 @@ export const translations = {
     noPermissionDeleteGroup: 'Du har inte behörighet att ta bort grupper. Endast administratörer kan ta bort grupper.',
     noPermissionEditGroup: 'Du har inte behörighet att redigera grupper. Endast administratörer kan redigera grupper.',
     noPermissionInviteToGroup: 'Du har inte behörighet att bjuda in medlemmar till grupper. Endast administratörer kan bjuda in till grupper.',
+    
+    // Viewer Role Help Messages
+    viewerNeedInvite: 'Som tittare behöver du en inbjudan till en grupp för att bidra till kampanjer.',
+    viewerRequestAccess: 'Begär åtkomst till grupp',
+    viewerRequestSent: 'Åtkomstbegäran skickad till gruppadministratörer',
+    viewerContactAdmin: 'Kontakta en gruppadministratör för att begära en inbjudan eller rolluppgradering.',
+    viewerUpgradeRole: 'För att bidra, be en administratör att uppgradera din roll till medlem eller bidragsgivare.',
     requiresApproval: 'Kräver godkännande',
     requiresApprovalDesc: 'Kampanjen behöver 3 röster innan den kan ta emot bidrag',
     startImmediately: 'Starta direkt',

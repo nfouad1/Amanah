@@ -245,9 +245,39 @@ export default function CampaignDetail() {
                   {t('contribute')}
                 </Link>
               ) : (
-                <div className="bg-gray-100 border border-gray-300 rounded-lg p-4 text-center">
-                  <p className="text-sm text-gray-600">
-                    {t('noPermissionContribute')}
+                <div className="space-y-3">
+                  <div className="relative group">
+                    <button
+                      disabled
+                      className="w-full bg-gray-300 text-gray-500 py-3 px-4 rounded-lg cursor-not-allowed font-semibold"
+                    >
+                      {t('contribute')}
+                    </button>
+                    {/* Tooltip */}
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block w-64 z-10">
+                      <div className="bg-gray-900 text-white text-sm rounded-lg p-3 shadow-lg">
+                        <p className="mb-2">{t('viewerNeedInvite')}</p>
+                        <p className="text-xs text-gray-300">{t('viewerUpgradeRole')}</p>
+                        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900"></div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <button
+                    onClick={() => {
+                      // TODO: Implement request access functionality
+                      alert(t('viewerRequestSent'));
+                    }}
+                    className="w-full bg-primary-100 text-primary-700 py-2 px-4 rounded-lg hover:bg-primary-200 font-medium text-sm flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    {t('viewerRequestAccess')}
+                  </button>
+                  
+                  <p className="text-xs text-gray-500 text-center">
+                    {t('viewerContactAdmin')}
                   </p>
                 </div>
               )}
