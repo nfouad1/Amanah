@@ -1,0 +1,7 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Option 5: Shield with Heart (Protection & Care) - CURRENT LOGO -->
+  <circle cx="100" cy="100" r="90" fill="#f97316" opacity="0.15"/>
+  <path d="M100 40 L140 60 L140 100 C140 130 120 150 100 160 C80 150 60 130 60 100 L60 60 Z" fill="#f97316"/>
+  <path d="M100 120 C90 110 75 105 75 90 C75 80 82 75 90 75 C95 75 98 78 100 85 C102 78 105 75 110 75 C118 80 125 80 125 90 C125 105 110 110 100 120 Z" fill="white"/>
+  <circle cx="100" cy="50" r="5" fill="#eab308"/>
+</svg>

@@ -1,0 +1,6 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Option 4: Interlocking Hearts (Family Love) -->
+  <path d="M100 140 C80 120 50 110 50 85 C50 65 65 55 80 55 C90 55 95 60 100 70 C105 60 110 55 120 55 C135 55 150 65 150 85 C150 110 120 120 100 140 Z" fill="#f97316"/>
+  <circle cx="75" cy="75" r="12" fill="white" opacity="0.3"/>
+  <circle cx="125" cy="75" r="12" fill="white" opacity="0.3"/>
+</svg>

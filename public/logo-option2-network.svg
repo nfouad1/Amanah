@@ -1,0 +1,13 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Option 2: Connected Circles (Family Network) -->
+  <circle cx="100" cy="100" r="35" fill="#f97316"/>
+  <circle cx="100" cy="100" r="28" fill="white" opacity="0.2"/>
+  <circle cx="60" cy="80" r="20" fill="#eab308"/>
+  <circle cx="140" cy="80" r="20" fill="#eab308"/>
+  <circle cx="80" cy="140" r="20" fill="#eab308"/>
+  <circle cx="120" cy="140" r="20" fill="#eab308"/>
+  <line x1="100" y1="100" x2="60" y2="80" stroke="#f97316" stroke-width="3"/>
+  <line x1="100" y1="100" x2="140" y2="80" stroke="#f97316" stroke-width="3"/>
+  <line x1="100" y1="100" x2="80" y2="140" stroke="#f97316" stroke-width="3"/>
+  <line x1="100" y1="100" x2="120" y2="140" stroke="#f97316" stroke-width="3"/>
+</svg>
