@@ -260,9 +260,14 @@ export default function Dashboard() {
                   </Link>
                 )}
                 {(user.role === 'admin' || user.id === 'admin-default') && (
-                  <Link href="/dashboard/users" className="block w-full bg-gradient-to-r from-warm-600 to-secondary-600 hover:from-warm-700 hover:to-secondary-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-center">
-                    👑 {t('userManagement')}
-                  </Link>
+                  <>
+                    <Link href="/dashboard/users" className="block w-full bg-gradient-to-r from-warm-600 to-secondary-600 hover:from-warm-700 hover:to-secondary-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-center">
+                      👑 {t('userManagement')}
+                    </Link>
+                    <Link href="/dashboard/access-requests" className="block w-full bg-gradient-to-r from-secondary-500 to-primary-500 hover:from-secondary-600 hover:to-primary-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-center">
+                      📋 {t('viewAccessRequests')}
+                    </Link>
+                  </>
                 )}
               </div>
             </div>

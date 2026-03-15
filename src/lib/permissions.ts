@@ -450,3 +450,18 @@ export function checkGroupInvitePermission(role: UserRole): PermissionCheckResul
     suggestedAction: 'contactAdmin',
   };
 }
+
+
+// Check if user can remove members from group
+export function checkMemberRemovalPermission(userRole?: string): { allowed: boolean; reason?: string } {
+  if (!userRole) {
+    return { allowed: false, reason: 'noPermissionRemoveMember' };
+  }
+  
+  // Only admins can remove members
+  if (userRole === 'admin') {
+    return { allowed: true };
+  }
+  
+  return { allowed: false, reason: 'noPermissionRemoveMember' };
+}

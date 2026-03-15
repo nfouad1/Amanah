@@ -41,6 +41,21 @@ export interface GroupMember {
   joinedDate: string;
 }
 
+export interface AccessRequest {
+  id: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
+  groupId: string;
+  groupName: string;
+  campaignId?: string;
+  campaignTitle?: string;
+  status: 'pending' | 'approved' | 'rejected';
+  requestedAt: string;
+  respondedAt?: string;
+  respondedBy?: string;
+}
+
 export interface Activity {
   id: string;
   type: 'contribution' | 'campaign_created' | 'group_created';
@@ -944,4 +959,178 @@ export function addUserToGroup(groupId: string, userId: string, userName: string
 export function getInviteCodeByCode(code: string): InviteCode | null {
   const inviteCodes = getInviteCodes();
   return inviteCodes.find(i => i.code.toUpperCase() === code.toUpperCase()) || null;
+}
+
+
+// Access Request Management
+export function getAccessRequests(): AccessRequest[] {
+  if (typeof window === 'undefined') return [];
+  
+  try {
+    const stored = localStorage.getItem('amanah_access_requests');
+    return stored ? JSON.parse(stored) : [];
+  } catch (error) {
+    console.error('Error loading access requests:', error);
+    return [];
+  }
+}
+
+export function createAccessRequest(
+  userId: string,
+  userName: string,
+  userEmail: string,
+  groupId: string,
+  groupName: string,
+  campaignId?: string,
+  campaignTitle?: string
+): AccessRequest {
+  const requests = getAccessRequests();
+  
+  // Check if there's already a pending request for this user and group
+  const existingRequest = requests.find(
+    r => r.userId === userId && r.groupId === groupId && r.status === 'pending'
+  );
+  
+  if (existingRequest) {
+    return existingRequest;
+  }
+  
+  const newRequest: AccessRequest = {
+    id: Date.now().toString(),
+    userId,
+    userName,
+    userEmail,
+    groupId,
+    groupName,
+    campaignId,
+    campaignTitle,
+    status: 'pending',
+    requestedAt: new Date().toISOString(),
+  };
+  
+  requests.unshift(newRequest);
+  localStorage.setItem('amanah_access_requests', JSON.stringify(requests));
+  
+  // Notify all group admins
+  try {
+    const group = getGroupById(groupId);
+    if (group && group.memberList) {
+      const admins = group.memberList.filter(m => m.role === 'admin' && m.status === 'active');
+      admins.forEach(admin => {
+        createNotification(
+          admin.id,
+          'group_invited',
+          'notifAccessRequest',
+          {
+            userName,
+            groupName,
+            campaignTitle: campaignTitle || '',
+          },
+          groupId,
+          'group'
+        );
+      });
+    }
+  } catch (error) {
+    console.error('Error creating access request notifications:', error);
+  }
+  
+  return newRequest;
+}
+
+export function getAccessRequestsByGroup(groupId: string): AccessRequest[] {
+  const requests = getAccessRequests();
+  return requests.filter(r => r.groupId === groupId);
+}
+
+export function getAccessRequestsByUser(userId: string): AccessRequest[] {
+  const requests = getAccessRequests();
+  return requests.filter(r => r.userId === userId);
+}
+
+export function getPendingAccessRequestsForAdmin(adminUserId: string): AccessRequest[] {
+  const requests = getAccessRequests();
+  const groups = getGroups();
+  
+  // Get all groups where user is admin
+  const adminGroups = groups.filter(g => 
+    g.memberList?.some(m => m.id === adminUserId && m.role === 'admin' && m.status === 'active')
+  );
+  
+  const adminGroupIds = adminGroups.map(g => g.id);
+  
+  // Return pending requests for those groups
+  return requests.filter(r => 
+    r.status === 'pending' && adminGroupIds.includes(r.groupId)
+  );
+}
+
+export function approveAccessRequest(requestId: string, adminUserId: string): boolean {
+  const requests = getAccessRequests();
+  const requestIndex = requests.findIndex(r => r.id === requestId);
+  
+  if (requestIndex === -1) return false;
+  
+  const request = requests[requestIndex];
+  
+  // Update request status
+  request.status = 'approved';
+  request.respondedAt = new Date().toISOString();
+  request.respondedBy = adminUserId;
+  
+  localStorage.setItem('amanah_access_requests', JSON.stringify(requests));
+  
+  // Add user to group as member
+  const success = addUserToGroup(
+    request.groupId,
+    request.userId,
+    request.userName,
+    request.userEmail
+  );
+  
+  if (success) {
+    // Notify the user
+    createNotification(
+      request.userId,
+      'group_invited',
+      'notifAccessRequestApproved',
+      {
+        groupName: request.groupName,
+      },
+      request.groupId,
+      'group'
+    );
+  }
+  
+  return success;
+}
+
+export function rejectAccessRequest(requestId: string, adminUserId: string): boolean {
+  const requests = getAccessRequests();
+  const requestIndex = requests.findIndex(r => r.id === requestId);
+  
+  if (requestIndex === -1) return false;
+  
+  const request = requests[requestIndex];
+  
+  // Update request status
+  request.status = 'rejected';
+  request.respondedAt = new Date().toISOString();
+  request.respondedBy = adminUserId;
+  
+  localStorage.setItem('amanah_access_requests', JSON.stringify(requests));
+  
+  // Notify the user
+  createNotification(
+    request.userId,
+    'group_invited',
+    'notifAccessRequestRejected',
+    {
+      groupName: request.groupName,
+    },
+    request.groupId,
+    'group'
+  );
+  
+  return true;
 }

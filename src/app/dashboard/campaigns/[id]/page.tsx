@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { getCampaignById, voteForCampaign, removeVoteFromCampaign } from '@/lib/mockData';
+import { getCampaignById, voteForCampaign, removeVoteFromCampaign, createAccessRequest } from '@/lib/mockData';
 import { getCurrentUser } from '@/lib/auth';
 import { getLanguage, getTranslation, Language, translations } from '@/lib/i18n';
 import { checkVotingPermission, checkContributionPermission } from '@/lib/permissions';
@@ -16,6 +16,7 @@ export default function CampaignDetail() {
   const [user, setUser] = useState<any>(null);
   const [lang, setLang] = useState<Language>('en');
   const [isRTL, setIsRTL] = useState(false);
+  const [requestSent, setRequestSent] = useState(false);
 
   const loadCampaign = () => {
     if (typeof window !== 'undefined') {
@@ -41,6 +42,23 @@ export default function CampaignDetail() {
   const t = (key: keyof typeof translations.en) => {
     if (!mounted) return translations.en[key];
     return getTranslation(lang, key);
+  };
+
+  const handleRequestAccess = () => {
+    if (!user || !campaign) return;
+    
+    createAccessRequest(
+      user.id,
+      user.name,
+      user.email,
+      campaign.groupId,
+      campaign.groupName,
+      campaign.id,
+      campaign.title
+    );
+    
+    setRequestSent(true);
+    alert(t('viewerRequestSent'));
   };
 
     const handleVote = () => {
@@ -264,16 +282,14 @@ export default function CampaignDetail() {
                   </div>
                   
                   <button
-                    onClick={() => {
-                      // TODO: Implement request access functionality
-                      alert(t('viewerRequestSent'));
-                    }}
-                    className="w-full bg-primary-100 text-primary-700 py-2 px-4 rounded-lg hover:bg-primary-200 font-medium text-sm flex items-center justify-center gap-2"
+                    onClick={handleRequestAccess}
+                    disabled={requestSent}
+                    className="w-full bg-primary-100 text-primary-700 py-2 px-4 rounded-lg hover:bg-primary-200 font-medium text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
-                    {t('viewerRequestAccess')}
+                    {requestSent ? t('viewerRequestSent') : t('viewerRequestAccess')}
                   </button>
                   
                   <p className="text-xs text-gray-500 text-center">

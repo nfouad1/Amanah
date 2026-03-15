@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { getGroupById, getCampaigns, addMembersToGroup, removeMemberFromGroup, updateGroup, deleteCampaign, deleteGroup } from '@/lib/mockData';
 import { getCurrentUser } from '@/lib/auth';
 import { getLanguage, getTranslation, Language, translations } from '@/lib/i18n';
-import { canUserCreateCampaign, checkGroupDeletionPermission, checkGroupEditPermission, checkGroupInvitePermission } from '@/lib/permissions';
+import { canUserCreateCampaign, checkGroupDeletionPermission, checkGroupEditPermission, checkGroupInvitePermission, checkMemberRemovalPermission } from '@/lib/permissions';
 
 export default function GroupDetail() {
   const params = useParams();
@@ -75,6 +75,7 @@ export default function GroupDetail() {
   const canInviteToGroup = user ? checkGroupInvitePermission(user.role).allowed : false;
   const canEditGroup = user ? checkGroupEditPermission(user.role).allowed : false;
   const canDeleteGroup = user ? checkGroupDeletionPermission(user.role).allowed : false;
+  const canRemoveMember = user ? checkMemberRemovalPermission(user.role).allowed : false;
 
   const handleInviteMembers = async () => {
     setIsInviting(true);
@@ -117,6 +118,12 @@ export default function GroupDetail() {
   };
 
   const handleRemoveMember = (memberId: string, memberName: string) => {
+    // Check permission
+    if (!canRemoveMember) {
+      alert(t('noPermissionRemoveMember'));
+      return;
+    }
+    
     if (confirm(t('confirmRemoveMember').replace('{name}', memberName))) {
       const success = removeMemberFromGroup(id, memberId);
       
@@ -321,7 +328,7 @@ export default function GroupDetail() {
                       </div>
                       <p className="text-xs text-gray-500 mt-1">{member.contact}</p>
                     </div>
-                    {member.role !== 'admin' && (
+                    {member.role !== 'admin' && canRemoveMember && (
                       <button
                         onClick={() => handleRemoveMember(member.id, member.name)}
                         className="text-red-600 hover:text-red-700 p-1"

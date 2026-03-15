@@ -314,6 +314,7 @@ export const translations = {
     noPermissionDeleteGroup: 'You do not have permission to delete groups. Only Admins can delete groups.',
     noPermissionEditGroup: 'You do not have permission to edit groups. Only Admins can edit groups.',
     noPermissionInviteToGroup: 'You do not have permission to invite members to groups. Only Admins can invite to groups.',
+    noPermissionRemoveMember: 'You do not have permission to remove members. Only Admins can remove members.',
     
     // Viewer Role Help Messages
     viewerNeedInvite: 'As a Viewer, you need to be invited to a group to contribute to campaigns.',
@@ -321,6 +322,21 @@ export const translations = {
     viewerRequestSent: 'Access request sent to group admins',
     viewerContactAdmin: 'Contact a group admin to request an invite or role upgrade.',
     viewerUpgradeRole: 'To contribute, ask an admin to upgrade your role to Member or Contributor.',
+    
+    // Access Request Notifications
+    notifAccessRequest: '{userName} requested access to {groupName}',
+    notifAccessRequestApproved: 'Your access request to {groupName} was approved',
+    notifAccessRequestRejected: 'Your access request to {groupName} was rejected',
+    accessRequests: 'Access Requests',
+    pendingRequests: 'Pending Requests',
+    approveRequest: 'Approve',
+    rejectRequest: 'Reject',
+    noAccessRequests: 'No pending access requests',
+    requestedAccess: 'requested access to',
+    viewAccessRequests: 'View Access Requests',
+    requestApproved: 'Request approved',
+    requestRejected: 'Request rejected',
+    campaign: 'Campaign',
     requiresApproval: 'Requires Approval',
     requiresApprovalDesc: 'Campaign needs 3 votes before it can accept contributions',
     startImmediately: 'Start Immediately',
@@ -671,6 +687,7 @@ export const translations = {
     noPermissionDeleteGroup: 'ليس لديك إذن لحذف المجموعات. يمكن للمسؤولين فقط حذف المجموعات.',
     noPermissionEditGroup: 'ليس لديك إذن لتعديل المجموعات. يمكن للمسؤولين فقط تعديل المجموعات.',
     noPermissionInviteToGroup: 'ليس لديك إذن لدعوة أعضاء إلى المجموعات. يمكن للمسؤولين فقط الدعوة إلى المجموعات.',
+    noPermissionRemoveMember: 'ليس لديك إذن لإزالة الأعضاء. يمكن للمسؤولين فقط إزالة الأعضاء.',
     
     // Viewer Role Help Messages
     viewerNeedInvite: 'كمشاهد، تحتاج إلى دعوة للانضمام إلى مجموعة للمساهمة في الحملات.',
@@ -678,6 +695,21 @@ export const translations = {
     viewerRequestSent: 'تم إرسال طلب الوصول إلى مسؤولي المجموعة',
     viewerContactAdmin: 'اتصل بمسؤول المجموعة لطلب دعوة أو ترقية الدور.',
     viewerUpgradeRole: 'للمساهمة، اطلب من المسؤول ترقية دورك إلى عضو أو مساهم.',
+    
+    // Access Request Notifications
+    notifAccessRequest: '{userName} طلب الوصول إلى {groupName}',
+    notifAccessRequestApproved: 'تمت الموافقة على طلب الوصول الخاص بك إلى {groupName}',
+    notifAccessRequestRejected: 'تم رفض طلب الوصول الخاص بك إلى {groupName}',
+    accessRequests: 'طلبات الوصول',
+    pendingRequests: 'الطلبات المعلقة',
+    approveRequest: 'موافقة',
+    rejectRequest: 'رفض',
+    noAccessRequests: 'لا توجد طلبات وصول معلقة',
+    requestedAccess: 'طلب الوصول إلى',
+    viewAccessRequests: 'عرض طلبات الوصول',
+    requestApproved: 'تمت الموافقة على الطلب',
+    requestRejected: 'تم رفض الطلب',
+    campaign: 'حملة',
     requiresApproval: 'يتطلب الموافقة',
     requiresApprovalDesc: 'تحتاج الحملة إلى 3 أصوات قبل أن تتمكن من قبول المساهمات',
     startImmediately: 'ابدأ فوراً',
@@ -1028,6 +1060,7 @@ export const translations = {
     noPermissionDeleteGroup: 'Du har inte behörighet att ta bort grupper. Endast administratörer kan ta bort grupper.',
     noPermissionEditGroup: 'Du har inte behörighet att redigera grupper. Endast administratörer kan redigera grupper.',
     noPermissionInviteToGroup: 'Du har inte behörighet att bjuda in medlemmar till grupper. Endast administratörer kan bjuda in till grupper.',
+    noPermissionRemoveMember: 'Du har inte behörighet att ta bort medlemmar. Endast administratörer kan ta bort medlemmar.',
     
     // Viewer Role Help Messages
     viewerNeedInvite: 'Som tittare behöver du en inbjudan till en grupp för att bidra till kampanjer.',
@@ -1035,6 +1068,21 @@ export const translations = {
     viewerRequestSent: 'Åtkomstbegäran skickad till gruppadministratörer',
     viewerContactAdmin: 'Kontakta en gruppadministratör för att begära en inbjudan eller rolluppgradering.',
     viewerUpgradeRole: 'För att bidra, be en administratör att uppgradera din roll till medlem eller bidragsgivare.',
+    
+    // Access Request Notifications
+    notifAccessRequest: '{userName} begärde åtkomst till {groupName}',
+    notifAccessRequestApproved: 'Din åtkomstbegäran till {groupName} godkändes',
+    notifAccessRequestRejected: 'Din åtkomstbegäran till {groupName} avvisades',
+    accessRequests: 'Åtkomstbegäranden',
+    pendingRequests: 'Väntande begäranden',
+    approveRequest: 'Godkänn',
+    rejectRequest: 'Avvisa',
+    noAccessRequests: 'Inga väntande åtkomstbegäranden',
+    requestedAccess: 'begärde åtkomst till',
+    viewAccessRequests: 'Visa åtkomstbegäranden',
+    requestApproved: 'Begäran godkänd',
+    requestRejected: 'Begäran avvisad',
+    campaign: 'Kampanj',
     requiresApproval: 'Kräver godkännande',
     requiresApprovalDesc: 'Kampanjen behöver 3 röster innan den kan ta emot bidrag',
     startImmediately: 'Starta direkt',
