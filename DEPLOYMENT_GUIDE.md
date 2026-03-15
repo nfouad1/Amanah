@@ -1,4 +1,4 @@
-# Amanah - Deployment Guide
+# Sanad - Deployment Guide
 
 ## Quick Start: Deploy to Vercel (Recommended)
 
@@ -17,10 +17,10 @@ git init
 git add .
 
 # Commit
-git commit -m "Initial commit - Amanah family crowdfunding app"
+git commit -m "Initial commit - Sanad family crowdfunding app"
 
 # Create a new repository on GitHub, then:
-git remote add origin https://github.com/YOUR_USERNAME/amanah.git
+git remote add origin https://github.com/YOUR_USERNAME/sanad.git
 git branch -M main
 git push -u origin main
 ```

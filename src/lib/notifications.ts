@@ -11,12 +11,12 @@ function generateId(): string {
 
 // Get storage key for user
 function getStorageKey(userId: string): string {
-  return `amanah_notifications_${userId}`;
+  return `sanad_notifications_${userId}`;
 }
 
 // Get filter storage key
 function getFilterKey(userId: string): string {
-  return `amanah_notification_filter_${userId}`;
+  return `sanad_notification_filter_${userId}`;
 }
 
 // Load notifications from localStorage

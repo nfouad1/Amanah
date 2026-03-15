@@ -37,13 +37,13 @@ const DEFAULT_ADMIN: AuthUser = {
 function getUsers(): AuthUser[] {
   if (typeof window === 'undefined') return [];
   try {
-    const stored = localStorage.getItem('amanah_users');
+    const stored = localStorage.getItem('sanad_users');
     const users = stored ? JSON.parse(stored) : [];
     
     // Add default admin if no users exist
     if (users.length === 0) {
       users.push(DEFAULT_ADMIN);
-      localStorage.setItem('amanah_users', JSON.stringify(users));
+      localStorage.setItem('sanad_users', JSON.stringify(users));
     }
     
     return users;
@@ -57,7 +57,7 @@ function getUsers(): AuthUser[] {
 function saveUsers(users: AuthUser[]): void {
   if (typeof window === 'undefined') return;
   try {
-    localStorage.setItem('amanah_users', JSON.stringify(users));
+    localStorage.setItem('sanad_users', JSON.stringify(users));
   } catch (error) {
     console.error('Error saving users:', error);
   }
@@ -67,7 +67,7 @@ function saveUsers(users: AuthUser[]): void {
 export function getCurrentUser(): User | null {
   if (typeof window === 'undefined') return null;
   try {
-    const stored = localStorage.getItem('amanah_current_user');
+    const stored = localStorage.getItem('sanad_current_user');
     return stored ? JSON.parse(stored) : null;
   } catch (error) {
     console.error('Error loading current user:', error);
@@ -80,9 +80,9 @@ function setCurrentUser(user: User | null): void {
   if (typeof window === 'undefined') return;
   try {
     if (user) {
-      localStorage.setItem('amanah_current_user', JSON.stringify(user));
+      localStorage.setItem('sanad_current_user', JSON.stringify(user));
     } else {
-      localStorage.removeItem('amanah_current_user');
+      localStorage.removeItem('sanad_current_user');
     }
   } catch (error) {
     console.error('Error saving current user:', error);
@@ -114,7 +114,7 @@ function determineUserRole(context: RoleAssignmentContext): RoleAssignmentResult
     // Get invite codes from localStorage
     if (typeof window !== 'undefined') {
       try {
-        const stored = localStorage.getItem('amanah_invite_codes');
+        const stored = localStorage.getItem('sanad_invite_codes');
         if (stored) {
           const inviteCodes = JSON.parse(stored);
           const invite = inviteCodes.find(
@@ -164,7 +164,7 @@ function determineUserRole(context: RoleAssignmentContext): RoleAssignmentResult
 function consumeInviteToken(inviteToken: string, userId: string): void {
   if (typeof window === 'undefined') return;
   try {
-    const stored = localStorage.getItem('amanah_invite_codes');
+    const stored = localStorage.getItem('sanad_invite_codes');
     if (stored) {
       const inviteCodes = JSON.parse(stored);
       const inviteIndex = inviteCodes.findIndex(
@@ -174,7 +174,7 @@ function consumeInviteToken(inviteToken: string, userId: string): void {
       if (inviteIndex !== -1) {
         inviteCodes[inviteIndex].usedBy = userId;
         inviteCodes[inviteIndex].usedAt = new Date().toISOString();
-        localStorage.setItem('amanah_invite_codes', JSON.stringify(inviteCodes));
+        localStorage.setItem('sanad_invite_codes', JSON.stringify(inviteCodes));
       }
     }
   } catch (error) {
@@ -335,7 +335,7 @@ export function changePassword(userId: string, currentPassword: string, newPassw
 export function getUserProfile(userId: string): any | null {
   if (typeof window === 'undefined') return null;
   try {
-    const profiles = localStorage.getItem('amanah_user_profiles');
+    const profiles = localStorage.getItem('sanad_user_profiles');
     const profilesData = profiles ? JSON.parse(profiles) : {};
     return profilesData[userId] || null;
   } catch (error) {
@@ -348,13 +348,13 @@ export function getUserProfile(userId: string): any | null {
 export function saveUserProfile(userId: string, profile: { phone?: string; bio?: string; avatar?: string }): void {
   if (typeof window === 'undefined') return;
   try {
-    const profiles = localStorage.getItem('amanah_user_profiles');
+    const profiles = localStorage.getItem('sanad_user_profiles');
     const profilesData = profiles ? JSON.parse(profiles) : {};
     profilesData[userId] = {
       ...profilesData[userId],
       ...profile,
     };
-    localStorage.setItem('amanah_user_profiles', JSON.stringify(profilesData));
+    localStorage.setItem('sanad_user_profiles', JSON.stringify(profilesData));
   } catch (error) {
     console.error('Error saving user profile:', error);
   }

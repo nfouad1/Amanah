@@ -1,6 +1,6 @@
 {
-  "name": "Amanah - Family Support Platform",
-  "short_name": "Amanah",
+  "name": "Sanad - Family Support Platform",
+  "short_name": "Sanad",
   "description": "A private crowdfunding platform for families to support each other",
   "start_url": "/",
   "display": "standalone",

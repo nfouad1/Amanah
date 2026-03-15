@@ -5,7 +5,7 @@
 For testing and initial setup, a default admin account is automatically created:
 
 ### Login Details
-- **Email**: `admin@amanah.app`
+- **Email**: `admin@sanad.fund`
 - **Password**: `admin123`
 - **Role**: Administrator
 - **Permissions**: Full access to all features

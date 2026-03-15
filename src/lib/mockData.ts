@@ -207,9 +207,9 @@ export function getCampaigns(): Campaign[] {
   if (typeof window === 'undefined') return [];
   
   try {
-    const stored = localStorage.getItem('amanah_campaigns');
+    const stored = localStorage.getItem('sanad_campaigns');
     if (!stored) {
-      localStorage.setItem('amanah_campaigns', JSON.stringify(defaultCampaigns));
+      localStorage.setItem('sanad_campaigns', JSON.stringify(defaultCampaigns));
       return defaultCampaigns;
     }
     
@@ -223,7 +223,7 @@ export function getCampaigns(): Campaign[] {
     }));
     
     // Save migrated data
-    localStorage.setItem('amanah_campaigns', JSON.stringify(migratedCampaigns));
+    localStorage.setItem('sanad_campaigns', JSON.stringify(migratedCampaigns));
     return migratedCampaigns;
   } catch (error) {
     console.error('Error loading campaigns:', error);
@@ -247,7 +247,7 @@ export function addCampaign(campaign: Omit<Campaign, 'id' | 'current' | 'contrib
   
   // Add to beginning of array (newest first)
   campaigns.unshift(newCampaign);
-  localStorage.setItem('amanah_campaigns', JSON.stringify(campaigns));
+  localStorage.setItem('sanad_campaigns', JSON.stringify(campaigns));
   
   // Add activity
   addActivity({
@@ -296,9 +296,9 @@ export function getGroups(): Group[] {
   if (typeof window === 'undefined') return [];
   
   try {
-    const stored = localStorage.getItem('amanah_groups');
+    const stored = localStorage.getItem('sanad_groups');
     if (!stored) {
-      localStorage.setItem('amanah_groups', JSON.stringify(defaultGroups));
+      localStorage.setItem('sanad_groups', JSON.stringify(defaultGroups));
       return defaultGroups;
     }
     return JSON.parse(stored);
@@ -345,7 +345,7 @@ export function addGroup(group: Omit<Group, 'id' | 'members' | 'memberList'>, in
   };
   
   groups.unshift(newGroup);
-  localStorage.setItem('amanah_groups', JSON.stringify(groups));
+  localStorage.setItem('sanad_groups', JSON.stringify(groups));
   
   // Add activity
   addActivity({
@@ -400,7 +400,7 @@ export function addMembersToGroup(groupId: string, invites: string[]): boolean {
   
   group.members = group.memberList.length;
   groups[groupIndex] = group;
-  localStorage.setItem('amanah_groups', JSON.stringify(groups));
+  localStorage.setItem('sanad_groups', JSON.stringify(groups));
   
   return true;
 }
@@ -425,7 +425,7 @@ export function removeMemberFromGroup(groupId: string, memberId: string): boolea
   group.members = group.memberList.length;
   
   groups[groupIndex] = group;
-  localStorage.setItem('amanah_groups', JSON.stringify(groups));
+  localStorage.setItem('sanad_groups', JSON.stringify(groups));
   
   return true;
 }
@@ -443,7 +443,7 @@ export function updateGroup(groupId: string, updates: { name?: string; descripti
   if (updates.description !== undefined) group.description = updates.description;
   
   groups[groupIndex] = group;
-  localStorage.setItem('amanah_groups', JSON.stringify(groups));
+  localStorage.setItem('sanad_groups', JSON.stringify(groups));
   
   return true;
 }
@@ -456,7 +456,7 @@ export function deleteCampaign(campaignId: string): boolean {
   
   if (filteredCampaigns.length === campaigns.length) return false;
   
-  localStorage.setItem('amanah_campaigns', JSON.stringify(filteredCampaigns));
+  localStorage.setItem('sanad_campaigns', JSON.stringify(filteredCampaigns));
   
   // Create notifications for contributors
   if (campaign) {
@@ -496,9 +496,9 @@ export function deleteGroup(groupId: string): boolean {
   // Also delete all campaigns in this group
   const campaigns = getCampaigns();
   const filteredCampaigns = campaigns.filter(c => c.groupId !== groupId);
-  localStorage.setItem('amanah_campaigns', JSON.stringify(filteredCampaigns));
+  localStorage.setItem('sanad_campaigns', JSON.stringify(filteredCampaigns));
   
-  localStorage.setItem('amanah_groups', JSON.stringify(filteredGroups));
+  localStorage.setItem('sanad_groups', JSON.stringify(filteredGroups));
   return true;
 }
 
@@ -535,7 +535,7 @@ export function voteForCampaign(campaignId: string, userId: string): { success: 
   }
   
   campaigns[campaignIndex] = campaign;
-  localStorage.setItem('amanah_campaigns', JSON.stringify(campaigns));
+  localStorage.setItem('sanad_campaigns', JSON.stringify(campaigns));
   
     // Create notifications
   try {
@@ -621,7 +621,7 @@ export function removeVoteFromCampaign(campaignId: string, userId: string): { su
   }
   
   campaigns[campaignIndex] = campaign;
-  localStorage.setItem('amanah_campaigns', JSON.stringify(campaigns));
+  localStorage.setItem('sanad_campaigns', JSON.stringify(campaigns));
   
   const statusMessage = campaign.status === 'pending' && campaign.votes === MINIMUM_VOTES - 1
     ? 'Vote removed. Campaign is now pending and needs more votes to become active.'
@@ -635,9 +635,9 @@ export function getActivities(): Activity[] {
   if (typeof window === 'undefined') return [];
   
   try {
-    const stored = localStorage.getItem('amanah_activities');
+    const stored = localStorage.getItem('sanad_activities');
     if (!stored) {
-      localStorage.setItem('amanah_activities', JSON.stringify(defaultActivities));
+      localStorage.setItem('sanad_activities', JSON.stringify(defaultActivities));
       return defaultActivities;
     }
     return JSON.parse(stored);
@@ -660,7 +660,7 @@ export function addActivity(activity: Omit<Activity, 'id' | 'createdAt'>): Activ
   
   // Keep only last 50 activities
   const trimmedActivities = activities.slice(0, 50);
-  localStorage.setItem('amanah_activities', JSON.stringify(trimmedActivities));
+  localStorage.setItem('sanad_activities', JSON.stringify(trimmedActivities));
   return newActivity;
 }
 
@@ -681,7 +681,7 @@ export function addContribution(campaignId: string, amount: number, userId: stri
       campaign.status = 'completed';
     }
     
-    localStorage.setItem('amanah_campaigns', JSON.stringify(campaigns));
+    localStorage.setItem('sanad_campaigns', JSON.stringify(campaigns));
     
     // Add activity
     addActivity({
@@ -757,9 +757,9 @@ export function getInviteCodes(): InviteCode[] {
   if (typeof window === 'undefined') return [];
   
   try {
-    const stored = localStorage.getItem('amanah_invite_codes');
+    const stored = localStorage.getItem('sanad_invite_codes');
     if (!stored) {
-      localStorage.setItem('amanah_invite_codes', JSON.stringify(defaultInviteCodes));
+      localStorage.setItem('sanad_invite_codes', JSON.stringify(defaultInviteCodes));
       return defaultInviteCodes;
     }
     return JSON.parse(stored);
@@ -803,7 +803,7 @@ export function useInviteCode(code: string, userId: string): boolean {
   invite.usedAt = new Date().toISOString();
   
   inviteCodes[inviteIndex] = invite;
-  localStorage.setItem('amanah_invite_codes', JSON.stringify(inviteCodes));
+  localStorage.setItem('sanad_invite_codes', JSON.stringify(inviteCodes));
   
   return true;
 }
@@ -871,7 +871,7 @@ export function createInviteCode(
   }
   
   inviteCodes.push(newInvite);
-  localStorage.setItem('amanah_invite_codes', JSON.stringify(inviteCodes));
+  localStorage.setItem('sanad_invite_codes', JSON.stringify(inviteCodes));
   
   return newInvite;
 }
@@ -909,7 +909,7 @@ export function deactivateInviteCode(code: string): boolean {
   if (inviteIndex === -1) return false;
   
   inviteCodes[inviteIndex].isActive = false;
-  localStorage.setItem('amanah_invite_codes', JSON.stringify(inviteCodes));
+  localStorage.setItem('sanad_invite_codes', JSON.stringify(inviteCodes));
   
   return true;
 }
@@ -950,7 +950,7 @@ export function addUserToGroup(groupId: string, userId: string, userName: string
   
   group.members = group.memberList.length;
   groups[groupIndex] = group;
-  localStorage.setItem('amanah_groups', JSON.stringify(groups));
+  localStorage.setItem('sanad_groups', JSON.stringify(groups));
   
   return true;
 }
@@ -967,7 +967,7 @@ export function getAccessRequests(): AccessRequest[] {
   if (typeof window === 'undefined') return [];
   
   try {
-    const stored = localStorage.getItem('amanah_access_requests');
+    const stored = localStorage.getItem('sanad_access_requests');
     return stored ? JSON.parse(stored) : [];
   } catch (error) {
     console.error('Error loading access requests:', error);
@@ -1009,7 +1009,7 @@ export function createAccessRequest(
   };
   
   requests.unshift(newRequest);
-  localStorage.setItem('amanah_access_requests', JSON.stringify(requests));
+  localStorage.setItem('sanad_access_requests', JSON.stringify(requests));
   
   // Notify all group admins
   try {
@@ -1078,7 +1078,7 @@ export function approveAccessRequest(requestId: string, adminUserId: string): bo
   request.respondedAt = new Date().toISOString();
   request.respondedBy = adminUserId;
   
-  localStorage.setItem('amanah_access_requests', JSON.stringify(requests));
+  localStorage.setItem('sanad_access_requests', JSON.stringify(requests));
   
   // Add user to group as member
   const success = addUserToGroup(
@@ -1118,7 +1118,7 @@ export function rejectAccessRequest(requestId: string, adminUserId: string): boo
   request.respondedAt = new Date().toISOString();
   request.respondedBy = adminUserId;
   
-  localStorage.setItem('amanah_access_requests', JSON.stringify(requests));
+  localStorage.setItem('sanad_access_requests', JSON.stringify(requests));
   
   // Notify the user
   createNotification(

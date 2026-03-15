@@ -1,6 +1,6 @@
-# Amanah - Family Crowdfunding Platform
+# Sanad - Family Crowdfunding Platform
 
-**Amanah** (Arabic: أمانة, meaning "trust") is a family-focused crowdfunding platform that enables families to support each other through collective contributions and democratic campaign approval.
+**Sanad** (Arabic: سند, meaning "support") is a family-focused crowdfunding platform that enables families to support each other through collective contributions and democratic campaign approval.
 
 ## 🌟 Features
 

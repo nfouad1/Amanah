@@ -3,9 +3,9 @@ export type Language = 'en' | 'ar' | 'sv';
 export const translations = {
   en: {
     // Landing Page
-    appName: 'Amanah',
+    appName: 'Sanad',
     tagline: 'Support your family, together',
-    taglineSubtext: 'Amanah means "trust" - the foundation of family support',
+    taglineSubtext: 'Sanad means "support" - the foundation of family care',
     getStarted: 'Get Started',
     createGroups: 'Create Groups',
     createGroupsDesc: 'Build private family circles to pool resources and support each other',
@@ -376,9 +376,9 @@ export const translations = {
   },
   ar: {
     // Landing Page
-    appName: 'أمانة',
+    appName: 'سند',
     tagline: 'ادعم عائلتك، معاً',
-    taglineSubtext: 'أمانة تعني "الثقة" - أساس الدعم العائلي',
+    taglineSubtext: 'سند تعني "الدعم" - أساس رعاية العائلة',
     getStarted: 'ابدأ الآن',
     createGroups: 'إنشاء مجموعات',
     createGroupsDesc: 'بناء دوائر عائلية خاصة لتجميع الموارد ودعم بعضكم البعض',
@@ -749,9 +749,9 @@ export const translations = {
   },
   sv: {
     // Landing Page
-    appName: 'Amanah',
+    appName: 'Sanad',
     tagline: 'Stöd din familj, tillsammans',
-    taglineSubtext: 'Amanah betyder "förtroende" - grunden för familjestöd',
+    taglineSubtext: 'Sanad betyder "stöd" - grunden för familjeomsorg',
     getStarted: 'Kom igång',
     createGroups: 'Skapa grupper',
     createGroupsDesc: 'Bygg privata familjekretsar för att samla resurser och stödja varandra',
@@ -1130,7 +1130,7 @@ export function getTranslation(lang: Language, key: keyof typeof translations.en
 export function getLanguage(): Language {
   if (typeof window === 'undefined') return 'en';
   try {
-    return (localStorage.getItem('amanah_language') as Language) || 'en';
+    return (localStorage.getItem('sanad_language') as Language) || 'en';
   } catch (error) {
     console.error('Error loading language:', error);
     return 'en';
@@ -1140,7 +1140,7 @@ export function getLanguage(): Language {
 export function setLanguage(lang: Language): void {
   if (typeof window === 'undefined') return;
   try {
-    localStorage.setItem('amanah_language', lang);
+    localStorage.setItem('sanad_language', lang);
   } catch (error) {
     console.error('Error saving language:', error);
   }
