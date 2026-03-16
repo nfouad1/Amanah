@@ -62,21 +62,21 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-12">
-          <div className="flex flex-col items-center mb-6">
-            <img src="/logo.png" alt="Sanad Logo" width="500" height="500" className="object-contain" />
-            <h1 className="text-6xl font-serif italic text-primary-900 mt-4" style={{ fontFamily: 'Georgia, serif' }}>Sanad</h1>
+      <div className="container mx-auto px-4 py-4">
+        <div className="text-center mb-6">
+          <div className="flex flex-col items-center mb-3">
+            <img src="/logo.png" alt="Sanad Logo" width="350" height="350" className="object-contain" />
+            <h1 className="text-5xl font-serif italic text-primary-900 mt-1" style={{ fontFamily: 'Georgia, serif' }}>Sanad</h1>
           </div>
-          <p className="text-xl text-primary-800">
+          <p className="text-lg text-primary-800">
             {t('tagline')}
           </p>
-          <p className="text-sm text-primary-600 mt-2">
+          <p className="text-sm text-primary-600 mt-1">
             {t('taglineSubtext')}
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-6">
           <div className="card-warm p-6">
             <div className="text-primary-500 mb-3">
               <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
@@ -114,16 +114,16 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="text-center mt-12">
-          <Link href="/login" className="inline-block btn-primary text-lg px-10 py-4">
+        <div className="text-center mt-6">
+          <Link href="/login" className="inline-block btn-primary text-lg px-8 py-3">
             {t('getStarted')}
           </Link>
         </div>
 
         {/* Active Campaigns Section */}
         {campaigns.length > 0 && (
-          <div className="mt-20 max-w-5xl mx-auto">
-            <div className="text-center mb-10">
+          <div className="mt-10 max-w-5xl mx-auto">
+            <div className="text-center mb-6">
               <h2 className="text-3xl font-bold text-primary-900 mb-3">{t('activeCampaigns')}</h2>
               <p className="text-primary-700">{t('seeFamiliesSupporting')}</p>
             </div>
@@ -178,7 +178,7 @@ export default function Home() {
               })}
             </div>
 
-            <div className="text-center mt-8">
+            <div className="text-center mt-6">
               <Link href="/login" className="text-primary-600 hover:text-primary-700 font-semibold text-lg">
                 {t('viewAllCampaigns')}
               </Link>

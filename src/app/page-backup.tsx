@@ -68,9 +68,9 @@ export default function Home() {
       </div>
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">
-          <div className="flex flex-col items-center mb-6">
-            <img src="/logo.png" alt="Sanad Logo" width="500" height="500" className="object-contain" />
-            <h1 className="text-6xl font-serif italic text-gray-900 mt-4" style={{ fontFamily: 'Georgia, serif' }}>Sanad</h1>
+          <div className="flex flex-col items-center mb-4">
+            <img src="/logo.png" alt="Sanad Logo" width="350" height="350" className="object-contain" />
+            <h1 className="text-5xl font-serif italic text-gray-900 mt-2" style={{ fontFamily: 'Georgia, serif' }}>Sanad</h1>
           </div>
           <p className="text-xl text-gray-600">
             {t('tagline')}

@@ -61,9 +61,9 @@ export default function Login() {
 
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
-          <div className="flex flex-col items-center mb-4">
-            <img src="/logo.png" alt="Sanad Logo" width="500" height="500" className="object-contain" />
-            <h1 className="text-5xl font-serif italic text-primary-900 mt-3" style={{ fontFamily: 'Georgia, serif' }}>Sanad</h1>
+          <div className="flex flex-col items-center mb-3">
+            <img src="/logo.png" alt="Sanad Logo" width="350" height="350" className="object-contain" />
+            <h1 className="text-4xl font-serif italic text-primary-900 mt-1" style={{ fontFamily: 'Georgia, serif' }}>Sanad</h1>
           </div>
           <p className="text-primary-700">{t('tagline')}</p>
         </div>
