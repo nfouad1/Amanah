@@ -67,9 +67,6 @@ export default function Home() {
           <div className="flex justify-center mb-6">
             <img src="/logo.png" alt="Sanad Logo" width="200" height="200" className="object-contain" />
           </div>
-          <h1 className="text-5xl font-bold text-primary-900 mb-4">
-            {t('appName')}
-          </h1>
           <p className="text-xl text-primary-800">
             {t('tagline')}
           </p>

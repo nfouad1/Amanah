@@ -99,7 +99,6 @@ export default function Register() {
           <div className="flex justify-center mb-4">
             <img src="/logo.png" alt="Sanad Logo" width="200" height="200" className="object-contain" />
           </div>
-          <h1 className="text-4xl font-bold text-primary-900 mb-2">{t('appName')}</h1>
           <p className="text-primary-700">{t('tagline')}</p>
         </div>
 
