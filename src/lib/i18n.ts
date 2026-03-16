@@ -29,6 +29,8 @@ export const translations = {
     contribute: 'Contribute',
     createGroup: 'Create Group',
     create: '+ Create',
+    allCampaigns: 'All Campaigns',
+    completedTab: 'Completed',
     
     // Campaign
     raised: 'raised',
@@ -402,6 +404,8 @@ export const translations = {
     contribute: 'المساهمة',
     createGroup: 'إنشاء مجموعة',
     create: '+ إنشاء',
+    allCampaigns: 'جميع الحملات',
+    completedTab: 'المكتملة',
     
     // Campaign
     raised: 'تم جمعه',
@@ -775,6 +779,8 @@ export const translations = {
     contribute: 'Bidra',
     createGroup: 'Skapa grupp',
     create: '+ Skapa',
+    allCampaigns: 'Alla kampanjer',
+    completedTab: 'Avslutade',
     
     // Campaign
     raised: 'insamlat',

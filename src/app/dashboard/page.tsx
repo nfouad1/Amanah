@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [lang, setLang] = useState<Language>('en');
   const [isRTL, setIsRTL] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState<'active' | 'pending' | 'completed'>('active');
 
   useEffect(() => {
     // Check authentication
@@ -128,71 +129,137 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Pending Campaigns */}
-            {pendingCampaigns.length > 0 && (
-              <div className="bg-amber-50 border border-amber-200 rounded-lg shadow">
-                <div className="p-6 border-b border-amber-200 flex justify-between items-center">
-                  <div>
-                    <h2 className="text-xl font-semibold text-amber-900">{t('pendingCampaigns')}</h2>
-                    <p className="text-sm text-amber-700 mt-1">{t('pendingCampaignsDesc')}</p>
-                  </div>
-                </div>
-                <div className="divide-y divide-amber-200">
-                  {pendingCampaigns.map(campaign => (
-                    <CampaignCard 
-                      key={campaign.id}
-                      id={campaign.id}
-                      title={campaign.title}
-                      group={campaign.groupName}
-                      current={campaign.current}
-                      target={campaign.target}
-                      currency={campaign.currency}
-                      contributors={campaign.contributors}
-                      dueDate={campaign.dueDate}
-                      votes={campaign.votes}
-                      status={campaign.status}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Active Campaigns */}
+            {/* Campaign Tabs */}
             <div className="bg-white rounded-lg shadow">
-              <div className="p-6 border-b border-primary-100 flex justify-between items-center">
-                <h2 className="text-xl font-semibold text-primary-900">{t('activeCampaigns')}</h2>
-                {canCreateCampaign && (
-                  <Link href="/dashboard/campaigns/new" className="text-primary-600 hover:text-primary-700 text-sm font-medium">
-                    {t('newCampaign')}
-                  </Link>
-                )}
+              <div className="p-6 border-b border-primary-100">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-semibold text-primary-900">{t('allCampaigns')}</h2>
+                  {canCreateCampaign && (
+                    <Link href="/dashboard/campaigns/new" className="text-primary-600 hover:text-primary-700 text-sm font-medium">
+                      {t('newCampaign')}
+                    </Link>
+                  )}
+                </div>
+                
+                {/* Tabs */}
+                <div className="flex gap-2 border-b border-gray-200">
+                  <button
+                    onClick={() => setActiveTab('active')}
+                    className={`px-4 py-2 font-medium text-sm transition-colors ${
+                      activeTab === 'active'
+                        ? 'text-primary-600 border-b-2 border-primary-600'
+                        : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    {t('active')} ({activeCampaigns.length})
+                  </button>
+                  {pendingCampaigns.length > 0 && (
+                    <button
+                      onClick={() => setActiveTab('pending')}
+                      className={`px-4 py-2 font-medium text-sm transition-colors ${
+                        activeTab === 'pending'
+                          ? 'text-amber-600 border-b-2 border-amber-600'
+                          : 'text-gray-500 hover:text-gray-700'
+                      }`}
+                    >
+                      {t('pending')} ({pendingCampaigns.length})
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setActiveTab('completed')}
+                    className={`px-4 py-2 font-medium text-sm transition-colors ${
+                      activeTab === 'completed'
+                        ? 'text-green-600 border-b-2 border-green-600'
+                        : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    {t('completedTab')} ({completedCampaigns.length})
+                  </button>
+                </div>
               </div>
-              <div className="divide-y">
-                {activeCampaigns.length > 0 ? (
-                  activeCampaigns.map(campaign => (
-                    <CampaignCard 
-                      key={campaign.id}
-                      id={campaign.id}
-                      title={campaign.title}
-                      group={campaign.groupName}
-                      current={campaign.current}
-                      target={campaign.target}
-                      currency={campaign.currency}
-                      contributors={campaign.contributors}
-                      dueDate={campaign.dueDate}
-                      votes={campaign.votes}
-                    />
-                  ))
-                ) : (
-                    <div className="p-12 text-center">
-                    <p className="text-gray-500 mb-4">{t('noActiveCampaigns')}</p>
-                    {canCreateCampaign && (
-                      <Link href="/dashboard/campaigns/new" className="text-primary-600 hover:text-primary-700 font-medium">
-                        {t('createFirstCampaignBtn')}
-                      </Link>
-                    )}
-                  </div>
 
+              {/* Tab Content */}
+              <div className="divide-y">
+                {activeTab === 'active' && (
+                  <>
+                    {activeCampaigns.length > 0 ? (
+                      activeCampaigns.map(campaign => (
+                        <CampaignCard 
+                          key={campaign.id}
+                          id={campaign.id}
+                          title={campaign.title}
+                          group={campaign.groupName}
+                          current={campaign.current}
+                          target={campaign.target}
+                          currency={campaign.currency}
+                          contributors={campaign.contributors}
+                          dueDate={campaign.dueDate}
+                          votes={campaign.votes}
+                        />
+                      ))
+                    ) : (
+                      <div className="p-12 text-center">
+                        <p className="text-gray-500 mb-4">{t('noActiveCampaigns')}</p>
+                        {canCreateCampaign && (
+                          <Link href="/dashboard/campaigns/new" className="text-primary-600 hover:text-primary-700 font-medium">
+                            {t('createFirstCampaignBtn')}
+                          </Link>
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {activeTab === 'pending' && (
+                  <>
+                    {pendingCampaigns.length > 0 ? (
+                      pendingCampaigns.map(campaign => (
+                        <CampaignCard 
+                          key={campaign.id}
+                          id={campaign.id}
+                          title={campaign.title}
+                          group={campaign.groupName}
+                          current={campaign.current}
+                          target={campaign.target}
+                          currency={campaign.currency}
+                          contributors={campaign.contributors}
+                          dueDate={campaign.dueDate}
+                          votes={campaign.votes}
+                          status={campaign.status}
+                        />
+                      ))
+                    ) : (
+                      <div className="p-12 text-center">
+                        <p className="text-gray-500">{t('pendingCampaignsDesc')}</p>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {activeTab === 'completed' && (
+                  <>
+                    {completedCampaigns.length > 0 ? (
+                      completedCampaigns.map(campaign => (
+                        <CampaignCard 
+                          key={campaign.id}
+                          id={campaign.id}
+                          title={campaign.title}
+                          group={campaign.groupName}
+                          current={campaign.current}
+                          target={campaign.target}
+                          currency={campaign.currency}
+                          contributors={campaign.contributors}
+                          dueDate={campaign.dueDate}
+                          votes={campaign.votes}
+                          completed={true}
+                        />
+                      ))
+                    ) : (
+                      <div className="p-12 text-center">
+                        <p className="text-gray-500">{t('completedCampaigns')}: 0</p>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
