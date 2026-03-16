@@ -84,12 +84,7 @@ export default function Dashboard() {
       <header className="header-gradient shadow-lg">
         <div className="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
-            <svg width="48" height="48" className="sm:w-16 sm:h-16" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="100" cy="100" r="90" fill="#f97316" opacity="0.15"/>
-              <circle cx="100" cy="100" r="25" fill="#eab308"/>
-              <circle cx="100" cy="100" r="20" fill="white"/>
-              <path d="M100 90 C95 90 92 93 92 97 C92 103 100 110 100 110 C100 110 108 103 108 97 C108 93 105 90 100 90Z" fill="#f97316"/>
-            </svg>
+            <img src="/logo.png" alt="Sanad Logo" width="48" height="48" className="sm:w-16 sm:h-16 object-contain" />
             <h1 className="text-lg sm:text-2xl font-bold text-white">{t('appName')}</h1>
           </div>
           <div className="flex items-center gap-2 sm:gap-4">
