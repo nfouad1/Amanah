@@ -65,7 +65,7 @@ export default function Home() {
       <div className="container mx-auto px-4 py-3">
         <div className="text-center mb-4">
           <div className="flex flex-col items-center mb-2">
-            <img src="/logo.png" alt="Sanad Logo" width="350" height="350" className="object-contain" />
+            <img src="/logo.png" alt="Sanad Logo" width="300" height="300" className="object-contain" />
             <h1 className="text-5xl font-serif italic text-primary-900 -mt-2" style={{ fontFamily: 'Georgia, serif' }}>Sanad</h1>
           </div>
           <p className="text-lg text-primary-800">
