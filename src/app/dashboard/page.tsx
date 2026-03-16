@@ -84,7 +84,7 @@ export default function Dashboard() {
       <header className="header-gradient shadow-lg">
         <div className="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
-            <img src="/logo.png" alt="Sanad Logo" width="48" height="48" className="sm:w-16 sm:h-16 object-contain" />
+            <img src="/logo.png" alt="Sanad Logo" width="56" height="56" className="sm:w-20 sm:h-20 object-contain" />
             <h1 className="text-lg sm:text-2xl font-bold text-white">{t('appName')}</h1>
           </div>
           <div className="flex items-center gap-2 sm:gap-4">
