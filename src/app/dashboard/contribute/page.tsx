@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { addContribution, getCampaigns } from '@/lib/mockData';
+import { addContribution, getCampaignsForUser } from '@/lib/mockData';
 import { getLanguage, getTranslation, Language, translations, getCurrencyForLanguage } from '@/lib/i18n';
 import { getCurrentUser } from '@/lib/auth';
 import { checkContributionPermission } from '@/lib/permissions';
@@ -50,7 +50,7 @@ export default function Contribute() {
     
     if (typeof window !== 'undefined') {
       try {
-        const allCampaigns = getCampaigns();
+        const allCampaigns = getCampaignsForUser(user.id, user.role);
         setCampaigns(allCampaigns.filter(c => c.status === 'active'));
       } catch (error) {
         console.error('Error loading campaigns:', error);

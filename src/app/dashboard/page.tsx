@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getCampaigns, getGroups, getActivities } from '@/lib/mockData';
+import { getCampaignsForUser, getGroupsForUser, getActivitiesForUser } from '@/lib/mockData';
 import { getLanguage, getTranslation, Language, translations, convertCurrency, getCurrencyForLanguage, formatCurrency } from '@/lib/i18n';
 import { getCurrentUser, logout } from '@/lib/auth';
 import { canUserCreateCampaign, canUserCreateGroup, canUserContribute, checkInviteCreationPermission } from '@/lib/permissions';
@@ -29,11 +29,11 @@ export default function Dashboard() {
     }
     setUser(currentUser);
 
-    // Load data only on client side
+    // Load data only on client side - filtered by user's groups
     if (typeof window !== 'undefined') {
-      setCampaigns(getCampaigns());
-      setGroups(getGroups());
-      setActivities(getActivities());
+      setCampaigns(getCampaignsForUser(currentUser.id, currentUser.role));
+      setGroups(getGroupsForUser(currentUser.id, currentUser.role));
+      setActivities(getActivitiesForUser(currentUser.id, currentUser.role));
     }
     
     const currentLang = getLanguage();

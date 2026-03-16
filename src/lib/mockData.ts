@@ -3,6 +3,7 @@
 
 import { createNotification } from './notifications';
 import { getAllUsers } from './auth';
+import type { UserRole } from './auth';
 
 export interface Campaign {
   id: string;
@@ -1133,4 +1134,138 @@ export function rejectAccessRequest(requestId: string, adminUserId: string): boo
   );
   
   return true;
+}
+
+
+// Group-based filtering functions for privacy and security
+// Non-admin users should only see groups they are members of and campaigns from those groups
+
+/**
+ * Get user's group IDs (groups where user is a member)
+ * @param userId - The user ID to check
+ * @returns Array of group IDs the user belongs to
+ */
+export function getUserGroupIds(userId: string): string[] {
+  const groups = getGroups();
+  const userGroups: string[] = [];
+  
+  groups.forEach(group => {
+    if (group.memberList) {
+      const isMember = group.memberList.some(
+        member => member.id === userId && member.status === 'active'
+      );
+      if (isMember) {
+        userGroups.push(group.id);
+      }
+    }
+  });
+  
+  return userGroups;
+}
+
+/**
+ * Get campaigns filtered by user's group membership
+ * Admin sees all campaigns, others only see campaigns from their groups
+ * @param userId - The user ID
+ * @param userRole - The user's role
+ * @returns Filtered campaigns array
+ */
+export function getCampaignsForUser(userId: string, userRole: UserRole): Campaign[] {
+  const allCampaigns = getCampaigns();
+  
+  // Admin sees everything
+  if (userRole === 'admin') {
+    return allCampaigns;
+  }
+  
+  // Get user's groups
+  const userGroupIds = getUserGroupIds(userId);
+  
+  // Filter campaigns to only those from user's groups
+  return allCampaigns.filter(campaign => userGroupIds.includes(campaign.groupId));
+}
+
+/**
+ * Get groups filtered by user's membership
+ * Admin sees all groups, others only see groups they belong to
+ * @param userId - The user ID
+ * @param userRole - The user's role
+ * @returns Filtered groups array
+ */
+export function getGroupsForUser(userId: string, userRole: UserRole): Group[] {
+  const allGroups = getGroups();
+  
+  // Admin sees everything
+  if (userRole === 'admin') {
+    return allGroups;
+  }
+  
+  // Get user's groups
+  const userGroupIds = getUserGroupIds(userId);
+  
+  // Filter to only user's groups
+  return allGroups.filter(group => userGroupIds.includes(group.id));
+}
+
+/**
+ * Get activities filtered by user's group membership
+ * Admin sees all activities, others only see activities from their groups
+ * @param userId - The user ID
+ * @param userRole - The user's role
+ * @returns Filtered activities array
+ */
+export function getActivitiesForUser(userId: string, userRole: UserRole): Activity[] {
+  const allActivities = getActivities();
+  
+  // Admin sees everything
+  if (userRole === 'admin') {
+    return allActivities;
+  }
+  
+  // Get user's campaigns (from their groups)
+  const userCampaigns = getCampaignsForUser(userId, userRole);
+  const userCampaignTitles = userCampaigns.map(c => c.title);
+  
+  // Filter activities to only those related to user's campaigns
+  return allActivities.filter(activity => {
+    if (!activity.campaign) return false;
+    return userCampaignTitles.includes(activity.campaign);
+  });
+}
+
+/**
+ * Check if user has access to a specific campaign
+ * @param userId - The user ID
+ * @param userRole - The user's role
+ * @param campaignId - The campaign ID to check
+ * @returns true if user can access the campaign
+ */
+export function canUserAccessCampaign(userId: string, userRole: UserRole, campaignId: string): boolean {
+  // Admin can access everything
+  if (userRole === 'admin') {
+    return true;
+  }
+  
+  const campaign = getCampaignById(campaignId);
+  if (!campaign) return false;
+  
+  const userGroupIds = getUserGroupIds(userId);
+  return userGroupIds.includes(campaign.groupId);
+}
+
+/**
+ * Check if user has access to a specific group
+ * @param userId - The user ID
+ * @param userRole - The user's role
+ * @param groupId - The group ID to check
+ * @returns true if user can access the group
+ */
+export function canUserAccessGroup(userId: string, userRole: UserRole, groupId: string): boolean {
+  // Admin can access everything
+  if (userRole === 'admin') {
+    return true;
+  }
+  
+  const userGroupIds = getUserGroupIds(userId);
+  return userGroupIds.includes(groupId);
 }
