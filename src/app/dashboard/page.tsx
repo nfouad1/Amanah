@@ -83,8 +83,9 @@ export default function Dashboard() {
       {/* Header */}
       <header className="header-gradient shadow-lg">
         <div className="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <img src="/logo.png" alt="Sanad Logo" width="56" height="56" className="sm:w-20 sm:h-20 object-contain" />
+          <div className="flex items-center gap-3 sm:gap-4">
+            <img src="/logo.png" alt="Sanad Logo" width="64" height="64" className="sm:w-24 sm:h-24 object-contain" />
+            <h1 className="text-2xl sm:text-3xl font-serif italic text-white" style={{ fontFamily: 'Georgia, serif' }}>Sanad</h1>
           </div>
           <div className="flex items-center gap-2 sm:gap-4">
             <LanguageSwitcher onLanguageChange={handleLanguageChange} />
