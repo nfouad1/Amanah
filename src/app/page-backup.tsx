@@ -69,7 +69,7 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
-            <img src="/logo.png" alt="Sanad Logo" width="160" height="160" className="object-contain" />
+            <img src="/logo.png" alt="Sanad Logo" width="200" height="200" className="object-contain" />
           </div>
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
             {t('appName')}

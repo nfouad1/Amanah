@@ -62,7 +62,7 @@ export default function Login() {
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <img src="/logo.png" alt="Sanad Logo" width="160" height="160" className="object-contain" />
+            <img src="/logo.png" alt="Sanad Logo" width="200" height="200" className="object-contain" />
           </div>
           <h1 className="text-4xl font-bold text-primary-900 mb-2">{t('appName')}</h1>
           <p className="text-primary-700">{t('tagline')}</p>
