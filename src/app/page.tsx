@@ -48,8 +48,8 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-primary-50 via-warm-50 to-secondary-50" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="container mx-auto px-4 py-8">
-        <div className={`flex justify-between items-center mb-4`}>
+      <div className="container mx-auto px-4 py-2">
+        <div className={`flex justify-between items-center mb-2`}>
           <div></div>
           <div className="flex items-center gap-3">
             <LanguageSwitcher onLanguageChange={handleLanguageChange} />
@@ -62,73 +62,73 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="container mx-auto px-4 py-3">
-        <div className="text-center mb-4">
-          <div className="flex flex-col items-center mb-2">
+      <div className="container mx-auto px-4 py-2">
+        <div className="text-center mb-3">
+          <div className="flex flex-col items-center mb-1">
             <img src="/logo.png" alt="Sanad Logo" width="300" height="300" className="object-contain" />
-            <h1 className="text-5xl font-serif italic text-primary-900 -mt-2" style={{ fontFamily: 'Georgia, serif' }}>Sanad</h1>
+            <h1 className="text-4xl font-serif italic text-primary-900 -mt-3" style={{ fontFamily: 'Georgia, serif' }}>Sanad</h1>
           </div>
-          <p className="text-lg text-primary-800">
+          <p className="text-base text-primary-800">
             {t('tagline')}
           </p>
-          <p className="text-sm text-primary-600 mt-1">
+          <p className="text-xs text-primary-600 mt-1">
             {t('taglineSubtext')}
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto mb-4">
-          <div className="card-warm p-4">
+        <div className="grid md:grid-cols-3 gap-3 max-w-5xl mx-auto mb-3">
+          <div className="card-warm p-3">
             <div className="text-primary-500 mb-2">
-              <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
               </svg>
             </div>
-            <h3 className="text-lg font-semibold mb-2 text-primary-900">{t('createGroups')}</h3>
-            <p className="text-sm text-neutral-700">
+            <h3 className="text-base font-semibold mb-1 text-primary-900">{t('createGroups')}</h3>
+            <p className="text-xs text-neutral-700">
               {t('createGroupsDesc')}
             </p>
           </div>
           
-          <div className="card-warm p-4">
+          <div className="card-warm p-3">
             <div className="text-warm-500 mb-2">
-              <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd"/>
               </svg>
             </div>
-            <h3 className="text-lg font-semibold mb-2 text-primary-900">{t('saveTogether')}</h3>
-            <p className="text-sm text-neutral-700">
+            <h3 className="text-base font-semibold mb-1 text-primary-900">{t('saveTogether')}</h3>
+            <p className="text-xs text-neutral-700">
               {t('saveTogetherDesc')}
             </p>
           </div>
           
-          <div className="card-warm p-4">
+          <div className="card-warm p-3">
             <div className="text-secondary-500 mb-2">
-              <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/>
               </svg>
             </div>
-            <h3 className="text-lg font-semibold mb-2 text-primary-900">{t('voteSupport')}</h3>
-            <p className="text-sm text-neutral-700">
+            <h3 className="text-base font-semibold mb-1 text-primary-900">{t('voteSupport')}</h3>
+            <p className="text-xs text-neutral-700">
               {t('voteSupportDesc')}
             </p>
           </div>
         </div>
 
-        <div className="text-center mt-4">
-          <Link href="/login" className="inline-block btn-primary text-base px-6 py-2">
+        <div className="text-center mt-3">
+          <Link href="/login" className="inline-block btn-primary text-sm px-5 py-2">
             {t('getStarted')}
           </Link>
         </div>
 
         {/* Active Campaigns Section */}
         {campaigns.length > 0 && (
-          <div className="mt-6 max-w-5xl mx-auto">
-            <div className="text-center mb-4">
-              <h2 className="text-2xl font-bold text-primary-900 mb-2">{t('activeCampaigns')}</h2>
-              <p className="text-sm text-primary-700">{t('seeFamiliesSupporting')}</p>
+          <div className="mt-4 max-w-5xl mx-auto">
+            <div className="text-center mb-3">
+              <h2 className="text-xl font-bold text-primary-900 mb-1">{t('activeCampaigns')}</h2>
+              <p className="text-xs text-primary-700">{t('seeFamiliesSupporting')}</p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-3 gap-3">
               {campaigns.map((campaign) => {
                 const percentage = (campaign.current / campaign.target) * 100;
                 const voteCount = campaign.votes || 0;
@@ -177,8 +177,8 @@ export default function Home() {
               })}
             </div>
 
-            <div className="text-center mt-4">
-              <Link href="/login" className="text-primary-600 hover:text-primary-700 font-semibold text-base">
+            <div className="text-center mt-3">
+              <Link href="/login" className="text-primary-600 hover:text-primary-700 font-semibold text-sm">
                 {t('viewAllCampaigns')}
               </Link>
             </div>
