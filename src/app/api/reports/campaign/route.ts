@@ -86,13 +86,9 @@ export async function POST(request: NextRequest) {
     const reportData = {
       reportId,
       generatedAt: new Date(),
-      language: lang,
-      filters: {
-        campaignIds,
-        status,
-        groupId,
-        startDate: parsedStartDate,
-        endDate: parsedEndDate,
+      dateRange: {
+        start: parsedStartDate ?? null,
+        end: parsedEndDate ?? null,
       },
       campaigns: campaignStats,
       aggregateStats,
