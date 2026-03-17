@@ -3,6 +3,8 @@ import { ReportService } from '@/services/reports/ReportService';
 import { PDFGeneratorService } from '@/services/reports/PDFGeneratorService';
 import type { Language } from '@/types/reports';
 
+export const runtime = 'nodejs';
+
 const reportService = new ReportService();
 const pdfService = new PDFGeneratorService();
 
