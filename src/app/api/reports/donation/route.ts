@@ -75,18 +75,17 @@ export async function POST(request: NextRequest) {
     const reportData = {
       reportId,
       generatedAt: new Date(),
-      language: lang,
       dateRange: {
-        start: parsedStartDate,
-        end: parsedEndDate,
+        start: parsedStartDate ?? null,
+        end: parsedEndDate ?? null,
       },
-      member: {
-        id: userId,
+      user: {
         name: userName || 'Unknown',
         email: userEmail || '',
       },
       contributions,
-      currencyTotals,
+      totals: currencyTotals,
+      disclaimer: '',
     };
 
     // Generate PDF
