@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
-import { getInviteCodes, createInviteCode, deactivateInviteCode, getActiveInviteCount, getMaxInvites, getGroups, type InviteCode } from '@/lib/mockData';
+import { getInviteCodes, createInviteCode, deactivateInviteCode, getActiveInviteCount, getMaxInvites, getGroupsForUser, type InviteCode } from '@/lib/mockData';
 import { getLanguage, getTranslation, Language, translations } from '@/lib/i18n';
 
 export default function InvitesPage() {
@@ -33,7 +33,7 @@ export default function InvitesPage() {
     setIsRTL(currentLang === 'ar');
     
     loadInviteCodes();
-    loadGroups();
+    setGroups(getGroupsForUser(currentUser.id, currentUser.role));
   }, [router]);
 
   const loadInviteCodes = () => {
@@ -44,7 +44,7 @@ export default function InvitesPage() {
   
   const loadGroups = () => {
     if (typeof window !== 'undefined') {
-      setGroups(getGroups());
+      setGroups(getGroupsForUser(user.id, user.role));
     }
   };
 
