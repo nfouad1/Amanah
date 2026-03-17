@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { getCurrentUser, updateProfile, changePassword, getUserProfile, saveUserProfile } from '@/lib/auth';
 import { getLanguage, getTranslation, Language, translations } from '@/lib/i18n';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import DonationReportForm from '@/components/DonationReportForm';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -14,7 +15,7 @@ export default function ProfilePage() {
   const [user, setUser] = useState<any>(null);
   const [lang, setLang] = useState<Language>('en');
   const [isRTL, setIsRTL] = useState(false);
-  const [activeTab, setActiveTab] = useState<'profile' | 'password'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'password' | 'reports'>('profile');
   
   const [profileForm, setProfileForm] = useState({
     name: '',
@@ -214,6 +215,18 @@ export default function ProfilePage() {
               >
                 {t('changePassword')}
               </button>
+              {user.role !== 'viewer' && (
+                <button
+                  onClick={() => setActiveTab('reports')}
+                  className={`px-6 py-3 font-medium ${
+                    activeTab === 'reports'
+                      ? 'text-primary-600 border-b-2 border-primary-600'
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  {t('reports')}
+                </button>
+              )}
             </div>
           </div>
 
@@ -362,8 +375,7 @@ export default function ProfilePage() {
 
             {/* Password Tab */}
             {activeTab === 'password' && (
-              <form onSubmit={handlePasswordSubmit} className="space-y-6">
-                <div>
+              <form onSubmit={handlePasswordSubmit} className="space-y-6">                <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     {t('currentPassword')} *
                   </label>
@@ -430,6 +442,17 @@ export default function ProfilePage() {
                   </button>
                 </div>
               </form>
+            )}
+
+            {/* Reports Tab */}
+            {activeTab === 'reports' && user.role !== 'viewer' && (
+              <DonationReportForm
+                userId={user.id}
+                userRole={user.role}
+                userName={user.name}
+                userEmail={user.email}
+                lang={lang}
+              />
             )}
           </div>
         </div>

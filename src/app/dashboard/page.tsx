@@ -9,6 +9,7 @@ import { getCurrentUser, logout } from '@/lib/auth';
 import { canUserCreateCampaign, canUserCreateGroup, canUserContribute, checkInviteCreationPermission } from '@/lib/permissions';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import NotificationBell from '@/components/NotificationBell';
+import CampaignReportForm from '@/components/CampaignReportForm';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -333,6 +334,11 @@ export default function Dashboard() {
                 )}
               </div>
             </div>
+
+            {/* Campaign Report - Admin only */}
+            {(user.role === 'admin' || user.id === 'admin-default') && (
+              <CampaignReportForm userId={user.id} lang={lang} />
+            )}
           </div>
         </div>
       </div>
