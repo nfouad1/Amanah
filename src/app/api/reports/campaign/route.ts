@@ -4,11 +4,11 @@ import { PDFGeneratorService } from '@/services/reports/PDFGeneratorService';
 import type { Language } from '@/types/reports';
 
 export const runtime = 'nodejs';
-
-const reportService = new ReportService();
-const pdfService = new PDFGeneratorService();
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
+  const reportService = new ReportService();
+  const pdfService = new PDFGeneratorService();
   try {
     const body = await request.json();
     const {

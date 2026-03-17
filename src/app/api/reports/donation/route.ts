@@ -4,14 +4,14 @@ import { PDFGeneratorService } from '@/services/reports/PDFGeneratorService';
 import type { Language } from '@/types/reports';
 
 export const runtime = 'nodejs';
-
-const reportService = new ReportService();
-const pdfService = new PDFGeneratorService();
+export const dynamic = 'force-dynamic';
 
 // Roles allowed to generate donation reports
 const ALLOWED_ROLES = ['admin', 'contributor', 'member'];
 
 export async function POST(request: NextRequest) {
+  const reportService = new ReportService();
+  const pdfService = new PDFGeneratorService();
   try {
     const body = await request.json();
     const { userId, userRole, userName, userEmail, startDate, endDate, language = 'en' } = body;
