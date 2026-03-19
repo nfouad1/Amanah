@@ -7,6 +7,7 @@ import { getCurrentUser, updateProfile, changePassword, getUserProfile, saveUser
 import { getLanguage, getTranslation, Language, translations } from '@/lib/i18n';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import DonationReportForm from '@/components/DonationReportForm';
+import { getNotificationPreferences, saveNotificationPreferences, DEFAULT_PREFERENCES, type NotificationPreferences } from '@/lib/notifications';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function ProfilePage() {
   const [user, setUser] = useState<any>(null);
   const [lang, setLang] = useState<Language>('en');
   const [isRTL, setIsRTL] = useState(false);
-  const [activeTab, setActiveTab] = useState<'profile' | 'password' | 'reports'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'password' | 'reports' | 'notifications'>('profile');
   
   const [profileForm, setProfileForm] = useState({
     name: '',
@@ -34,6 +35,7 @@ export default function ProfilePage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [notifPrefs, setNotifPrefs] = useState<NotificationPreferences>(DEFAULT_PREFERENCES);
 
   useEffect(() => {
     setMounted(true);
@@ -57,6 +59,7 @@ export default function ProfilePage() {
       bio: profile?.bio || '',
     });
     setAvatar(profile?.avatar || '');
+    setNotifPrefs(getNotificationPreferences(currentUser.id));
   }, [router]);
 
   const handleLanguageChange = (newLang: Language) => {
@@ -227,6 +230,16 @@ export default function ProfilePage() {
                   {t('reports')}
                 </button>
               )}
+              <button
+                onClick={() => setActiveTab('notifications')}
+                className={`px-6 py-3 font-medium ${
+                  activeTab === 'notifications'
+                    ? 'text-primary-600 border-b-2 border-primary-600'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                Notifikationer
+              </button>
             </div>
           </div>
 
@@ -453,6 +466,50 @@ export default function ProfilePage() {
                 userEmail={user.email}
                 lang={lang}
               />
+            )}
+
+            {/* Notifications Tab */}
+            {activeTab === 'notifications' && (
+              <div className="space-y-6">
+                <p className="text-gray-600 text-sm">Välj vilka notifikationer du vill ta emot.</p>
+
+                {[
+                  { key: 'campaign_created', label: 'Ny kampanj skapad i min grupp' },
+                  { key: 'campaign_contribution', label: 'Ny donation gjord i en kampanj' },
+                  { key: 'campaign_goal_reached', label: 'Kampanj nått sitt mål' },
+                  { key: 'campaign_vote', label: 'Ny röst på en kampanj' },
+                  { key: 'campaign_activated', label: 'Kampanj aktiverad' },
+                  { key: 'campaign_deleted', label: 'Kampanj borttagen' },
+                  { key: 'contribution_received', label: 'Donation mottagen' },
+                  { key: 'invite_accepted', label: 'Inbjudan accepterad' },
+                  { key: 'invite_expired', label: 'Inbjudan utgången' },
+                ].map(({ key, label }) => (
+                  <div key={key} className="flex items-center justify-between py-3 border-b border-gray-100">
+                    <span className="text-sm text-gray-800">{label}</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const updated = { ...notifPrefs, [key]: !notifPrefs[key as keyof NotificationPreferences] };
+                        setNotifPrefs(updated);
+                        saveNotificationPreferences(user.id, updated);
+                      }}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        notifPrefs[key as keyof NotificationPreferences] ? 'bg-primary-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          notifPrefs[key as keyof NotificationPreferences] ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                ))}
+
+                <p className="text-xs text-gray-500">
+                  Rolländringar och gruppinbjudningar kan inte stängas av.
+                </p>
+              </div>
             )}
           </div>
         </div>

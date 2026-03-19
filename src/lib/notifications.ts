@@ -4,6 +4,59 @@ import { Notification, NotificationType, ResourceType, NotificationFilter } from
 
 const MAX_NOTIFICATIONS = 100;
 
+// Notification preferences - which types the user wants to receive
+export interface NotificationPreferences {
+  campaign_created: boolean;
+  campaign_contribution: boolean;
+  campaign_goal_reached: boolean;
+  campaign_vote: boolean;
+  campaign_activated: boolean;
+  campaign_deleted: boolean;
+  role_changed: boolean;
+  group_invited: boolean;
+  invite_accepted: boolean;
+  invite_expired: boolean;
+  contribution_received: boolean;
+}
+
+export const DEFAULT_PREFERENCES: NotificationPreferences = {
+  campaign_created: true,
+  campaign_contribution: true,
+  campaign_goal_reached: true,
+  campaign_vote: true,
+  campaign_activated: true,
+  campaign_deleted: true,
+  role_changed: true,
+  group_invited: true,
+  invite_accepted: true,
+  invite_expired: true,
+  contribution_received: true,
+};
+
+function getPreferencesKey(userId: string): string {
+  return `sanad_notification_prefs_${userId}`;
+}
+
+export function getNotificationPreferences(userId: string): NotificationPreferences {
+  if (typeof window === 'undefined') return DEFAULT_PREFERENCES;
+  try {
+    const stored = localStorage.getItem(getPreferencesKey(userId));
+    if (!stored) return DEFAULT_PREFERENCES;
+    return { ...DEFAULT_PREFERENCES, ...JSON.parse(stored) };
+  } catch {
+    return DEFAULT_PREFERENCES;
+  }
+}
+
+export function saveNotificationPreferences(userId: string, prefs: NotificationPreferences): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(getPreferencesKey(userId), JSON.stringify(prefs));
+  } catch (error) {
+    console.error('Error saving notification preferences:', error);
+  }
+}
+
 // Generate UUID for notification IDs
 function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -49,7 +102,7 @@ function saveNotifications(userId: string, notifications: Notification[]): void 
   }
 }
 
-// Create a new notification
+// Create a new notification (respects user preferences)
 export function createNotification(
   userId: string,
   type: NotificationType,
@@ -57,7 +110,14 @@ export function createNotification(
   messageParams?: Record<string, string>,
   relatedResourceId?: string,
   relatedResourceType?: ResourceType
-): Notification {
+): Notification | null {
+  // Check user preferences - system notifications (role_changed, group_invited) always go through
+  const alwaysShow: NotificationType[] = ['role_changed', 'group_invited'];
+  if (!alwaysShow.includes(type)) {
+    const prefs = getNotificationPreferences(userId);
+    if (!prefs[type]) return null;
+  }
+
   const notification: Notification = {
     id: generateId(),
     userId,
@@ -93,8 +153,6 @@ export function createNotification(
   
   return notification;
 }
-
-// Mark notification as read
 export function markAsRead(userId: string, notificationId: string): void {
   const notifications = getNotifications(userId);
   const notification = notifications.find(n => n.id === notificationId);
