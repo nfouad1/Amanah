@@ -362,6 +362,20 @@ export const translations = {
     filterGroups: 'Groups',
     confirmClearAll: 'Are you sure you want to delete all notifications?',
     
+    // Notification Preferences
+    notificationPreferences: 'Notification Preferences',
+    notificationPreferencesDesc: 'Choose which notifications you want to receive.',
+    notifPrefCampaignCreated: 'New campaign created in my group',
+    notifPrefCampaignContribution: 'New donation made to a campaign',
+    notifPrefCampaignGoalReached: 'Campaign reached its goal',
+    notifPrefCampaignVote: 'New vote on a campaign',
+    notifPrefCampaignActivated: 'Campaign activated',
+    notifPrefCampaignDeleted: 'Campaign deleted',
+    notifPrefContributionReceived: 'Donation received',
+    notifPrefInviteAccepted: 'Invite accepted',
+    notifPrefInviteExpired: 'Invite expired',
+    notifPrefAlwaysOn: 'Role changes and group invites cannot be disabled.',
+    
     // Notification Messages
     notifCampaignCreated: "New campaign '{campaignTitle}' created in {groupName}",
     notifCampaignContribution: "{userName} contributed {amount} to '{campaignTitle}'",
@@ -802,6 +816,20 @@ export const translations = {
     filterGroups: 'المجموعات',
     confirmClearAll: 'هل أنت متأكد من حذف جميع الإشعارات؟',
     
+    // Notification Preferences
+    notificationPreferences: 'إعدادات الإشعارات',
+    notificationPreferencesDesc: 'اختر الإشعارات التي تريد تلقيها.',
+    notifPrefCampaignCreated: 'حملة جديدة في مجموعتي',
+    notifPrefCampaignContribution: 'تبرع جديد في حملة',
+    notifPrefCampaignGoalReached: 'حملة وصلت إلى هدفها',
+    notifPrefCampaignVote: 'تصويت جديد على حملة',
+    notifPrefCampaignActivated: 'تفعيل حملة',
+    notifPrefCampaignDeleted: 'حذف حملة',
+    notifPrefContributionReceived: 'تبرع مستلم',
+    notifPrefInviteAccepted: 'قبول دعوة',
+    notifPrefInviteExpired: 'انتهاء صلاحية دعوة',
+    notifPrefAlwaysOn: 'لا يمكن تعطيل إشعارات تغيير الدور والدعوات.',
+    
     // Notification Messages
     notifCampaignCreated: "تم إنشاء حملة جديدة '{campaignTitle}' في {groupName}",
     notifCampaignContribution: "{userName} ساهم بمبلغ {amount} في '{campaignTitle}'",
@@ -1241,6 +1269,20 @@ export const translations = {
     filterRoles: 'Roller',
     filterGroups: 'Grupper',
     confirmClearAll: 'Är du säker på att du vill radera alla notifikationer?',
+    
+    // Notification Preferences
+    notificationPreferences: 'Notifikationsinställningar',
+    notificationPreferencesDesc: 'Välj vilka notifikationer du vill ta emot.',
+    notifPrefCampaignCreated: 'Ny kampanj skapad i min grupp',
+    notifPrefCampaignContribution: 'Ny donation gjord i en kampanj',
+    notifPrefCampaignGoalReached: 'Kampanj nått sitt mål',
+    notifPrefCampaignVote: 'Ny röst på en kampanj',
+    notifPrefCampaignActivated: 'Kampanj aktiverad',
+    notifPrefCampaignDeleted: 'Kampanj borttagen',
+    notifPrefContributionReceived: 'Donation mottagen',
+    notifPrefInviteAccepted: 'Inbjudan accepterad',
+    notifPrefInviteExpired: 'Inbjudan utgången',
+    notifPrefAlwaysOn: 'Rolländringar och gruppinbjudningar kan inte stängas av.',
     
     // Notification Messages
     notifCampaignCreated: "Ny kampanj '{campaignTitle}' skapad i {groupName}",

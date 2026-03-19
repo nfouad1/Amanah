@@ -238,7 +238,7 @@ export default function ProfilePage() {
                     : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
-                Notifikationer
+                {t('notificationPreferences')}
               </button>
             </div>
           </div>
@@ -471,18 +471,18 @@ export default function ProfilePage() {
             {/* Notifications Tab */}
             {activeTab === 'notifications' && (
               <div className="space-y-6">
-                <p className="text-gray-600 text-sm">Välj vilka notifikationer du vill ta emot.</p>
+                <p className="text-gray-600 text-sm">{t('notificationPreferencesDesc')}</p>
 
                 {[
-                  { key: 'campaign_created', label: 'Ny kampanj skapad i min grupp' },
-                  { key: 'campaign_contribution', label: 'Ny donation gjord i en kampanj' },
-                  { key: 'campaign_goal_reached', label: 'Kampanj nått sitt mål' },
-                  { key: 'campaign_vote', label: 'Ny röst på en kampanj' },
-                  { key: 'campaign_activated', label: 'Kampanj aktiverad' },
-                  { key: 'campaign_deleted', label: 'Kampanj borttagen' },
-                  { key: 'contribution_received', label: 'Donation mottagen' },
-                  { key: 'invite_accepted', label: 'Inbjudan accepterad' },
-                  { key: 'invite_expired', label: 'Inbjudan utgången' },
+                  { key: 'campaign_created', label: t('notifPrefCampaignCreated') },
+                  { key: 'campaign_contribution', label: t('notifPrefCampaignContribution') },
+                  { key: 'campaign_goal_reached', label: t('notifPrefCampaignGoalReached') },
+                  { key: 'campaign_vote', label: t('notifPrefCampaignVote') },
+                  { key: 'campaign_activated', label: t('notifPrefCampaignActivated') },
+                  { key: 'campaign_deleted', label: t('notifPrefCampaignDeleted') },
+                  { key: 'contribution_received', label: t('notifPrefContributionReceived') },
+                  { key: 'invite_accepted', label: t('notifPrefInviteAccepted') },
+                  { key: 'invite_expired', label: t('notifPrefInviteExpired') },
                 ].map(({ key, label }) => (
                   <div key={key} className="flex items-center justify-between py-3 border-b border-gray-100">
                     <span className="text-sm text-gray-800">{label}</span>
@@ -507,7 +507,7 @@ export default function ProfilePage() {
                 ))}
 
                 <p className="text-xs text-gray-500">
-                  Rolländringar och gruppinbjudningar kan inte stängas av.
+                  {t('notifPrefAlwaysOn')}
                 </p>
               </div>
             )}
