@@ -102,7 +102,16 @@ export default function NotificationPanel({ userId, onClose, onUpdate }: Notific
           router.push(`/dashboard/campaigns/${relatedResourceId}`);
           break;
         case 'group':
-          router.push(`/dashboard/groups/${relatedResourceId}`);
+          // Access request notifications should go to access-requests page
+          if (
+            notification.type === 'group_invited' &&
+            (notification.messageKey === 'notifAccessRequest' ||
+              notification.messageKey === 'notifGroupCreationRequest')
+          ) {
+            router.push('/dashboard/access-requests');
+          } else {
+            router.push(`/dashboard/groups/${relatedResourceId}`);
+          }
           break;
         case 'user':
           router.push('/dashboard/profile');

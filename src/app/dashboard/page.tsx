@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getCampaignsForUser, getGroupsForUser, getActivitiesForUser, createGroupCreationRequest, hasPendingGroupCreationRequest } from '@/lib/mockData';
+import { getCampaignsForUser, getGroupsForUser, getActivitiesForUser, createGroupCreationRequest, hasPendingGroupCreationRequest, createAccessRequest, getAccessRequestsByUser, getGroups } from '@/lib/mockData';
 import { getLanguage, getTranslation, Language, translations, convertCurrency, getCurrencyForLanguage, formatCurrency } from '@/lib/i18n';
 import { getCurrentUser, logout } from '@/lib/auth';
 import { canUserCreateCampaign, canUserCreateGroup, canUserContribute, checkInviteCreationPermission } from '@/lib/permissions';
@@ -23,6 +23,10 @@ export default function Dashboard() {
   const [groupRequestPending, setGroupRequestPending] = useState(false);
   const [showGroupRequestModal, setShowGroupRequestModal] = useState(false);
   const [groupRequestMessage, setGroupRequestMessage] = useState('');
+  const [showAccessRequestModal, setShowAccessRequestModal] = useState(false);
+  const [accessRequestPending, setAccessRequestPending] = useState(false);
+  const [allGroups, setAllGroups] = useState<any[]>([]);
+  const [selectedGroupId, setSelectedGroupId] = useState('');
 
   useEffect(() => {
     // Check authentication
@@ -36,6 +40,11 @@ export default function Dashboard() {
     // Check if viewer has pending group creation request
     if (currentUser.role === 'viewer') {
       setGroupRequestPending(hasPendingGroupCreationRequest(currentUser.id));
+      // Check if viewer has any pending access request
+      const existingRequests = getAccessRequestsByUser(currentUser.id);
+      setAccessRequestPending(existingRequests.some(r => r.status === 'pending' && r.type !== 'group_creation'));
+      // Load all groups for the access request modal
+      setAllGroups(getGroups());
     }
 
     // Load data only on client side - filtered by user's groups
@@ -66,6 +75,16 @@ export default function Dashboard() {
     setGroupRequestPending(true);
     setShowGroupRequestModal(false);
     setGroupRequestMessage('');
+  };
+
+  const handleAccessRequest = () => {
+    if (!user || !selectedGroupId) return;
+    const group = allGroups.find(g => g.id === selectedGroupId);
+    if (!group) return;
+    createAccessRequest(user.id, user.name, user.email, group.id, group.name);
+    setAccessRequestPending(true);
+    setShowAccessRequestModal(false);
+    setSelectedGroupId('');
   };
 
   const t = (key: keyof typeof translations.en) => getTranslation(lang, key);
@@ -102,7 +121,9 @@ export default function Dashboard() {
       <header className="shadow-lg" style={{ background: 'linear-gradient(135deg, #5C3D1E 0%, #2D6A4F 100%)' }}>
         <div className="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
-            <img src="/logo.png" alt="Sanad Logo" width="48" height="48" className="sm:w-14 sm:h-14 object-contain" />
+            <div className="rounded-full p-1" style={{ background: 'rgba(255,255,255,0.15)' }}>
+              <img src="/logo.png" alt="Sanad Logo" width="48" height="48" className="sm:w-14 sm:h-14 object-contain drop-shadow-lg" style={{ filter: 'drop-shadow(0 0 6px rgba(255,255,255,0.4))' }} />
+            </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-4">
             <LanguageSwitcher onLanguageChange={handleLanguageChange} />
@@ -152,12 +173,18 @@ export default function Dashboard() {
                 </svg>
                 <p className="text-sm text-amber-800">{t('viewerBannerText')}</p>
               </div>
-              <Link
-                href="/dashboard/access-requests"
-                className="flex-shrink-0 bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-amber-700"
-              >
-                {t('viewerRequestAccess')}
-              </Link>
+              {accessRequestPending ? (
+                <span className="flex-shrink-0 bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-medium">
+                  ⏳ {t('pending')}
+                </span>
+              ) : (
+                <button
+                  onClick={() => setShowAccessRequestModal(true)}
+                  className="flex-shrink-0 bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-amber-700"
+                >
+                  {t('viewerRequestAccess')}
+                </button>
+              )}
             </div>
 
             {/* Group creation request banner */}
@@ -185,6 +212,50 @@ export default function Dashboard() {
                   ⏳ {t('pending')}
                 </span>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Access request modal */}
+        {showAccessRequestModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-2">
+                {t('viewerRequestAccess')}
+              </h2>
+              <p className="text-gray-600 text-sm mb-4">
+                {t('viewerBannerText')}
+              </p>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('selectGroup')}
+                </label>
+                <select
+                  value={selectedGroupId}
+                  onChange={(e) => setSelectedGroupId(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                >
+                  <option value="">{t('selectGroup')}</option>
+                  {allGroups.map(g => (
+                    <option key={g.id} value={g.id}>{g.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={handleAccessRequest}
+                  disabled={!selectedGroupId}
+                  className="flex-1 bg-amber-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {t('send' as keyof typeof translations.en)}
+                </button>
+                <button
+                  onClick={() => setShowAccessRequestModal(false)}
+                  className="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-semibold hover:bg-gray-300"
+                >
+                  {t('cancel')}
+                </button>
+              </div>
             </div>
           </div>
         )}

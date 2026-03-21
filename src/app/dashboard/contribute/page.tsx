@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { addContribution, getCampaignsForUser } from '@/lib/mockData';
 import { getLanguage, getTranslation, Language, translations, getCurrencyForLanguage } from '@/lib/i18n';
 import { getCurrentUser } from '@/lib/auth';
@@ -10,6 +10,7 @@ import { checkContributionPermission } from '@/lib/permissions';
 
 export default function Contribute() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [campaigns, setCampaigns] = useState<any[]>([]);
   const [lang, setLang] = useState<Language>('en');
   const [isRTL, setIsRTL] = useState(false);
@@ -51,7 +52,14 @@ export default function Contribute() {
     if (typeof window !== 'undefined') {
       try {
         const allCampaigns = getCampaignsForUser(user.id, user.role);
-        setCampaigns(allCampaigns.filter(c => c.status === 'active'));
+        const activeCampaigns = allCampaigns.filter(c => c.status === 'active');
+        setCampaigns(activeCampaigns);
+
+        // Pre-select campaign from URL param
+        const campaignFromUrl = searchParams.get('campaign');
+        if (campaignFromUrl && activeCampaigns.some(c => c.id === campaignFromUrl)) {
+          setFormData(prev => ({ ...prev, campaignId: campaignFromUrl }));
+        }
       } catch (error) {
         console.error('Error loading campaigns:', error);
         setCampaigns([]);

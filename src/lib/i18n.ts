@@ -62,6 +62,8 @@ export const translations = {
     inviteByPhone: 'Invite by Phone Number',
     onePerLine: 'One per line',
     members: 'members',
+    totalMembers: 'Total Members',
+    viewGroup: 'View Group',
     
     // Contribute
     makeContribution: 'Make a Contribution',
@@ -530,6 +532,8 @@ export const translations = {
     inviteByPhone: 'دعوة عبر رقم الهاتف',
     onePerLine: 'واحد في كل سطر',
     members: 'أعضاء',
+    totalMembers: 'إجمالي الأعضاء',
+    viewGroup: 'عرض المجموعة',
     
     // Contribute
     makeContribution: 'تقديم مساهمة',
@@ -998,6 +1002,8 @@ export const translations = {
     inviteByPhone: 'Bjud in via telefonnummer',
     onePerLine: 'En per rad',
     members: 'medlemmar',
+    totalMembers: 'Totalt antal medlemmar',
+    viewGroup: 'Visa grupp',
     
     // Contribute
     makeContribution: 'Gör ett bidrag',
