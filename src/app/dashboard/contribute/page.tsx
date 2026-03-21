@@ -64,15 +64,20 @@ export default function Contribute() {
     return getTranslation(lang, key);
   };
 
-  // Get currency based on language
-  const currency = getCurrencyForLanguage(lang);
-  
-  // Quick amount options based on currency
-  const quickAmounts = lang === 'sv' 
-    ? [250, 500, 1000, 2500]  // SEK
-    : lang === 'ar'
-    ? [100, 250, 500, 1000]   // SAR
-    : [25, 50, 100, 250];     // USD
+  // Get currency based on selected campaign, fallback to language default
+  const selectedCampaign = campaigns.find(c => c.id === formData.campaignId);
+  const campaignCurrency = selectedCampaign?.currency || getCurrencyForLanguage(lang).code;
+  const currencySymbols: Record<string, string> = {
+    USD: '$', SEK: 'kr', SAR: '﷼', EUR: '€', GBP: '£', NOK: 'kr', DKK: 'kr',
+  };
+  const campaignCurrencySymbol = currencySymbols[campaignCurrency] || campaignCurrency;
+
+  // Quick amount options based on campaign currency
+  const quickAmounts = campaignCurrency === 'SEK' || campaignCurrency === 'NOK' || campaignCurrency === 'DKK'
+    ? [250, 500, 1000, 2500]
+    : campaignCurrency === 'SAR'
+    ? [100, 250, 500, 1000]
+    : [25, 50, 100, 250];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,7 +106,9 @@ export default function Contribute() {
             {t('backToDashboard')}
           </Link>
           <div className="text-sm text-gray-600">
-            {t('currency')}: {currency.code} ({currency.symbol})
+            {formData.campaignId
+              ? `${t('currency')}: ${campaignCurrency}`
+              : t('selectCampaign')}
           </div>
         </div>
       </header>
@@ -157,7 +164,7 @@ export default function Contribute() {
               </label>
               <div className="relative">
                 <span className={`absolute ${isRTL ? 'right-4' : 'left-4'} top-2 text-gray-500`}>
-                  {currency.symbol}
+                  {campaignCurrencySymbol}
                 </span>
                 <input
                   type="number"
@@ -177,7 +184,7 @@ export default function Contribute() {
                     onClick={() => setFormData({ ...formData, amount: amount.toString() })}
                     className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm"
                   >
-                    {currency.symbol}{amount.toLocaleString(lang === 'sv' ? 'sv-SE' : lang === 'ar' ? 'ar-SA' : 'en-US')}
+                    {campaignCurrencySymbol}{amount.toLocaleString(lang === 'sv' ? 'sv-SE' : lang === 'ar' ? 'ar-SA' : 'en-US')}
                   </button>
                 ))}
               </div>
