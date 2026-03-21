@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { addContribution, getCampaignsForUser } from '@/lib/mockData';
 import { getLanguage, getTranslation, Language, translations, getCurrencyForLanguage } from '@/lib/i18n';
@@ -9,6 +9,14 @@ import { getCurrentUser } from '@/lib/auth';
 import { checkContributionPermission } from '@/lib/permissions';
 
 export default function Contribute() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+      <ContributeContent />
+    </Suspense>
+  );
+}
+
+function ContributeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [campaigns, setCampaigns] = useState<any[]>([]);
