@@ -1178,6 +1178,18 @@ export function getCampaignsForUser(userId: string, userRole: UserRole): Campaig
     return allCampaigns;
   }
   
+  // Viewers: if they belong to groups, show only those groups' campaigns
+  // If they have no groups yet (new viewer), show all active campaigns
+  if (userRole === 'viewer') {
+    const userGroupIds = getUserGroupIds(userId);
+    if (userGroupIds.length > 0) {
+      return allCampaigns.filter(campaign => 
+        campaign.status === 'active' && userGroupIds.includes(campaign.groupId)
+      );
+    }
+    return allCampaigns.filter(campaign => campaign.status === 'active');
+  }
+  
   // Get user's groups
   const userGroupIds = getUserGroupIds(userId);
   

@@ -321,6 +321,7 @@ export const translations = {
     // Viewer Role Help Messages
     viewerNeedInvite: 'As a Viewer, you need to be invited to a group to contribute to campaigns.',
     viewerRequestAccess: 'Request Access to Group',
+    viewerBannerText: 'You are viewing as a guest. You can browse campaigns but need an invite to contribute.',
     viewerRequestSent: 'Access request sent to group admins',
     viewerContactAdmin: 'Contact a group admin to request an invite or role upgrade.',
     viewerUpgradeRole: 'To contribute, ask an admin to upgrade your role to Member or Contributor.',
@@ -775,6 +776,7 @@ export const translations = {
     // Viewer Role Help Messages
     viewerNeedInvite: 'كمشاهد، تحتاج إلى دعوة للانضمام إلى مجموعة للمساهمة في الحملات.',
     viewerRequestAccess: 'طلب الوصول إلى المجموعة',
+    viewerBannerText: 'أنت تتصفح كضيف. يمكنك تصفح الحملات ولكن تحتاج إلى دعوة للمساهمة.',
     viewerRequestSent: 'تم إرسال طلب الوصول إلى مسؤولي المجموعة',
     viewerContactAdmin: 'اتصل بمسؤول المجموعة لطلب دعوة أو ترقية الدور.',
     viewerUpgradeRole: 'للمساهمة، اطلب من المسؤول ترقية دورك إلى عضو أو مساهم.',
@@ -1229,6 +1231,7 @@ export const translations = {
     // Viewer Role Help Messages
     viewerNeedInvite: 'Som tittare behöver du en inbjudan till en grupp för att bidra till kampanjer.',
     viewerRequestAccess: 'Begär åtkomst till grupp',
+    viewerBannerText: 'Du surfar som gäst. Du kan se kampanjer men behöver en inbjudan för att bidra.',
     viewerRequestSent: 'Åtkomstbegäran skickad till gruppadministratörer',
     viewerContactAdmin: 'Kontakta en gruppadministratör för att begära en inbjudan eller rolluppgradering.',
     viewerUpgradeRole: 'För att bidra, be en administratör att uppgradera din roll till medlem eller bidragsgivare.',
