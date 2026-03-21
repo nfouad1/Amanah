@@ -51,6 +51,7 @@ export const translations = {
     familyGroup: 'Family Group',
     selectGroup: 'Select a group',
     cancel: 'Cancel',
+    send: 'Send',
     createCampaignBtn: 'Create Campaign',
     creating: 'Creating...',
     
@@ -518,6 +519,7 @@ export const translations = {
     familyGroup: 'المجموعة العائلية',
     selectGroup: 'اختر مجموعة',
     cancel: 'إلغاء',
+    send: 'إرسال',
     createCampaignBtn: 'إنشاء حملة',
     creating: 'جاري الإنشاء...',
     
@@ -985,6 +987,7 @@ export const translations = {
     familyGroup: 'Familjegrupp',
     selectGroup: 'Välj en grupp',
     cancel: 'Avbryt',
+    send: 'Skicka',
     createCampaignBtn: 'Skapa kampanj',
     creating: 'Skapar...',
     

@@ -211,7 +211,7 @@ export default function Dashboard() {
                   onClick={handleGroupCreationRequest}
                   className="flex-1 bg-primary-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-primary-700"
                 >
-                  {t('send')}
+                  {t('send' as keyof typeof translations.en)}
                 </button>
                 <button
                   onClick={() => setShowGroupRequestModal(false)}
