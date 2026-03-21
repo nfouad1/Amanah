@@ -54,7 +54,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-warm-50 to-secondary-50 flex items-center justify-center px-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: 'linear-gradient(135deg, #fdf4f2 0%, #fdfbf0 50%, #f7f6f5 100%)' }} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="absolute top-4 right-4">
         <LanguageSwitcher onLanguageChange={handleLanguageChange} />
       </div>
@@ -62,13 +62,18 @@ export default function Login() {
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <div className="flex flex-col items-center mb-3">
-            <img src="/logo.png" alt="Sanad Logo" width="300" height="300" className="object-contain" />
-            <h1 className="text-4xl font-serif italic text-primary-900 mt-1" style={{ fontFamily: 'Georgia, serif' }}>Sanad</h1>
+            <img src="/logo.png" alt="Sanad Logo" width="120" height="120" className="object-contain" />
+            <h1
+              className="text-4xl font-bold tracking-wide mt-1"
+              style={{ fontFamily: 'Georgia, "Times New Roman", serif', color: '#C8705A', letterSpacing: '0.12em' }}
+            >
+              Sanad
+            </h1>
           </div>
-          <p className="text-primary-700">{t('tagline')}</p>
+          <p className="text-warm-600">{t('tagline')}</p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-8">
+        <div className="bg-white rounded-2xl shadow-lg p-8 border border-warm-100">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('login')}</h2>
 
           {error && (

@@ -14,6 +14,7 @@ export default function AccessRequests() {
   const [isRTL, setIsRTL] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [selectedRoles, setSelectedRoles] = useState<Record<string, string>>({});
 
   useEffect(() => {
     setMounted(true);
@@ -58,7 +59,8 @@ export default function AccessRequests() {
   const handleApprove = (requestId: string) => {
     if (!user) return;
     
-    const success = approveAccessRequest(requestId, user.id);
+    const role = selectedRoles[requestId] || 'member';
+    const success = approveAccessRequest(requestId, user.id, role);
     if (success) {
       loadRequests(user.id);
       alert(t('requestApproved') || 'Request approved');
@@ -156,26 +158,42 @@ export default function AccessRequests() {
                       </p>
                     </div>
                     
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleApprove(request.id)}
-                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 font-medium text-sm flex items-center gap-2"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        {t('approveRequest')}
-                      </button>
-                      
-                      <button
-                        onClick={() => handleReject(request.id)}
-                        className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 font-medium text-sm flex items-center gap-2"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        {t('rejectRequest')}
-                      </button>
+                    <div className="flex flex-col gap-2 items-end">
+                      <div className="flex items-center gap-2">
+                        <label className="text-sm text-gray-600 whitespace-nowrap">
+                          {t('assignRole')}:
+                        </label>
+                        <select
+                          value={selectedRoles[request.id] || 'member'}
+                          onChange={(e) => setSelectedRoles(prev => ({ ...prev, [request.id]: e.target.value }))}
+                          className="text-sm border border-gray-300 rounded-lg px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        >
+                          <option value="member">{t('roleMember')}</option>
+                          <option value="contributor">{t('roleContributor')}</option>
+                          <option value="viewer">{t('roleViewer')}</option>
+                        </select>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleApprove(request.id)}
+                          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 font-medium text-sm flex items-center gap-2"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          {t('approveRequest')}
+                        </button>
+                        
+                        <button
+                          onClick={() => handleReject(request.id)}
+                          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 font-medium text-sm flex items-center gap-2"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                          {t('rejectRequest')}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

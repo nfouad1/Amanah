@@ -2,7 +2,7 @@
 // In production, this would be replaced with actual API calls
 
 import { createNotification } from './notifications';
-import { getAllUsers } from './auth';
+import { getAllUsers, updateUserRole } from './auth';
 import type { UserRole } from './auth';
 
 export interface Campaign {
@@ -916,7 +916,7 @@ export function deactivateInviteCode(code: string): boolean {
 }
 
 // Add user to group (used when registering with group-specific invite)
-export function addUserToGroup(groupId: string, userId: string, userName: string, userEmail: string): boolean {
+export function addUserToGroup(groupId: string, userId: string, userName: string, userEmail: string, role: string = 'member'): boolean {
   const groups = getGroups();
   const groupIndex = groups.findIndex(g => g.id === groupId);
   
@@ -944,7 +944,7 @@ export function addUserToGroup(groupId: string, userId: string, userName: string
     id: nextId.toString(),
     name: userName,
     contact: userEmail,
-    role: 'member',
+    role: role,
     status: 'active',
     joinedDate: new Date().toISOString(),
   });
@@ -1052,6 +1052,13 @@ export function getAccessRequestsByUser(userId: string): AccessRequest[] {
 export function getPendingAccessRequestsForAdmin(adminUserId: string): AccessRequest[] {
   const requests = getAccessRequests();
   const groups = getGroups();
+  const users = getAllUsers();
+  
+  // Check if global admin
+  const adminUser = users.find(u => u.id === adminUserId);
+  if (adminUser?.role === 'admin') {
+    return requests.filter(r => r.status === 'pending');
+  }
   
   // Get all groups where user is admin
   const adminGroups = groups.filter(g => 
@@ -1066,7 +1073,7 @@ export function getPendingAccessRequestsForAdmin(adminUserId: string): AccessReq
   );
 }
 
-export function approveAccessRequest(requestId: string, adminUserId: string): boolean {
+export function approveAccessRequest(requestId: string, adminUserId: string, assignedRole: string = 'member'): boolean {
   const requests = getAccessRequests();
   const requestIndex = requests.findIndex(r => r.id === requestId);
   
@@ -1081,15 +1088,25 @@ export function approveAccessRequest(requestId: string, adminUserId: string): bo
   
   localStorage.setItem('sanad_access_requests', JSON.stringify(requests));
   
-  // Add user to group as member
+  // Add user to group with assigned role
   const success = addUserToGroup(
     request.groupId,
     request.userId,
     request.userName,
-    request.userEmail
+    request.userEmail,
+    assignedRole
   );
   
   if (success) {
+    // Upgrade user's global role if assigned role is higher than viewer
+    if (assignedRole && assignedRole !== 'viewer') {
+      const users = getAllUsers();
+      const user = users.find(u => u.id === request.userId);
+      if (user && user.role === 'viewer') {
+        updateUserRole(request.userId, assignedRole as UserRole, adminUserId);
+      }
+    }
+
     // Notify the user
     createNotification(
       request.userId,

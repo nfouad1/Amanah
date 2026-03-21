@@ -81,13 +81,18 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-warm-50 to-secondary-50" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #fdf4f2 0%, #fdfbf0 50%, #f7f6f5 100%)' }} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <header className="header-gradient shadow-lg">
+      <header className="bg-warm-500 shadow-lg">
         <div className="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <img src="/logo.png" alt="Sanad Logo" width="64" height="64" className="sm:w-24 sm:h-24 object-contain" />
-            <h1 className="text-2xl sm:text-3xl font-serif italic text-white" style={{ fontFamily: 'Georgia, serif' }}>Sanad</h1>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <img src="/logo.png" alt="Sanad Logo" width="48" height="48" className="sm:w-14 sm:h-14 object-contain" />
+            <h1
+              className="text-2xl sm:text-3xl font-bold tracking-wide text-white"
+              style={{ fontFamily: 'Georgia, "Times New Roman", serif', letterSpacing: '0.1em' }}
+            >
+              Sanad
+            </h1>
           </div>
           <div className="flex items-center gap-2 sm:gap-4">
             <LanguageSwitcher onLanguageChange={handleLanguageChange} />

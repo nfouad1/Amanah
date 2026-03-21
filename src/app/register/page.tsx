@@ -89,7 +89,7 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-warm-50 to-secondary-50 flex items-center justify-center px-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: 'linear-gradient(135deg, #fdf4f2 0%, #fdfbf0 50%, #f7f6f5 100%)' }} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="absolute top-4 right-4">
         <LanguageSwitcher onLanguageChange={handleLanguageChange} />
       </div>
@@ -97,24 +97,29 @@ export default function Register() {
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <div className="flex flex-col items-center mb-3">
-            <img src="/logo.png" alt="Sanad Logo" width="300" height="300" className="object-contain" />
-            <h1 className="text-4xl font-serif italic text-primary-900 mt-1" style={{ fontFamily: 'Georgia, serif' }}>Sanad</h1>
+            <img src="/logo.png" alt="Sanad Logo" width="120" height="120" className="object-contain" />
+            <h1
+              className="text-4xl font-bold tracking-wide mt-1"
+              style={{ fontFamily: 'Georgia, "Times New Roman", serif', color: '#C8705A', letterSpacing: '0.12em' }}
+            >
+              Sanad
+            </h1>
           </div>
-          <p className="text-primary-700">{t('tagline')}</p>
+          <p className="text-warm-600">{t('tagline')}</p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-8">
+        <div className="bg-white rounded-2xl shadow-lg p-8 border border-warm-100">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('createAccount')}</h2>
 
           {/* Invite Only Notice */}
-          <div className="bg-primary-50 border border-primary-200 rounded-lg p-4 mb-6">
+          <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 mb-6">
             <div className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-5 h-5 text-primary-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
               </svg>
               <div>
-                <h3 className="font-semibold text-primary-900 text-sm">{t('inviteOnly')}</h3>
-                <p className="text-sm text-primary-800 mt-1">{t('inviteOnlyDesc')}</p>
+                <h3 className="font-semibold text-primary-700 text-sm">{t('inviteOnly')}</h3>
+                <p className="text-sm text-warm-600 mt-1">{t('inviteOnlyDesc')}</p>
               </div>
             </div>
           </div>
@@ -194,7 +199,7 @@ export default function Register() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-primary-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-primary-700 transition disabled:bg-primary-400 disabled:cursor-not-allowed"
+              className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? t('creatingAccount') : t('createAccount')}
             </button>
