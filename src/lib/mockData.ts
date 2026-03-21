@@ -944,7 +944,7 @@ export function addUserToGroup(groupId: string, userId: string, userName: string
     id: nextId.toString(),
     name: userName,
     contact: userEmail,
-    role: role,
+    role: role as 'admin' | 'member',
     status: 'active',
     joinedDate: new Date().toISOString(),
   });
