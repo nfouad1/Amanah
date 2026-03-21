@@ -95,8 +95,8 @@ export default function Register() {
       </div>
 
       <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <div className="flex flex-col items-center mb-3">
+        <div className="text-center mb-4">
+          <div className="flex flex-col items-center" style={{ marginBottom: '-16px' }}>
             <img src="/logo.png" alt="Sanad Logo" width="160" height="160" className="object-contain drop-shadow-md" />
           </div>
           <p style={{ color: '#2D6A4F' }} className="font-medium">{t('tagline')}</p>

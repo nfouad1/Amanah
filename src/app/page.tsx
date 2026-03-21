@@ -60,7 +60,7 @@ export default function Home() {
 
       {/* Hero */}
       <div className="container mx-auto px-4 pt-4 pb-8 text-center">
-        <div className="flex flex-col items-center mb-1">
+        <div className="flex flex-col items-center" style={{ marginBottom: '-48px' }}>
           <img
             src="/logo.png"
             alt="Sanad"
