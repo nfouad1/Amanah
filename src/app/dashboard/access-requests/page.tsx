@@ -132,20 +132,45 @@ export default function AccessRequests() {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                          <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                          </svg>
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${request.type === 'group_creation' ? 'bg-primary-100' : 'bg-amber-100'}`}>
+                          {request.type === 'group_creation' ? (
+                            <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                          ) : (
+                            <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                          )}
                         </div>
                         <div>
-                          <p className="font-semibold text-gray-900">{request.userName}</p>
+                          <div className="flex items-center gap-2">
+                            <p className="font-semibold text-gray-900">{request.userName}</p>
+                            {request.type === 'group_creation' && (
+                              <span className="bg-primary-100 text-primary-700 text-xs px-2 py-0.5 rounded-full font-medium">
+                                {t('viewerRequestGroupCreation' as keyof typeof translations.en)}
+                              </span>
+                            )}
+                          </div>
                           <p className="text-sm text-gray-500">{request.userEmail}</p>
                         </div>
                       </div>
                       
-                      <p className="text-gray-700 mb-2">
-                        {t('requestedAccess')} <span className="font-medium">{request.groupName}</span>
-                      </p>
+                      {request.type === 'group_creation' ? (
+                        <p className="text-gray-700 mb-2">
+                          {t('viewerGroupCreationBannerText' as keyof typeof translations.en)}
+                        </p>
+                      ) : (
+                        <p className="text-gray-700 mb-2">
+                          {t('requestedAccess')} <span className="font-medium">{request.groupName}</span>
+                        </p>
+                      )}
+
+                      {request.requestMessage && (
+                        <p className="text-sm text-gray-600 bg-gray-50 rounded px-3 py-2 mb-2 italic">
+                          "{request.requestMessage}"
+                        </p>
+                      )}
                       
                       {request.campaignTitle && (
                         <p className="text-sm text-gray-600 mb-2">
@@ -159,20 +184,27 @@ export default function AccessRequests() {
                     </div>
                     
                     <div className="flex flex-col gap-2 items-end">
-                      <div className="flex items-center gap-2">
-                        <label className="text-sm text-gray-600 whitespace-nowrap">
-                          {t('assignRole')}:
-                        </label>
-                        <select
-                          value={selectedRoles[request.id] || 'member'}
-                          onChange={(e) => setSelectedRoles(prev => ({ ...prev, [request.id]: e.target.value }))}
-                          className="text-sm border border-gray-300 rounded-lg px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-                        >
-                          <option value="member">{t('roleMember')}</option>
-                          <option value="contributor">{t('roleContributor')}</option>
-                          <option value="viewer">{t('roleViewer')}</option>
-                        </select>
-                      </div>
+                      {request.type !== 'group_creation' && (
+                        <div className="flex items-center gap-2">
+                          <label className="text-sm text-gray-600 whitespace-nowrap">
+                            {t('assignRole')}:
+                          </label>
+                          <select
+                            value={selectedRoles[request.id] || 'member'}
+                            onChange={(e) => setSelectedRoles(prev => ({ ...prev, [request.id]: e.target.value }))}
+                            className="text-sm border border-gray-300 rounded-lg px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          >
+                            <option value="member">{t('roleMember')}</option>
+                            <option value="contributor">{t('roleContributor')}</option>
+                            <option value="viewer">{t('roleViewer')}</option>
+                          </select>
+                        </div>
+                      )}
+                      {request.type === 'group_creation' && (
+                        <p className="text-xs text-gray-500 text-right max-w-48">
+                          Godkännande uppgraderar användaren till <span className="font-medium text-primary-700">Contributor</span>
+                        </p>
+                      )}
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleApprove(request.id)}

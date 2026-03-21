@@ -51,6 +51,8 @@ export interface AccessRequest {
   groupName: string;
   campaignId?: string;
   campaignTitle?: string;
+  type?: 'access' | 'group_creation'; // 'access' = default, 'group_creation' = viewer wants to create a group
+  requestMessage?: string; // Optional message from the requester
   status: 'pending' | 'approved' | 'rejected';
   requestedAt: string;
   respondedAt?: string;
@@ -232,6 +234,14 @@ export function getCampaigns(): Campaign[] {
   }
 }
 
+// Get number of active/pending campaigns created by a user
+export function getActiveCampaignCountForUser(userId: string): number {
+  const campaigns = getCampaigns();
+  return campaigns.filter(
+    c => c.createdBy === userId && (c.status === 'active' || c.status === 'pending')
+  ).length;
+}
+
 export function addCampaign(campaign: Omit<Campaign, 'id' | 'current' | 'contributors' | 'createdAt' | 'votes' | 'votedBy'>): Campaign {
   const campaigns = getCampaigns();
   const newCampaign: Campaign = {
@@ -242,8 +252,8 @@ export function addCampaign(campaign: Omit<Campaign, 'id' | 'current' | 'contrib
     createdAt: new Date().toISOString(),
     votes: 0,
     votedBy: [],
-    // If requiresApproval is true, start as pending. Otherwise, start as active
-    status: campaign.requiresApproval ? 'pending' : 'active',
+    requiresApproval: true, // Always require votes - no exceptions
+    status: 'pending', // Always start as pending
   };
   
   // Add to beginning of array (newest first)
@@ -1049,6 +1059,66 @@ export function getAccessRequestsByUser(userId: string): AccessRequest[] {
   return requests.filter(r => r.userId === userId);
 }
 
+// Create a request from a viewer who wants to create their own group
+export function createGroupCreationRequest(
+  userId: string,
+  userName: string,
+  userEmail: string,
+  message?: string
+): AccessRequest | null {
+  const requests = getAccessRequests();
+
+  // Check if there's already a pending group_creation request from this user
+  const existing = requests.find(
+    r => r.userId === userId && r.type === 'group_creation' && r.status === 'pending'
+  );
+  if (existing) return existing;
+
+  const newRequest: AccessRequest = {
+    id: Date.now().toString(),
+    userId,
+    userName,
+    userEmail,
+    groupId: 'platform', // Placeholder - not tied to a specific group
+    groupName: 'Platform',
+    type: 'group_creation',
+    requestMessage: message,
+    status: 'pending',
+    requestedAt: new Date().toISOString(),
+  };
+
+  requests.unshift(newRequest);
+  localStorage.setItem('sanad_access_requests', JSON.stringify(requests));
+
+  // Notify all platform admins
+  try {
+    const users = getAllUsers();
+    const admins = users.filter(u => u.role === 'admin');
+    admins.forEach(admin => {
+      createNotification(
+        admin.id,
+        'group_invited',
+        'notifGroupCreationRequest',
+        { userName, userEmail },
+        userId,
+        'group'
+      );
+    });
+  } catch (error) {
+    console.error('Error creating group creation request notifications:', error);
+  }
+
+  return newRequest;
+}
+
+// Check if user has a pending group creation request
+export function hasPendingGroupCreationRequest(userId: string): boolean {
+  const requests = getAccessRequests();
+  return requests.some(
+    r => r.userId === userId && r.type === 'group_creation' && r.status === 'pending'
+  );
+}
+
 export function getPendingAccessRequestsForAdmin(adminUserId: string): AccessRequest[] {
   const requests = getAccessRequests();
   const groups = getGroups();
@@ -1086,7 +1156,22 @@ export function approveAccessRequest(requestId: string, adminUserId: string, ass
   request.respondedAt = new Date().toISOString();
   request.respondedBy = adminUserId;
   
+  requests[requestIndex] = request;
   localStorage.setItem('sanad_access_requests', JSON.stringify(requests));
+
+  // Handle group_creation requests: upgrade viewer to contributor
+  if (request.type === 'group_creation') {
+    updateUserRole(request.userId, 'contributor', adminUserId);
+    createNotification(
+      request.userId,
+      'group_invited',
+      'notifGroupCreationApproved',
+      {},
+      request.userId,
+      'group'
+    );
+    return true;
+  }
   
   // Add user to group with assigned role
   const success = addUserToGroup(
@@ -1136,16 +1221,19 @@ export function rejectAccessRequest(requestId: string, adminUserId: string): boo
   request.respondedAt = new Date().toISOString();
   request.respondedBy = adminUserId;
   
+  requests[requestIndex] = request;
   localStorage.setItem('sanad_access_requests', JSON.stringify(requests));
   
   // Notify the user
+  const notifKey = request.type === 'group_creation'
+    ? 'notifGroupCreationRejected'
+    : 'notifAccessRequestRejected';
+
   createNotification(
     request.userId,
     'group_invited',
-    'notifAccessRequestRejected',
-    {
-      groupName: request.groupName,
-    },
+    notifKey,
+    { groupName: request.groupName },
     request.groupId,
     'group'
   );

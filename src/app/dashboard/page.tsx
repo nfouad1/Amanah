@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getCampaignsForUser, getGroupsForUser, getActivitiesForUser } from '@/lib/mockData';
+import { getCampaignsForUser, getGroupsForUser, getActivitiesForUser, createGroupCreationRequest, hasPendingGroupCreationRequest } from '@/lib/mockData';
 import { getLanguage, getTranslation, Language, translations, convertCurrency, getCurrencyForLanguage, formatCurrency } from '@/lib/i18n';
 import { getCurrentUser, logout } from '@/lib/auth';
 import { canUserCreateCampaign, canUserCreateGroup, canUserContribute, checkInviteCreationPermission } from '@/lib/permissions';
@@ -20,6 +20,9 @@ export default function Dashboard() {
   const [isRTL, setIsRTL] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<'active' | 'pending' | 'completed'>('active');
+  const [groupRequestPending, setGroupRequestPending] = useState(false);
+  const [showGroupRequestModal, setShowGroupRequestModal] = useState(false);
+  const [groupRequestMessage, setGroupRequestMessage] = useState('');
 
   useEffect(() => {
     // Check authentication
@@ -29,6 +32,11 @@ export default function Dashboard() {
       return;
     }
     setUser(currentUser);
+
+    // Check if viewer has pending group creation request
+    if (currentUser.role === 'viewer') {
+      setGroupRequestPending(hasPendingGroupCreationRequest(currentUser.id));
+    }
 
     // Load data only on client side - filtered by user's groups
     if (typeof window !== 'undefined') {
@@ -50,6 +58,14 @@ export default function Dashboard() {
   const handleLogout = () => {
     logout();
     router.push('/login');
+  };
+
+  const handleGroupCreationRequest = () => {
+    if (!user) return;
+    createGroupCreationRequest(user.id, user.name, user.email, groupRequestMessage || undefined);
+    setGroupRequestPending(true);
+    setShowGroupRequestModal(false);
+    setGroupRequestMessage('');
   };
 
   const t = (key: keyof typeof translations.en) => getTranslation(lang, key);
@@ -83,16 +99,10 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #fdf4f2 0%, #fdfbf0 50%, #f7f6f5 100%)' }} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <header className="bg-warm-500 shadow-lg">
+      <header className="shadow-lg" style={{ background: 'linear-gradient(135deg, #5C3D1E 0%, #2D6A4F 100%)' }}>
         <div className="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
             <img src="/logo.png" alt="Sanad Logo" width="48" height="48" className="sm:w-14 sm:h-14 object-contain" />
-            <h1
-              className="text-2xl sm:text-3xl font-bold tracking-wide text-white"
-              style={{ fontFamily: 'Georgia, "Times New Roman", serif', letterSpacing: '0.1em' }}
-            >
-              Sanad
-            </h1>
           </div>
           <div className="flex items-center gap-2 sm:gap-4">
             <LanguageSwitcher onLanguageChange={handleLanguageChange} />
@@ -134,19 +144,83 @@ export default function Dashboard() {
 
         {/* Viewer banner */}
         {user.role === 'viewer' && (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <svg className="w-6 h-6 text-amber-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-              </svg>
-              <p className="text-sm text-amber-800">{t('viewerBannerText')}</p>
+          <div className="space-y-3 mb-6">
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <svg className="w-6 h-6 text-amber-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                <p className="text-sm text-amber-800">{t('viewerBannerText')}</p>
+              </div>
+              <Link
+                href="/dashboard/access-requests"
+                className="flex-shrink-0 bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-amber-700"
+              >
+                {t('viewerRequestAccess')}
+              </Link>
             </div>
-            <Link
-              href="/dashboard/access-requests"
-              className="flex-shrink-0 bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-amber-700"
-            >
-              {t('viewerRequestAccess')}
-            </Link>
+
+            {/* Group creation request banner */}
+            <div className="bg-primary-50 border border-primary-200 rounded-lg p-4 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <svg className="w-6 h-6 text-primary-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <p className="text-sm text-primary-800">
+                  {groupRequestPending
+                    ? t('viewerGroupCreationPending' as keyof typeof translations.en)
+                    : t('viewerGroupCreationBannerText' as keyof typeof translations.en)}
+                </p>
+              </div>
+              {!groupRequestPending && (
+                <button
+                  onClick={() => setShowGroupRequestModal(true)}
+                  className="flex-shrink-0 bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary-700"
+                >
+                  {t('viewerRequestGroupCreation' as keyof typeof translations.en)}
+                </button>
+              )}
+              {groupRequestPending && (
+                <span className="flex-shrink-0 bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-medium">
+                  ⏳ {t('pending')}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Group creation request modal */}
+        {showGroupRequestModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-2">
+                {t('viewerRequestGroupCreation' as keyof typeof translations.en)}
+              </h2>
+              <p className="text-gray-600 text-sm mb-4">
+                {t('viewerGroupCreationBannerText' as keyof typeof translations.en)}
+              </p>
+              <textarea
+                value={groupRequestMessage}
+                onChange={(e) => setGroupRequestMessage(e.target.value)}
+                placeholder={t('groupCreationRequestMessage' as keyof typeof translations.en)}
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent mb-4"
+              />
+              <div className="flex gap-3">
+                <button
+                  onClick={handleGroupCreationRequest}
+                  className="flex-1 bg-primary-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-primary-700"
+                >
+                  {t('send')}
+                </button>
+                <button
+                  onClick={() => setShowGroupRequestModal(false)}
+                  className="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-semibold hover:bg-gray-300"
+                >
+                  {t('cancel')}
+                </button>
+              </div>
+            </div>
           </div>
         )}
 

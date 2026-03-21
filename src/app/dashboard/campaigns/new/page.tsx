@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { addCampaign, getGroups } from '@/lib/mockData';
+import { addCampaign, getGroups, getActiveCampaignCountForUser } from '@/lib/mockData';
 import { getLanguage, getTranslation, Language, translations } from '@/lib/i18n';
 import { getCurrentUser } from '@/lib/auth';
 import { checkCampaignCreationPermission } from '@/lib/permissions';
@@ -24,7 +24,6 @@ export default function NewCampaign() {
     groupId: '',
     beneficiaryName: '',
     dueDate: '',
-    requiresApproval: true, // Default to requiring approval
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -49,6 +48,16 @@ export default function NewCampaign() {
     const currentLang = getLanguage();
     setLang(currentLang);
     setIsRTL(currentLang === 'ar');
+    
+    // Check active campaign limit (max 2 for non-admins)
+    if (user.role !== 'admin') {
+      const activeCampaigns = getActiveCampaignCountForUser(user.id);
+      if (activeCampaigns >= 2) {
+        alert(getTranslation(getLanguage(), 'campaignLimitReached' as keyof typeof translations.en));
+        router.push('/dashboard');
+        return;
+      }
+    }
     
     if (typeof window !== 'undefined') {
       try {
@@ -85,8 +94,8 @@ export default function NewCampaign() {
       currency: formData.currency,
       status: 'active',
       dueDate: formData.dueDate || undefined,
-      requiresApproval: formData.requiresApproval,
-      createdBy: currentUser?.id, // Add creator ID for notifications
+      requiresApproval: true,
+      createdBy: currentUser?.id,
     });
     
     alert(t('campaignCreatedSuccess'));
@@ -226,38 +235,16 @@ export default function NewCampaign() {
               </select>
             </div>
 
-            {/* Campaign Approval Setting */}
-            <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                {t('campaignApprovalSetting')}
-              </label>
-              <div className="space-y-3">
-                <label className="flex items-start gap-3 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="requiresApproval"
-                    checked={formData.requiresApproval === true}
-                    onChange={() => setFormData({ ...formData, requiresApproval: true })}
-                    className="mt-1"
-                  />
-                  <div>
-                    <div className="font-medium text-gray-900">✓ {t('requiresApproval')}</div>
-                    <div className="text-sm text-gray-600">{t('requiresApprovalDesc')}</div>
-                  </div>
-                </label>
-                <label className="flex items-start gap-3 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="requiresApproval"
-                    checked={formData.requiresApproval === false}
-                    onChange={() => setFormData({ ...formData, requiresApproval: false })}
-                    className="mt-1"
-                  />
-                  <div>
-                    <div className="font-medium text-gray-900">⚡ {t('startImmediately')}</div>
-                    <div className="text-sm text-gray-600">{t('startImmediatelyDesc')}</div>
-                  </div>
-                </label>
+            {/* Info: campaigns always require votes */}
+            <div className="border border-primary-200 rounded-lg p-4 bg-primary-50">
+              <div className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                <div>
+                  <p className="text-sm font-medium text-primary-900">{t('campaignNeedsVotes' as keyof typeof translations.en)}</p>
+                  <p className="text-sm text-primary-700 mt-1">{t('campaignNeedsVotesDesc' as keyof typeof translations.en)}</p>
+                </div>
               </div>
             </div>
 

@@ -9,54 +9,54 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Sanad logo color palette: Muted Coral, Soft Mustard Yellow, Deep Warm Grey
+        // Sanad logo palette: earthy browns, deep forest greens, warm golden accents
         primary: {
-          50:  '#fdf4f2',
-          100: '#fbe4de',
-          200: '#f6c9be',
-          300: '#eeaa97',
-          400: '#e48a74',
-          500: '#C8705A', // Muted Coral (main)
-          600: '#a85848',
-          700: '#874237',
-          800: '#5e2e26',
-          900: '#3a1b17',
+          50:  '#f5ede4',
+          100: '#e8d5be',
+          200: '#d4b08a',
+          300: '#bf8a56',
+          400: '#a86d35',
+          500: '#8B5E3C', // earthy brown medium
+          600: '#6F4A2A',
+          700: '#5C3D1E', // earthy brown dark
+          800: '#3D2710',
+          900: '#1F1308',
         },
         secondary: {
-          50:  '#fdfbf0',
-          100: '#faf5d9',
-          200: '#f4eab3',
-          300: '#ecdb87',
-          400: '#e0c95e',
-          500: '#C9A84C', // Soft Mustard Yellow
-          600: '#a68838',
-          700: '#7f6629',
-          800: '#57441b',
-          900: '#30250e',
+          50:  '#fdf8e7',
+          100: '#faefc4',
+          200: '#f5e08a',
+          300: '#eecf50',
+          400: '#E6BC2A',
+          500: '#D4A017', // warm gold
+          600: '#B8860B',
+          700: '#8B6508',
+          800: '#5C4205',
+          900: '#2E2103',
+        },
+        forest: {
+          50:  '#e8f5ee',
+          100: '#c8e8d6',
+          200: '#95d1ae',
+          300: '#62b986',
+          400: '#3D9E68',
+          500: '#2D6A4F', // deep forest green
+          600: '#1F5038',
+          700: '#1A3D2B', // darkest forest
+          800: '#102618',
+          900: '#081308',
         },
         warm: {
-          50:  '#f7f6f5',
-          100: '#edecea',
-          200: '#d9d7d4',
-          300: '#bfbcb8',
-          400: '#a09c97',
-          500: '#6B6560', // Deep Warm Grey
-          600: '#524e4a',
-          700: '#3d3a37',
-          800: '#282624',
-          900: '#161412',
-        },
-        accent: {
-          50:  '#fdf4f2',
-          100: '#fbe4de',
-          200: '#f6c9be',
-          300: '#eeaa97',
-          400: '#e48a74',
-          500: '#C8705A',
-          600: '#a85848',
-          700: '#874237',
-          800: '#5e2e26',
-          900: '#3a1b17',
+          50:  '#faf7f4',
+          100: '#f0ebe4',
+          200: '#ddd3c7',
+          300: '#c4b5a5',
+          400: '#a89280',
+          500: '#8B7355',
+          600: '#6B5840',
+          700: '#4F4030',
+          800: '#342A1F',
+          900: '#1A1510',
         },
         neutral: {
           50:  '#fafaf9',
