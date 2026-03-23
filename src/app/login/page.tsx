@@ -67,10 +67,10 @@ export default function Login() {
             <img
               src="/logo.png"
               alt="Sanad Logo"
-              width="160"
-              height="160"
+              width="350"
+              height="350"
               className="object-contain drop-shadow-md"
-              style={{ maxWidth: '160px' }}
+              style={{ maxWidth: '350px' }}
             />
           </div>
 
